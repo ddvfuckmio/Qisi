@@ -73,6 +73,7 @@
             <optional>true</optional>
         </dependency>
 
+        <!--前端模板依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
