@@ -6,6 +6,7 @@ package qisi.bean;
  */
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -19,11 +20,23 @@ public class User {
 	private String account;
 	private String password;
 	private String sex;
-	private String email;
+	private String age;
 	private String phone;
+	private String email;
 
 	@JSONField(format = "yyyy-MM-dd")
 	private Date createdAt;
+
+	public User() {
+	}
+
+	public String getAge() {
+		return age;
+	}
+
+	public void setAge(String age) {
+		this.age = age;
+	}
 
 	public Integer getId() {
 		return id;
@@ -39,9 +52,6 @@ public class User {
 
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
-	}
-
-	public User() {
 	}
 
 	public String getAccount() {

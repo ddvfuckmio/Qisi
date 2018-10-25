@@ -18,7 +18,7 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 
-	public void saveUser(User user){
+	public void userRegister(User user){
 		userRepository.save(user);
 	}
 
@@ -33,4 +33,9 @@ public class UserService {
 	public User checkUserIfExist(User user){
 		return userRepository.findUserIfExist(user.getAccount(),user.getPhone(),user.getEmail());
 	}
+
+	public void mockUsers(List<User> users){
+		userRepository.saveAll(users);
+	}
+
 }

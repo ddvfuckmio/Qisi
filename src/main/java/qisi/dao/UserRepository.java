@@ -30,4 +30,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	@Query("from users where account=?1 or phone=?2 or email=?3")
 	public User findUserIfExist(String account,String phone,String email);
 
+
 }

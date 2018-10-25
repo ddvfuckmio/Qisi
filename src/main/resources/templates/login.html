@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -7,10 +6,11 @@
 <body>
 
 <form action="/qisi/user/login" method="post">
-    账号:<input type="text" name="account"/></br>
-    密码:<input type="password" name="password"/></br>
+    账号:<input type="text" th:value="${user?.account}" name="account"/></br>
+    密码:<input type="password" th:value="${user?.password}" name="password"/></br>
     <input type="submit" value="登陆"></form>
 </form>
+
 <p th:text="${error}"/>
 <br/>
 </body>

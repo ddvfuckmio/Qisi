@@ -15,4 +15,14 @@ public class HtmlController {
 	public String login(){
 		return "login";
 	}
+
+	@RequestMapping("/register")
+	public String register(){
+		return "register";
+	}
+
+	@RequestMapping("/main")
+	public String success(){
+		return "main";
+	}
 }
