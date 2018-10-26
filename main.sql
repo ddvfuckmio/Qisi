@@ -25,6 +25,15 @@ CREATE TABLE `admin_users` (
 	UNIQUE KEY `phoneNumber_UNIQUE` (`phone`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '管理员表';
 
+CREATE TABLE `user_roles` (
+	`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+	`account` varchar(50) NOT NULL,
+  `role` varchar(10) DEFAULT NULL,
+	`createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY `account_UNIQUE` (`account`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '用户权限表';
+
 CREATE TABLE `courses` (
 	`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 	`courseName` varchar(50) NOT NULL,
@@ -85,4 +94,6 @@ CREATE TABLE `user_codes` (
 	 KEY `account` (`account`),
 	UNIQUE KEY `codeId` (`codeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '用户代码表';
+
+
 
