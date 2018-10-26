@@ -1,37 +1,26 @@
 CREATE TABLE `users` (
-	`uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
+	`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 	`account` varchar(50) NOT NULL,
 	`password` varchar(50) NOT NULL,
-	`age` varchar(50) NOT NULL,
+	`age` varchar(50) DEFAULT NULL,
 	`sex` varchar(10) DEFAULT NULL,
 	`job` varchar(50) DEFAULT NULL,
 	`phone` varchar(50) DEFAULT NULL,
 	`email` varchar(50) DEFAULT NULL,
 	`createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (`uid`),
-	UNIQUE KEY `account_UNIQUE` (`account`),
-	UNIQUE KEY `phoneNumber_UNIQUE` (`phone`),
-	UNIQUE KEY `email_UNIQUE` (`email`)
+	 PRIMARY KEY (`id`),
+	 UNIQUE KEY `account_UNIQUE` (`account`),
+	 UNIQUE KEY `phoneNumber_UNIQUE` (`phone`),
+	 UNIQUE KEY `email_UNIQUE` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '用户表';
-
-CREATE TABLE `admin_users` (
-	`uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
-	`account` varchar(50) NOT NULL,
-	`password` varchar(50) NOT NULL,
-	`phone` varchar(50) DEFAULT NULL,
-	`createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (`uid`),
-	UNIQUE KEY `account_UNIQUE` (`account`),
-	UNIQUE KEY `phoneNumber_UNIQUE` (`phone`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '管理员表';
 
 CREATE TABLE `user_roles` (
 	`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 	`account` varchar(50) NOT NULL,
   `role` varchar(10) DEFAULT NULL,
 	`createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY `account_UNIQUE` (`account`)
+	 PRIMARY KEY (`id`),
+	 UNIQUE KEY `account_UNIQUE` (`account`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '用户权限表';
 
 CREATE TABLE `courses` (
@@ -40,8 +29,8 @@ CREATE TABLE `courses` (
 	`introduction` varchar(100) DEFAULT NULL,
 	`totalExercises` int(11) unsigned DEFAULT 0,
 	`createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY `courseName` (`courseName`)
+	 PRIMARY KEY (`id`),
+	 UNIQUE KEY `courseName` (`courseName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '课程表';
 
 CREATE TABLE `course_lessons` (
@@ -66,8 +55,8 @@ CREATE TABLE `course_lesson_exercises` (
 	`firstCode`  text,
 	`secondCode` text,
 	`createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY `courseName_lessonName_exerciseIndex` (`courseName`,`lessonName`,`exerciseIndex`)
+   PRIMARY KEY (`id`),
+	 UNIQUE KEY `courseName_lessonName_exerciseIndex` (`courseName`,`lessonName`,`exerciseIndex`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '章节练习表';
 
 CREATE TABLE `user_course_progress` (
@@ -76,8 +65,8 @@ CREATE TABLE `user_course_progress` (
 	`courseName` varchar(50) NOT NULL,
 	`exerciseIndex` int(11) NOT NULL,
 	`createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY `account_courseName` (`account`,`courseName`)
+	 PRIMARY KEY (`id`),
+	 UNIQUE KEY `account_courseName` (`account`,`courseName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '用户课程进度表';
 
 CREATE TABLE `user_codes` (
@@ -90,9 +79,9 @@ CREATE TABLE `user_codes` (
 	`code` text NOT NULL,
 	`pass` varchar(10) DEFAULT NULL,
 	`createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (`id`),
+	 PRIMARY KEY (`id`),
 	 KEY `account` (`account`),
-	UNIQUE KEY `codeId` (`codeId`)
+	 UNIQUE KEY `codeId` (`codeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '用户代码表';
 
 

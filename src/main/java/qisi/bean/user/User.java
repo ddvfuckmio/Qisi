@@ -5,8 +5,6 @@ package qisi.bean.user;
  * @date : 2018/10/24 上午11:40
  */
 
-import com.alibaba.fastjson.annotation.JSONField;
-
 import javax.persistence.*;
 import java.util.Date;
 
@@ -14,7 +12,7 @@ import java.util.Date;
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer uid;
+	private Integer id;
 	private String account;
 	private String password;
 	private String sex;
@@ -54,12 +52,12 @@ public class User {
 		this.age = age;
 	}
 
-	public Integer getUid() {
-		return uid;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setUid(Integer uid) {
-		this.uid = uid;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public Date getCreatedAt() {
