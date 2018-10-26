@@ -7,7 +7,7 @@ package qisi.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import qisi.bean.User;
+import qisi.bean.user.User;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 

@@ -10,8 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import qisi.exception.userException.UserNotExistException;
 import qisi.service.UserService;
-import qisi.bean.User;
-import qisi.utils.MD5Util;
+import qisi.bean.user.User;
+import qisi.utils.Md5Util;
 import qisi.utils.MockUtil;
 
 import java.util.Date;
@@ -40,7 +40,7 @@ public class UserController {
 			return "login";
 		}
 
-		password = MD5Util.encode(formUser.getPassword());
+		password = Md5Util.encode(formUser.getPassword());
 		User user = userService.findUserByAccount(account);
 
 		if (user == null || !password.equals(user.getPassword())) {
@@ -57,6 +57,7 @@ public class UserController {
 		String password = formUser.getPassword();
 		String sex = formUser.getSex();
 		String age = formUser.getAge();
+		String job = formUser.getJob();
 		String phone = formUser.getPhone();
 		String email = formUser.getEmail();
 		map.put("user", formUser);
@@ -81,6 +82,11 @@ public class UserController {
 			return "register";
 		}
 
+		if (job == null || "".equals(job)) {
+			map.put("error", "职业不能为空");
+			return "register";
+		}
+
 		if (phone == null || "".equals(phone)) {
 			map.put("error", "电话不能为空");
 			return "register";
@@ -92,14 +98,18 @@ public class UserController {
 		}
 
 		formUser.setCreatedAt(new Date());
-		password = MD5Util.encode(password);
-		formUser.setPassword(password);
+
 		User findUser = userService.checkUserIfExist(formUser);
 		if (findUser != null) {
 			map.put("error", "该用户已经注册!");
 			return "register";
 		}
+
+		password = Md5Util.encode(password);
+		formUser.setPassword(password);
+
 		userService.userRegister(formUser);
+
 		map.put("msg", "注册成功!");
 		return "main";
 	}

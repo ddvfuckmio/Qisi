@@ -1,4 +1,4 @@
-package qisi.bean;
+package qisi.bean.user;
 
 /**
  * @author : ddv
@@ -6,7 +6,6 @@ package qisi.bean;
  */
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,19 +14,36 @@ import java.util.Date;
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-
+	private Integer uid;
 	private String account;
 	private String password;
 	private String sex;
+	private String job;
 	private String age;
 	private String phone;
 	private String email;
-
-	@JSONField(format = "yyyy-MM-dd")
 	private Date createdAt;
 
 	public User() {
+	}
+
+	public User(String account, String password, String sex, String job, String age, String phone, String email, Date createdAt) {
+		this.account = account;
+		this.password = password;
+		this.sex = sex;
+		this.job = job;
+		this.age = age;
+		this.phone = phone;
+		this.email = email;
+		this.createdAt = createdAt;
+	}
+
+	public String getJob() {
+		return job;
+	}
+
+	public void setJob(String job) {
+		this.job = job;
 	}
 
 	public String getAge() {
@@ -38,12 +54,12 @@ public class User {
 		this.age = age;
 	}
 
-	public Integer getId() {
-		return id;
+	public Integer getUid() {
+		return uid;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setUid(Integer uid) {
+		this.uid = uid;
 	}
 
 	public Date getCreatedAt() {
