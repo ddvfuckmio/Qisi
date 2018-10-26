@@ -3,11 +3,12 @@
 ## 软件环境搭设
 ```shell
 确保部署时
- 1: 有可用的jdk1.8
+ 1: jdk1.8支持
  2: maven支持
- 3:修改application.yml中的
+ 3: mysql支持
+ 4: 修改application.yml中的
  spring:
     profiles:
-       active: dev
- 并修改生产环境的配置文件
+       active: dev --> production
+ 并修改生产环境的配置文件(mysql,MQ...)
 ```
