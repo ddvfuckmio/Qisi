@@ -25,11 +25,19 @@
         <java.version>1.8</java.version>
     </properties>
 
-    <!--mvc等依赖-->
+
     <dependencies>
+
+        <!--mvc等依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!--security依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
         <!--tomcat依赖-->

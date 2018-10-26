@@ -114,6 +114,7 @@ public class UserController {
 		return "main";
 	}
 
+	@ResponseBody
 	@GetMapping("/users")
 	public List<User> getUsers() {
 		return userService.getUsers();
