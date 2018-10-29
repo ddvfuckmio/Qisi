@@ -12,23 +12,23 @@ import qisi.bean.user.User;
 public interface UserRepository extends JpaRepository<User, Integer> {
 
 	/**
-	 *	根据account查找用户
-	 * @param account
+	 *	根据username查找用户
+	 * @param username
 	 * @return user
 	 */
-	@Query("from users where account=?1")
-	public User findUserByAccount(String account);
+	@Query("from users where username=?1")
+	public User findUserByUsername(String username);
 
 
 	/**
-	 * 注册之前检查表中是否存在相同的account,phone,email 任何一项匹配则返回匹配的用户信息
-	 * @param account
+	 * 注册之前检查表中是否存在相同的username,phone,email 任何一项匹配则返回匹配的用户信息
+	 * @param username
 	 * @param phone
 	 * @param email
 	 * @return user
 	 */
-	@Query("from users where account=?1 or phone=?2 or email=?3")
-	public User findUserIfExist(String account,String phone,String email);
+	@Query("from users where username=?1 or phone=?2 or email=?3")
+	public User findUserIfExist(String username,String phone,String email);
 
 
 }

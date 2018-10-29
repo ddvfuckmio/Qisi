@@ -6,7 +6,8 @@
  1: jdk1.8支持
  2: maven支持
  3: mysql支持
- 4: 修改application.yml中的
+ 4: activeMQ支持
+ 5: 修改application.yml中的
  spring:
     profiles:
        active: dev --> production

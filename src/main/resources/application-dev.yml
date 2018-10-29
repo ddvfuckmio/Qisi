@@ -11,6 +11,4 @@ spring:
       cache:
 #  配置项目路径前缀,端口
 server:
-  servlet:
-    context-path: /qisi
   port: 8080

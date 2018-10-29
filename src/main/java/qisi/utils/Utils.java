@@ -1,15 +1,20 @@
 package qisi.utils;
 
+import java.security.MessageDigest;
+import java.util.UUID;
+
 /**
  * @author : ddv
- * @date : 2018/10/25 下午2:52
+ * @date : 2018/10/29 下午1:14
  */
 
-import java.security.MessageDigest;
-
-public class Md5Util {
-
+public class Utils {
 	private static final String SALT = "qisi";
+
+	public static String getUUID(){
+		return UUID.randomUUID().toString().replace("-", "").toLowerCase();
+	}
+
 
 	public static String encode(String password) {
 		password = password + SALT;
@@ -37,8 +42,9 @@ public class Md5Util {
 		}
 		return hexValue.toString();
 	}
-
 	public static void main(String[] args) {
-	System.out.println(Md5Util.encode(null));
+		for(int i = 0;i<10;i++){
+			System.out.println(getUUID());
+		}
 	}
 }

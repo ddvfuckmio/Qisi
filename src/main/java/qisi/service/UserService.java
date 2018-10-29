@@ -26,12 +26,12 @@ public class UserService {
 		return userRepository.findAll();
 	}
 
-	public User findUserByAccount(String account) {
-		return userRepository.findUserByAccount(account);
+	public User findUserByUsername(String username) {
+		return userRepository.findUserByUsername(username);
 	}
 
 	public User checkUserIfExist(User user) {
-		return userRepository.findUserIfExist(user.getAccount(), user.getPhone(), user.getEmail());
+		return userRepository.findUserIfExist(user.getUsername(), user.getPhone(), user.getEmail());
 	}
 
 	public void mockUsers(List<User> users) {

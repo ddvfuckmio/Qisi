@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import qisi.exception.userException.UserNotExistException;
 import qisi.service.UserService;
 import qisi.bean.user.User;
-import qisi.utils.Md5Util;
 import qisi.utils.MockUtil;
+import qisi.utils.Utils;
 
 import java.util.Date;
 import java.util.List;
@@ -26,11 +26,11 @@ public class UserController {
 
 	@PostMapping("/user/login")
 	public String userLogin(User formUser, Map<String, Object> map) {
-		String account = formUser.getAccount();
+		String username = formUser.getUsername();
 		String password = formUser.getPassword();
 		map.put("user", formUser);
 
-		if (account == null || "".equals(account)) {
+		if (username == null || "".equals(username)) {
 			map.put("error", "用户名不能为空!");
 			return "login";
 		}
@@ -40,20 +40,20 @@ public class UserController {
 			return "login";
 		}
 
-		password = Md5Util.encode(formUser.getPassword());
-		User user = userService.findUserByAccount(account);
+		password = Utils.encode(formUser.getPassword());
+		User user = userService.findUserByUsername(username);
 
 		if (user == null || !password.equals(user.getPassword())) {
 			map.put("error", "用户名与密码不匹配!");
 			return "login";
 		}
 
-		return "main";
+		return "success";
 	}
 
 	@PostMapping("/user/register")
 	public String userRegister(User formUser, Map<String, Object> map) {
-		String account = formUser.getAccount();
+		String account = formUser.getUsername();
 		String password = formUser.getPassword();
 		String sex = formUser.getSex();
 		String age = formUser.getAge();
@@ -63,7 +63,7 @@ public class UserController {
 		map.put("user", formUser);
 
 		if (account == null || "".equals(account)) {
-			map.put("error", "账号不能为空");
+			map.put("error", "用户名不能为空");
 			return "register";
 		}
 
@@ -97,6 +97,7 @@ public class UserController {
 			return "register";
 		}
 
+		formUser.setRole("普通用户");
 		formUser.setCreatedAt(new Date());
 
 		User findUser = userService.checkUserIfExist(formUser);
@@ -105,7 +106,7 @@ public class UserController {
 			return "register";
 		}
 
-		password = Md5Util.encode(password);
+		password = Utils.encode(password);
 		formUser.setPassword(password);
 
 		userService.userRegister(formUser);
@@ -120,11 +121,12 @@ public class UserController {
 		return userService.getUsers();
 	}
 
+	@ResponseBody
 	@GetMapping(value = "/user")
-	public User findUserByName(@RequestParam("account") String account) {
-		User user = userService.findUserByAccount(account);
+	public User findUserByName(@RequestParam("username") String username) {
+		User user = userService.findUserByUsername(username);
 		if (user == null) {
-			throw new UserNotExistException(account);
+			throw new UserNotExistException(username);
 		}
 		return user;
 	}
