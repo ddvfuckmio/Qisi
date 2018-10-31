@@ -5,10 +5,6 @@ package qisi.bean.user;
  * @date : 2018/10/24 上午11:40
  */
 
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.*;
 import java.util.Date;
 

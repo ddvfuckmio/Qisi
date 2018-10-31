@@ -52,7 +52,7 @@ public class UserController {
 	}
 
 	@PostMapping("/user/register")
-	public String userRegister(User formUser, Map<String, Object> map) {
+	public String userRegister(@RequestBody User formUser, Map<String, Object> map) {
 		String account = formUser.getUsername();
 		String password = formUser.getPassword();
 		String sex = formUser.getSex();
@@ -112,7 +112,7 @@ public class UserController {
 		userService.userRegister(formUser);
 
 		map.put("msg", "注册成功!");
-		return "main";
+		return "login";
 	}
 
 	@ResponseBody
@@ -123,7 +123,7 @@ public class UserController {
 
 	@ResponseBody
 	@GetMapping(value = "/user")
-	public User findUserByName(@RequestParam("username") String username) {
+	public User findUserByUserName(@RequestParam("username") String username) {
 		User user = userService.findUserByUsername(username);
 		if (user == null) {
 			throw new UserNotExistException(username);

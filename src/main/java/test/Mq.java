@@ -16,9 +16,7 @@ import java.util.HashMap;
 public class Mq {
 	public static void main(String[] args) throws JMSException, InterruptedException {
 //		produce("msg");
-
 		consumer("msg");
-
 		return;
 
 	}
