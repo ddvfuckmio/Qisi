@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/pages")
-public class HtmlController {
+public class PageController {
 
 	@RequestMapping("/login")
 	public String login() {

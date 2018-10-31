@@ -131,11 +131,4 @@ public class UserController {
 		return user;
 	}
 
-	@GetMapping("/mockUsers")
-	public String mockUsers() {
-		List<User> users = MockUtil.mockUsers();
-		userService.mockUsers(users);
-		return "main";
-	}
-
 }

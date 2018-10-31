@@ -10,7 +10,4 @@ spring:
      naming:
        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
    show-sql: true
-jackson:
-   date-format: yyyy-MM-dd HH:mm:ss
-   time-zone: GMT+8
 
