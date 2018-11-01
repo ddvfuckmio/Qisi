@@ -1,6 +1,7 @@
 package qisi.utils;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.commons.logging.Log;
 
 import javax.jms.*;
 import java.util.HashMap;
@@ -14,7 +15,7 @@ import java.util.Map;
  * password : admin
  */
 
-public class JmsUtil {
+public class Jms {
 
 	private static Session getTopicSession() throws JMSException {
 		ConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
@@ -23,25 +24,30 @@ public class JmsUtil {
 		return connection.createSession(Boolean.TRUE, Session.AUTO_ACKNOWLEDGE);
 	}
 
-	public static Map<String, String> consumer(String queueName, String codeId) {
+	public static Map<String, Object> consumer(String queueName, String codeId) {
+
 		Session session = null;
-		Map<String, String> map = new HashMap<>(16);
+		Map<String, Object> map = new HashMap<>(16);
 		try {
 			session = getTopicSession();
 			Queue queue = session.createQueue(queueName);
 			MessageConsumer messageConsumer = session.createConsumer(queue);
 
 			while (true) {
+				System.out.println("监听开始...");
 				MapMessage mapMessage = (MapMessage) messageConsumer.receive();
 				if (mapMessage != null) {
 					if (codeId.equals(mapMessage.getString("codeId"))) {
 						map.put("codeId", mapMessage.getString("codeId"));
-						map.put("code", mapMessage.getString("code"));
-						map.put("exerciseId", mapMessage.getString("exerciseId"));
+						map.put("pass", mapMessage.getBoolean("pass"));
+						session.close();
+						System.out.println("return...");
 						return map;
+					} else {
+						System.out.println("当前接受的消息不匹配...");
 					}
 				} else {
-					Thread.sleep(1000);
+					System.out.println("等待评测中...");
 				}
 			}
 		} catch (Exception e) {
@@ -51,22 +57,27 @@ public class JmsUtil {
 		return null;
 	}
 
-	private static void produce(String queueName) throws JMSException {
-		Session session = getTopicSession();
+	public static void produce(String queueName, String codeId, boolean pass) throws JMSException {
+		Session session = null;
+
+		session = getTopicSession();
 		Queue queue = session.createQueue(queueName);
 		MessageProducer messageProducer = session.createProducer(queue);
+		System.out.println(pass);
+		MapMessage mapMessage = session.createMapMessage();
+		mapMessage.setString("codeId", codeId);
+		mapMessage.setBoolean("pass", pass);
+		messageProducer.send(mapMessage);
 
-		for (int i = 0; i < 10; i++) {
-			MapMessage mapMessage = session.createMapMessage();
-			mapMessage.setObject("code", i);
-			messageProducer.send(mapMessage);
-		}
-		// 提交操作
 		session.commit();
+
+
 	}
 
 	public static void main(String[] args) throws JMSException, InterruptedException {
-		produce("commit");
-//		consumer("jms");
+//		produce("receive", "e089d6b3c9ce45bdbe161daeceead668", true);
+		for(;;) {
+			consumer("receive", "e089d6b3c9ce45bdbe161daeceead668");
+		}
 	}
 }

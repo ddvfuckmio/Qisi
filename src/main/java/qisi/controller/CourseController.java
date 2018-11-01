@@ -3,10 +3,7 @@ package qisi.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import qisi.bean.course.Code;
-import qisi.bean.course.Course;
-import qisi.bean.course.Exercise;
-import qisi.bean.course.Lesson;
+import qisi.bean.course.*;
 import qisi.exception.courseException.CourseNotExistException;
 import qisi.service.CourseService;
 import qisi.utils.Utils;
@@ -31,7 +28,7 @@ public class CourseController {
 	 */
 	@ResponseBody
 	@GetMapping("/courses")
-	public List<Course> getCourses() {
+	public List<Course> findAllCourses() {
 		return courseService.findAllCourses();
 	}
 
@@ -41,12 +38,8 @@ public class CourseController {
 	 */
 	@ResponseBody
 	@GetMapping("/course")
-	public Course getCourseByName(@RequestParam("courseName") String courseName) {
-		Course course = courseService.findCourseByName(courseName);
-		if (course == null) {
-			throw new CourseNotExistException(courseName);
-		}
-		return course;
+	public Course findCourseByName(@RequestParam("courseName") String courseName) {
+		return courseService.findCourseByName(courseName);
 	}
 
 	/**
@@ -55,12 +48,8 @@ public class CourseController {
 	 */
 	@ResponseBody
 	@GetMapping("/course/{courseId}")
-	public Course getCourseByCourseId(@PathVariable("courseId") String courseId) {
-		Course course = courseService.findCourseByCourseId(courseId);
-		if (course == null) {
-			throw new CourseNotExistException(courseId);
-		}
-		return course;
+	public Course findCourseByCourseId(@PathVariable("courseId") String courseId) {
+		return courseService.findCourseByCourseId(courseId);
 	}
 
 
@@ -69,20 +58,21 @@ public class CourseController {
 	 * 按课程ID获取该课程下的所有目录
 	 */
 	@ResponseBody
-	@GetMapping("/course/{courseId}/lessons")
-	public List<Lesson> findLessonsByCourseId(@PathVariable String courseId) {
-		List<Lesson> lessons = courseService.findLessonsByCourseId(courseId);
-		return lessons;
+	@GetMapping("/course/{courseId}/chapters")
+	public List<Chapter> findChaptersByCourseId(@PathVariable String courseId) {
+		List<Chapter> chapters = courseService.findChaptersByCourseId(courseId);
+		return chapters;
 	}
 
 	/**
 	 * lessonId
-	 * 按目录ID获取目录信息
+	 * 查询某节课对应的所有task
 	 */
+	@ResponseBody
 	@GetMapping("/lesson/{lessonId}")
-	public List<Exercise> findExercisesByLessonId(@PathVariable String lessonId) {
-		List<Exercise> exercises = courseService.findExercisesByLessonId(lessonId);
-		return exercises;
+	public List<Task> findExercisesByLessonId(@PathVariable String lessonId) {
+		List<Task> tasks = courseService.findTasksByLessonId(lessonId);
+		return tasks;
 	}
 
 
@@ -90,18 +80,18 @@ public class CourseController {
 	 * 获取所有训练信息
 	 */
 	@ResponseBody
-	@GetMapping("/exercises")
-	public List<Exercise> findExercises() {
-		return courseService.findExercises();
+	@GetMapping("/tasks")
+	public List<Task> findTasks() {
+		return courseService.findTasks();
 	}
 
 	/**
 	 * 根据训练ID获取训练信息
 	 */
 	@ResponseBody
-	@GetMapping("/exercise/{exerciseId}")
-	public Exercise findExerciseByExercise(@PathVariable("exerciseId") String exerciseId) {
-		return courseService.findExerciseByExerciseId(exerciseId);
+	@GetMapping("/task/{taskId}")
+	public Task findExerciseByExercise(@PathVariable("taskId") String taskId) {
+		return courseService.findTaskByTaskId(taskId);
 	}
 
 	/**
@@ -114,8 +104,7 @@ public class CourseController {
 	@ResponseBody
 	@PostMapping("/code/{exerciseId}")
 	public String commitCode(@RequestBody Code code, @PathVariable String exerciseId) {
-		Exercise exercise = courseService.findExerciseByExerciseId(exerciseId);
-		code.setExerciseId(exerciseId);
+		code.setTaskId(exerciseId);
 		code.setCodeId(Utils.getUUID());
 		code.setCreatedAt(new Date());
 		courseService.saveCode(code);

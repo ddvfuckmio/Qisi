@@ -16,7 +16,7 @@ public class Code implements Serializable {
 	private Integer id;
 	private String codeId;
 	private String username;
-	private String exerciseId;
+	private String taskId;
 	@Lob
 	@Column(columnDefinition = "text")
 	private String code;
@@ -50,12 +50,12 @@ public class Code implements Serializable {
 		this.username = username;
 	}
 
-	public String getExerciseId() {
-		return exerciseId;
+	public String getTaskId() {
+		return taskId;
 	}
 
-	public void setExerciseId(String exerciseId) {
-		this.exerciseId = exerciseId;
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
 	}
 
 	public String getCode() {
@@ -80,5 +80,18 @@ public class Code implements Serializable {
 
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	@Override
+	public String toString() {
+		return "Code{" +
+				"id=" + id +
+				", codeId='" + codeId + '\'' +
+				", username='" + username + '\'' +
+				", taskId='" + taskId + '\'' +
+				", code='" + code + '\'' +
+				", pass=" + pass +
+				", createdAt=" + createdAt +
+				'}';
 	}
 }

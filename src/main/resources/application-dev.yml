@@ -20,6 +20,9 @@ spring:
 # 配置全局默认topic模式
   jms:
     pub-sub-domain: true
+  redis:
+    host: localhost
+    port: 6379
 # 配置项目路径前缀,端口
 server:
   port: 8080

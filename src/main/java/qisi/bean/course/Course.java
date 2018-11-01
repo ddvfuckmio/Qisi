@@ -20,8 +20,6 @@ public class Course {
 	private String courseId;
 	private String courseName;
 	private String introduction;
-	private int totalLessons;
-	private int totalExercises;
 	private Date createdAt;
 
 	public Course() {
@@ -31,8 +29,6 @@ public class Course {
 		this.courseId = courseId;
 		this.courseName = courseName;
 		this.introduction = introduction;
-		this.totalLessons = totalLessons;
-		this.totalExercises = totalExercises;
 		this.createdAt = createdAt;
 	}
 
@@ -68,27 +64,22 @@ public class Course {
 		this.introduction = introduction;
 	}
 
-	public int getTotalLessons() {
-		return totalLessons;
-	}
-
-	public void setTotalLessons(int totalLessons) {
-		this.totalLessons = totalLessons;
-	}
-
-	public int getTotalExercises() {
-		return totalExercises;
-	}
-
-	public void setTotalExercises(int totalExercises) {
-		this.totalExercises = totalExercises;
-	}
-
 	public Date getCreatedAt() {
 		return createdAt;
 	}
 
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	@Override
+	public String toString() {
+		return "Course{" +
+				"id=" + id +
+				", courseId='" + courseId + '\'' +
+				", courseName='" + courseName + '\'' +
+				", introduction='" + introduction + '\'' +
+				", createdAt=" + createdAt +
+				'}';
 	}
 }

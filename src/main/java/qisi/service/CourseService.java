@@ -2,14 +2,8 @@ package qisi.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import qisi.bean.course.Code;
-import qisi.bean.course.Course;
-import qisi.bean.course.Exercise;
-import qisi.bean.course.Lesson;
-import qisi.dao.CodeRepository;
-import qisi.dao.CourseRepository;
-import qisi.dao.ExerciseRepository;
-import qisi.dao.LessonRepository;
+import qisi.bean.course.*;
+import qisi.dao.*;
 
 import java.util.List;
 
@@ -29,10 +23,13 @@ public class CourseService {
 	private CourseRepository courseRepository;
 
 	@Autowired
+	private ChapterRepository chapterRepository;
+
+	@Autowired
 	private LessonRepository lessonRepository;
 
 	@Autowired
-	private ExerciseRepository exerciseRepository;
+	private TaskRepository taskRepository;
 
 	@Autowired
 	private CodeRepository codeRepository;
@@ -40,6 +37,10 @@ public class CourseService {
 	/**
 	 * course业务
 	 */
+
+	public Course findCourseByCourseId(String courseId) {
+		return courseRepository.findCourseByCourseId(courseId);
+	}
 
 	public List<Course> findAllCourses() {
 		return courseRepository.findAllCourses();
@@ -49,37 +50,42 @@ public class CourseService {
 		return courseRepository.findCourseByName(courseName);
 	}
 
-	public void saveCourses(List<Course> courseList) {
-		courseRepository.saveAll(courseList);
+	public void saveCourses(List<Course> courses) {
+		courseRepository.saveAll(courses);
 	}
+
+
+	/**
+	 * chapter业务
+	 */
+
+	public List<Chapter> findChaptersByCourseId(String courseId) {
+		return chapterRepository.findChaptersByCourseId(courseId);
+	}
+
+	public void saveChapters(List<Chapter> chapters) {
+		chapterRepository.saveAll(chapters);
+	}
+
 
 	/**
 	 * lesson业务
 	 */
 
-	public List<Lesson> findLessonsByCourseId(String courseId) {
-		return lessonRepository.findLessonsByCourseId(courseId);
-	}
-
-	public void saveLessons(List<Lesson> lessonList) {
-		lessonRepository.saveAll(lessonList);
-	}
-
-
 	/**
-	 * exercise业务
+	 * task业务
 	 */
 
-	public List<Exercise> findExercises() {
-		return exerciseRepository.findAll();
+	public List<Task> findTasks() {
+		return taskRepository.findAll();
 	}
 
-	public List<Exercise> findExercisesByLessonId(String lessonId) {
-		return exerciseRepository.findExercisesByLessonId(lessonId);
+	public List<Task> findTasksByLessonId(String lessonId) {
+		return taskRepository.findTasksByLessonId(lessonId);
 	}
 
-	public Exercise findExerciseByExerciseId(String exerciseId) {
-		return exerciseRepository.findExerciseByExerciseId(exerciseId);
+	public Task findTaskByTaskId(String taskId) {
+		return taskRepository.findTasksByTaskId(taskId);
 	}
 
 	/**
@@ -90,7 +96,5 @@ public class CourseService {
 		codeRepository.save(code);
 	}
 
-	public Course findCourseByCourseId(String courseId) {
-		return courseRepository.findCourseByCourseId(courseId);
-	}
+
 }

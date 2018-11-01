@@ -8,31 +8,30 @@ import java.util.Date;
  * @date : 2018/10/29 下午1:48
  */
 
-@Entity(name = "course_lessons")
+@Entity(name = "course_chapter_lessons")
 public class Lesson {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	private String chapterId;
 	private String lessonId;
-	private String courseId;
 	private String lessonName;
 	private int lessonIndex;
-	private String comment;
+	private String introduction;
 	private String originCode;
-	private int totalExercises;
 	private Date createdAt;
 
 	public Lesson() {
+
 	}
 
-	public Lesson(String lessonId, String courseId, String lessonName, int lessonIndex, String text, String comment, String originCode, int totalExercises, Date createdAt) {
+	public Lesson(String chapterId, String lessonId, String lessonName, int lessonIndex, String introduction, String originCode, Date createdAt) {
+		this.chapterId = chapterId;
 		this.lessonId = lessonId;
-		this.courseId = courseId;
 		this.lessonName = lessonName;
 		this.lessonIndex = lessonIndex;
-		this.comment = comment;
+		this.introduction = introduction;
 		this.originCode = originCode;
-		this.totalExercises = totalExercises;
 		this.createdAt = createdAt;
 	}
 
@@ -44,20 +43,20 @@ public class Lesson {
 		this.id = id;
 	}
 
+	public String getChapterId() {
+		return chapterId;
+	}
+
+	public void setChapterId(String chapterId) {
+		this.chapterId = chapterId;
+	}
+
 	public String getLessonId() {
 		return lessonId;
 	}
 
 	public void setLessonId(String lessonId) {
 		this.lessonId = lessonId;
-	}
-
-	public String getCourseId() {
-		return courseId;
-	}
-
-	public void setCourseId(String courseId) {
-		this.courseId = courseId;
 	}
 
 	public String getLessonName() {
@@ -76,12 +75,12 @@ public class Lesson {
 		this.lessonIndex = lessonIndex;
 	}
 
-	public String getComment() {
-		return comment;
+	public String getIntroduction() {
+		return introduction;
 	}
 
-	public void setComment(String comment) {
-		this.comment = comment;
+	public void setIntroduction(String introduction) {
+		this.introduction = introduction;
 	}
 
 	public String getOriginCode() {
@@ -92,19 +91,25 @@ public class Lesson {
 		this.originCode = originCode;
 	}
 
-	public int getTotalExercises() {
-		return totalExercises;
-	}
-
-	public void setTotalExercises(int totalExercises) {
-		this.totalExercises = totalExercises;
-	}
-
 	public Date getCreatedAt() {
 		return createdAt;
 	}
 
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	@Override
+	public String toString() {
+		return "Lesson{" +
+				"id=" + id +
+				", chapterId='" + chapterId + '\'' +
+				", lessonId='" + lessonId + '\'' +
+				", lessonName='" + lessonName + '\'' +
+				", lessonIndex=" + lessonIndex +
+				", introduction='" + introduction + '\'' +
+				", originCode='" + originCode + '\'' +
+				", createdAt=" + createdAt +
+				'}';
 	}
 }

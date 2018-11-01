@@ -1,25 +1,31 @@
 package qisi.controller;
 
 import org.apache.activemq.command.ActiveMQQueue;
-import org.apache.activemq.command.ActiveMQTopic;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.web.bind.annotation.*;
+import qisi.bean.course.Chapter;
+import qisi.bean.course.Code;
 import qisi.bean.course.Course;
 import qisi.bean.course.Lesson;
+import qisi.bean.json.CodeJudge;
 import qisi.bean.user.User;
-import qisi.utils.JmsUtil;
+import qisi.utils.Jms;
 import qisi.service.CourseService;
 import qisi.service.ProducerService;
 import qisi.service.UserService;
-import qisi.utils.MockUtil;
+import qisi.utils.Mock;
 import qisi.utils.Utils;
 
 import javax.jms.Destination;
+import javax.jms.JMSException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author : ddv
@@ -28,7 +34,7 @@ import java.util.Map;
 
 @RestController
 public class MockController {
-
+	protected static final Logger Logger = LoggerFactory.getLogger(MockController.class);
 	private final String commitName = "commit";
 	private final String receiveName = "receive";
 
@@ -38,40 +44,75 @@ public class MockController {
 	private UserService userService;
 	@Autowired
 	private ProducerService producerService;
+	@Autowired
+	private StringRedisTemplate stringRedisTemplate;
 
 	@GetMapping("/mockCourses")
 	public String mockCourses() {
-		List<Course> courses = MockUtil.mockCourses();
+		List<Course> courses = Mock.mockCourses();
 		courseService.saveCourses(courses);
 		return "done";
 	}
 
-	@GetMapping("/mockLessons")
-	public String mockLessons() {
-		List<Lesson> lessons = MockUtil.mockLessons();
-		courseService.saveLessons(lessons);
+	@GetMapping("/mockChapters")
+	public String mockChapters() {
+		List<Chapter> chapters = Mock.mockChapters();
+		courseService.saveChapters(chapters);
 		return "done";
 	}
 
 	@GetMapping("/mockUsers")
 	public String mockUsers() {
-		List<User> users = MockUtil.mockUsers();
+		List<User> users = Mock.mockUsers();
 		userService.mockUsers(users);
 		return "done";
 	}
 
-	@PostMapping("/jms/send")
-	public String mockJms() {
+	@ResponseBody
+	@PostMapping("/mock/commit")
+	public CodeJudge mockJms(@RequestBody Code code) {
 		Destination destination = new ActiveMQQueue(commitName);
-		Destination destination1 = new ActiveMQTopic(receiveName);
-
+		System.out.println(code);
+		code.setCodeId(Utils.getUUID());
+		code.setCreatedAt(new Date());
 		HashMap<String, String> map = new HashMap<>(16);
-		String codeId = Utils.getUUID();
-		map.put("codeId", codeId);
-		map.put("code", "system.out.print()");
-		map.put("exerciseId", "1");
+		System.out.println(code.getCodeId());
+		map.put("codeId", code.getCodeId());
+		map.put("code", code.getCode());
+		map.put("exerciseId", code.getTaskId());
 		producerService.sendMessage(destination, map);
-		Map map1 = JmsUtil.consumer(commitName, "1");
-		return map1.toString();
+		Map resultMap = Jms.consumer(receiveName, code.getCodeId());
+		System.out.println("评测完成...");
+		Boolean pass = (Boolean) resultMap.get("pass");
+		System.out.println("结果..." + pass);
+		CodeJudge codeJudge = new CodeJudge();
+		if (pass) {
+			code.setPass(true);
+			codeJudge.setPass(true);
+			codeJudge.setReason("代码通过了所有的测试用例!");
+		} else {
+			codeJudge.setPass(false);
+			codeJudge.setReason("代码不通过,请检查代码是否符合要求!");
+		}
+		courseService.saveCode(code);
+		return codeJudge;
+	}
+
+	@PostMapping("/mock/judge")
+	public String mockJudge(@RequestParam String codeId, @RequestParam Boolean pass) throws JMSException {
+		System.out.println(codeId + pass);
+		Jms.produce(receiveName, codeId, pass);
+		return "judge job done...";
+	}
+
+	@GetMapping("/redis/set")
+	public String setKey() {
+		stringRedisTemplate.opsForValue().set("user", "张杰", 60, TimeUnit.SECONDS);
+		return "set key done...";
+	}
+
+	@GetMapping("/redis/get")
+	public String setKey(@RequestParam("key") String key) {
+		return stringRedisTemplate.opsForValue().get(key);
 	}
 }

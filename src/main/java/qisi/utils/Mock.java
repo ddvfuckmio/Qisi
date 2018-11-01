@@ -1,7 +1,7 @@
 package qisi.utils;
 
+import qisi.bean.course.Chapter;
 import qisi.bean.course.Course;
-import qisi.bean.course.Lesson;
 import qisi.bean.user.User;
 
 import java.util.ArrayList;
@@ -14,11 +14,12 @@ import java.util.Random;
  * @date : 2018/10/25 下午3:18
  */
 
-public class MockUtil {
+public class Mock {
 	private final static int COUNT = 100;
-	private static String[] courseName = {"Golang", "CSS", "HTML", "JAVA", "C++", "JS"};
-	private static String[] courseId = {"b6a9860c86624a938c7494155f29ae0d", "ec885ae819144bffbbfa1252d13c91ec", "3c62c0215a034195a6e2a9605151f31f"
+	private static String[] courseNames = {"Golang", "CSS", "HTML", "JAVA", "C++", "JS"};
+	private static String[] courseIds = {"b6a9860c86624a938c7494155f29ae0d", "ec885ae819144bffbbfa1252d13c91ec", "3c62c0215a034195a6e2a9605151f31f"
 			, "9452a0c962ce4f83843de9d7f349da1e", "7f40b8df2a9a4a50bf7166b146f21574", "b32aeaa329c346e2b866e960dd343f79"};
+	private static String[] chatperIds = {};
 
 	public static List<User> mockUsers() {
 		Random random = new Random();
@@ -46,14 +47,12 @@ public class MockUtil {
 
 	public static List<Course> mockCourses() {
 
-		List<Course> courses = new ArrayList<>(courseName.length);
-		for (int i = 0; i < courseName.length; i++) {
+		List<Course> courses = new ArrayList<>(courseNames.length);
+		for (int i = 0; i < courseNames.length; i++) {
 			Course course = new Course();
-			course.setCourseId(Utils.getUUID());
-			course.setCourseName(courseName[i]);
-			course.setIntroduction(courseName[i] + "的介绍");
-			course.setTotalLessons(i + 1);
-			course.setTotalExercises((i + 1) * 10);
+			course.setCourseId(courseIds[i]);
+			course.setCourseName(courseNames[i]);
+			course.setIntroduction(courseNames[i] + " 快速入门");
 			courses.add(course);
 			course.setCreatedAt(new Date());
 			course = null;
@@ -62,27 +61,20 @@ public class MockUtil {
 	}
 
 
-	public static List<Lesson> mockLessons() {
-		List<Lesson> lessons = new ArrayList<>();
-		for (int i = 0; i < courseName.length; i++) {
-			for (int j = 0; j <= i; j++) {
-				Lesson lesson = new Lesson();
-
-				lesson.setLessonId(Utils.getUUID());
-				lesson.setCourseId(courseId[i]);
-				lesson.setComment(courseName[i] + "-" + (j + 1));
-
-				lesson.setLessonName(courseName[i] + "-" + (j + 1));
-				lesson.setLessonIndex(j + 1);
-				lesson.setOriginCode(lesson.getLessonName());
-
-				lesson.setTotalExercises(10);
-				lesson.setCreatedAt(new Date());
-
-				lessons.add(lesson);
-				lesson = null;
+	public static List<Chapter> mockChapters() {
+		List<Chapter> chapters = new ArrayList<>();
+		for (int i = 0; i < courseNames.length; i++) {
+			for (int j = 0; j < 2; j++) {
+				Chapter chapter = new Chapter();
+				chapter.setCourseId(courseIds[i]);
+				chapter.setChapterId(Utils.getUUID());
+				chapter.setChapterName(courseNames[i] + "-" + (j + 1));
+				chapter.setChapterIndex(j + 1);
+				chapter.setCreatedAt(new Date());
+				chapters.add(chapter);
+				chapter = null;
 			}
 		}
-		return lessons;
+		return chapters;
 	}
 }

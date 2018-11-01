@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import qisi.exception.userException.UserNotExistException;
 import qisi.service.UserService;
 import qisi.bean.user.User;
-import qisi.utils.MockUtil;
 import qisi.utils.Utils;
 
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,9 @@ public class UserController {
 	private UserService userService;
 
 	@PostMapping("/user/login")
-	public String userLogin(User formUser, Map<String, Object> map) {
+	public String userLogin(User formUser, Map<String, Object> map, HttpSession session) {
+//		HttpServletRequest request = ((HttpServletRequest) RequestContextHolder.getRequestAttributes()).getR;
+		session.setAttribute("user", formUser.getUsername());
 		String username = formUser.getUsername();
 		String password = formUser.getPassword();
 		map.put("user", formUser);
@@ -117,7 +119,7 @@ public class UserController {
 
 	@ResponseBody
 	@GetMapping("/users")
-	public List<User> getUsers() {
+	public List<User> getUsers(HttpSession session) {
 		return userService.getUsers();
 	}
 
