@@ -59,6 +59,10 @@ public class CourseService {
 	 * chapter业务
 	 */
 
+	public List<Chapter> findAllChapters() {
+		return chapterRepository.findAll();
+	}
+
 	public List<Chapter> findChaptersByCourseId(String courseId) {
 		return chapterRepository.findChaptersByCourseId(courseId);
 	}
@@ -71,6 +75,9 @@ public class CourseService {
 	/**
 	 * lesson业务
 	 */
+	public List<Lesson> findAllLessons() {
+		return lessonRepository.findAll();
+	}
 
 	/**
 	 * task业务
@@ -95,6 +102,5 @@ public class CourseService {
 	public void saveCode(Code code) {
 		codeRepository.save(code);
 	}
-
-
+	
 }

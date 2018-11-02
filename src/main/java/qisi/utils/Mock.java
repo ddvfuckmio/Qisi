@@ -2,6 +2,7 @@ package qisi.utils;
 
 import qisi.bean.course.Chapter;
 import qisi.bean.course.Course;
+import qisi.bean.course.Lesson;
 import qisi.bean.user.User;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class Mock {
 	private static String[] courseNames = {"Golang", "CSS", "HTML", "JAVA", "C++", "JS"};
 	private static String[] courseIds = {"b6a9860c86624a938c7494155f29ae0d", "ec885ae819144bffbbfa1252d13c91ec", "3c62c0215a034195a6e2a9605151f31f"
 			, "9452a0c962ce4f83843de9d7f349da1e", "7f40b8df2a9a4a50bf7166b146f21574", "b32aeaa329c346e2b866e960dd343f79"};
-	private static String[] chatperIds = {};
+	private static String[] chatperIds = {"61ecece3a5084c728b26f02e564a2fc6", "86d511e2ead547daa2103fa702512021", "81bed5cadc734923a362e991aba60b40", "1033596990ca4f9dbf837bb98f6aa79d"};
 
 	public static List<User> mockUsers() {
 		Random random = new Random();
@@ -60,7 +61,6 @@ public class Mock {
 		return courses;
 	}
 
-
 	public static List<Chapter> mockChapters() {
 		List<Chapter> chapters = new ArrayList<>();
 		for (int i = 0; i < courseNames.length; i++) {
@@ -77,4 +77,18 @@ public class Mock {
 		}
 		return chapters;
 	}
+
+//	public static List<Lesson> mockLessons() {
+//		List<Lesson> lessons = new ArrayList<>();
+//		for (int i = 0; i < 2; i++) {
+//			for (int j = 0; j < chatperIds.length; j++) {
+//				Lesson lesson = new Lesson();
+//				lesson.setLessonId(Utils.getUUID());
+//				lesson.setChapterId(chatperIds[j]);
+//
+//			}
+//		}
+//
+//		return lessons;
+//	}
 }

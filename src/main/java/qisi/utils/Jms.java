@@ -1,7 +1,6 @@
 package qisi.utils;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.commons.logging.Log;
 
 import javax.jms.*;
 import java.util.HashMap;
