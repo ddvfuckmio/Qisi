@@ -69,9 +69,9 @@
 
         <!--log4j日志支持-->
         <!--<dependency>-->
-            <!--<groupId>com.googlecode.log4jdbc</groupId>-->
-            <!--<artifactId>log4jdbc</artifactId>-->
-            <!--<version>1.2</version>-->
+        <!--<groupId>com.googlecode.log4jdbc</groupId>-->
+        <!--<artifactId>log4jdbc</artifactId>-->
+        <!--<version>1.2</version>-->
         <!--</dependency>-->
 
         <!--json依赖-->
@@ -110,6 +110,20 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <!--阿里云短信接口-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>4.0.6</version>
+        </dependency>
+
+        <!--阿里云短信接口-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+            <version>1.1.0</version>
         </dependency>
 
     </dependencies>

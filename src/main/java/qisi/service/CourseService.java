@@ -67,6 +67,10 @@ public class CourseService {
 		return chapterRepository.findChaptersByCourseId(courseId);
 	}
 
+	public Integer countByCourseId(String courseId) {
+		return chapterRepository.countByCourseId(courseId);
+	}
+
 	public void saveChapters(List<Chapter> chapters) {
 		chapterRepository.saveAll(chapters);
 	}
@@ -102,5 +106,5 @@ public class CourseService {
 	public void saveCode(Code code) {
 		codeRepository.save(code);
 	}
-	
+
 }

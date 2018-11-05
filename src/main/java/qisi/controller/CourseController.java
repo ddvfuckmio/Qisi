@@ -79,6 +79,12 @@ public class CourseController {
 		return chapters;
 	}
 
+	@ResponseBody
+	@GetMapping("/chapter")
+	public Integer countByCourseId(@RequestParam("courseId") String courseId) {
+		return courseService.countByCourseId(courseId);
+	}
+
 	/**
 	 * 查询所有lesson
 	 */

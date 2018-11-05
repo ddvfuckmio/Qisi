@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import qisi.bean.course.Chapter;
 import qisi.bean.course.Code;
 import qisi.bean.course.Course;
-import qisi.bean.course.Lesson;
 import qisi.bean.json.CodeJudge;
 import qisi.bean.user.User;
 import qisi.utils.Jms;
@@ -21,6 +20,7 @@ import qisi.utils.Utils;
 
 import javax.jms.Destination;
 import javax.jms.JMSException;
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -107,12 +107,23 @@ public class MockController {
 
 	@GetMapping("/redis/set")
 	public String setKey() {
-		stringRedisTemplate.opsForValue().set("user", "张杰", 60, TimeUnit.SECONDS);
+		stringRedisTemplate.opsForValue().set("user", "张杰", 60*5, TimeUnit.SECONDS);
 		return "set key done...";
 	}
 
 	@GetMapping("/redis/get")
 	public String setKey(@RequestParam("key") String key) {
 		return stringRedisTemplate.opsForValue().get(key);
+	}
+
+	@GetMapping("/setSession")
+	public String setSession(HttpSession session) {
+		session.setAttribute("user", "session");
+		return "session存取完毕!";
+	}
+
+	@GetMapping("/getSession")
+	public String getSession(HttpSession session) {
+		return session.getAttribute("user").toString();
 	}
 }

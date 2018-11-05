@@ -13,14 +13,18 @@ import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Integer> {
 
-	/** 根据lessonId查找其下的所有任务
+	/**
+	 * 根据lessonId查找其下的所有任务
+	 *
 	 * @param lessonId
 	 * @return List<Task>
 	 */
 	@Query("from course_chapter_lesson_tasks where lessonId=?1 order by taskId")
 	public List<Task> findTasksByLessonId(String lessonId);
 
-	/**根据ID查找该任务
+	/**
+	 * 根据ID查找该任务
+	 *
 	 * @param taskId
 	 * @return
 	 */

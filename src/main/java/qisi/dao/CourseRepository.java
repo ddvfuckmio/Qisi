@@ -49,4 +49,5 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
 	 */
 	@Query("from courses where courseId=?1")
 	public Course findCourseByCourseId(String courseId);
+
 }

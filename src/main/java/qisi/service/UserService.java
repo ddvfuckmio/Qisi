@@ -34,6 +34,11 @@ public class UserService {
 		return userRepository.findUserIfExist(user.getUsername(), user.getPhone(), user.getEmail());
 	}
 
+	public void updatePassword(String username, String password) {
+		 userRepository.updatePassword(username, password);
+		 throw new RuntimeException();
+	}
+
 	public void mockUsers(List<User> users) {
 		userRepository.saveAll(users);
 	}

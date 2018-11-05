@@ -6,7 +6,9 @@ package qisi.controller;
  */
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import qisi.exception.userException.UserNotExistException;
 import qisi.service.UserService;
@@ -26,7 +28,6 @@ public class UserController {
 
 	@PostMapping("/user/login")
 	public String userLogin(User formUser, Map<String, Object> map, HttpSession session) {
-//		HttpServletRequest request = ((HttpServletRequest) RequestContextHolder.getRequestAttributes()).getR;
 		session.setAttribute("user", formUser.getUsername());
 		String username = formUser.getUsername();
 		String password = formUser.getPassword();
@@ -131,6 +132,26 @@ public class UserController {
 			throw new UserNotExistException(username);
 		}
 		return user;
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	@ResponseBody
+	@PostMapping("/user/password")
+	public String updatePassword(@RequestBody User user) {
+		if (user.getUsername() == null || "".equals(user.getUsername())) {
+			return "用户名非法!";
+		}
+
+		if (user.getPassword() == null || "".equals(user.getPassword())) {
+			return "用户密码非法!";
+		}
+
+		user.setPassword(Utils.encode(user.getPassword()));
+		System.out.println(user.getPassword());
+
+		userService.updatePassword(user.getUsername(), user.getPassword());
+
+		return "修改成功!";
 	}
 
 }

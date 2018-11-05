@@ -12,12 +12,22 @@ import java.util.List;
  * @date : 2018/11/1 下午4:50
  */
 
-public interface ChapterRepository extends JpaRepository<Chapter,Integer> {
+public interface ChapterRepository extends JpaRepository<Chapter, Integer> {
 
-	/**根据课程ID查找课程的所有目录
+	/**
+	 * 返回课程ID查找课程的所有目录
+	 *
 	 * @param courseId
 	 * @return
 	 */
 	@Query("from course_chapters where courseId=?1 order by chapterIndex")
 	public List<Chapter> findChaptersByCourseId(String courseId);
+
+	/**
+	 * 返回某课程总目录数
+	 *
+	 * @param courseId
+	 * @return
+	 */
+	public Integer countByCourseId(String courseId);
 }

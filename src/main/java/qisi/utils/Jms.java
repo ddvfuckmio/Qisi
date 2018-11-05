@@ -75,7 +75,7 @@ public class Jms {
 
 	public static void main(String[] args) throws JMSException, InterruptedException {
 //		produce("receive", "e089d6b3c9ce45bdbe161daeceead668", true);
-		for(;;) {
+		for (; ; ) {
 			consumer("receive", "e089d6b3c9ce45bdbe161daeceead668");
 		}
 	}
