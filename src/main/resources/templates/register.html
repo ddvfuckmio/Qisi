@@ -6,13 +6,14 @@
 </head>
 <body>
 <form action="/user/register" method="post">
-    账号:<input type="paper" th:value="${user?.username}" name="username"/></br>
+    账号:<input type="text" th:value="${user?.username}" name="username"/></br>
     密码:<input type="password" th:value="${user?.password}" name="password"/></br>
-    性别:<input type="paper" th:value="${user?.sex}" name="sex"/></br>
-    年龄:<input type="paper" th:value="${user?.age}" name="age"/></br>
-    职业:<input type="paper" th:value="${user?.job}" name="job"/></br>
-    电话:<input type="paper" th:value="${user?.phone}" name="phone"/></br>
-    邮箱:<input type="paper" th:value="${user?.email}" name="email"/></br>
+    性别:<input type="text" th:value="${user?.sex}" name="sex"/></br>
+    年龄:<input type="text" th:value="${user?.age}" name="age"/></br>
+    职业:<input type="text" th:value="${user?.job}" name="job"/></br>
+    电话:<input type="text" th:value="${user?.phone}" name="phone"/></br>
+    邮箱:<input type="text" th:value="${user?.email}" name="email"/></br>
+    验证码:<input type="text" th:value="${user?.code}" name="code"/></br>
     <input type="submit" value="注册"></br>
 </form>
 <p th:paper="${error}"/>

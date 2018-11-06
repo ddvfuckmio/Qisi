@@ -1,4 +1,4 @@
-package qisi.bean.json;
+package qisi.bean.query;
 
 import qisi.bean.course.Course;
 

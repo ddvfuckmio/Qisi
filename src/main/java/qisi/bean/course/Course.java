@@ -20,6 +20,7 @@ public class Course {
 	private String courseId;
 	private String courseName;
 	private String introduction;
+	private String type;
 	private Date createdAt;
 
 	public Course() {
@@ -30,6 +31,14 @@ public class Course {
 		this.courseName = courseName;
 		this.introduction = introduction;
 		this.createdAt = createdAt;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public Integer getId() {
@@ -79,6 +88,7 @@ public class Course {
 				", courseId='" + courseId + '\'' +
 				", courseName='" + courseName + '\'' +
 				", introduction='" + introduction + '\'' +
+				", type='" + type + '\'' +
 				", createdAt=" + createdAt +
 				'}';
 	}

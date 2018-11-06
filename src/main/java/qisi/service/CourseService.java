@@ -34,6 +34,9 @@ public class CourseService {
 	@Autowired
 	private CodeRepository codeRepository;
 
+	@Autowired
+	private CaseRepository caseRepository;
+
 	/**
 	 * course业务
 	 */
@@ -83,6 +86,10 @@ public class CourseService {
 		return lessonRepository.findAll();
 	}
 
+	public void saveLessons(List<Lesson> lessons) {
+		lessonRepository.saveAll(lessons);
+	}
+
 	/**
 	 * task业务
 	 */
@@ -99,12 +106,20 @@ public class CourseService {
 		return taskRepository.findTasksByTaskId(taskId);
 	}
 
+	public void saveTasks(List<Task> tasks) {
+		taskRepository.saveAll(tasks);
+	}
+
 	/**
 	 * code业务
 	 */
 
 	public void saveCode(Code code) {
 		codeRepository.save(code);
+	}
+
+	public void saveCases(List<Case> cases) {
+		caseRepository.saveAll(cases);
 	}
 
 }

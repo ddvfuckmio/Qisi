@@ -16,6 +16,8 @@ public class Task {
 	private String lessonId;
 	private String taskId;
 	private int taskIndex;
+	private int maxTime;
+	private int maxMemory;
 	@Lob
 	@Column(columnDefinition = "text")
 	private String introduction;
@@ -26,19 +28,6 @@ public class Task {
 	@Column(columnDefinition = "text")
 	private String secondCode;
 	private Date createdAt;
-
-	public Task() {
-	}
-
-	public Task(String lessonId, String taskId, int taskIndex, int exerciseIndex, String introduction, String firstCode, String secondCode, Date createdAt) {
-		this.lessonId = lessonId;
-		this.taskId = taskId;
-		this.taskIndex = taskIndex;
-		this.introduction = introduction;
-		this.firstCode = firstCode;
-		this.secondCode = secondCode;
-		this.createdAt = createdAt;
-	}
 
 	public int getId() {
 		return id;
@@ -104,6 +93,22 @@ public class Task {
 		this.createdAt = createdAt;
 	}
 
+	public int getMaxTime() {
+		return maxTime;
+	}
+
+	public void setMaxTime(int maxTime) {
+		this.maxTime = maxTime;
+	}
+
+	public int getMaxMemory() {
+		return maxMemory;
+	}
+
+	public void setMaxMemory(int maxMemory) {
+		this.maxMemory = maxMemory;
+	}
+
 	@Override
 	public String toString() {
 		return "Task{" +
@@ -111,6 +116,8 @@ public class Task {
 				", lessonId='" + lessonId + '\'' +
 				", taskId='" + taskId + '\'' +
 				", taskIndex=" + taskIndex +
+				", maxTime=" + maxTime +
+				", maxMemory=" + maxMemory +
 				", introduction='" + introduction + '\'' +
 				", firstCode='" + firstCode + '\'' +
 				", secondCode='" + secondCode + '\'' +
@@ -118,3 +125,4 @@ public class Task {
 				'}';
 	}
 }
+

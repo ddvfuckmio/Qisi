@@ -6,7 +6,6 @@ package qisi.controller;
  */
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -151,7 +150,7 @@ public class UserController {
 
 		userService.updatePassword(user.getUsername(), user.getPassword());
 
-		return "修改成功!";
+		return "修改完毕!";
 	}
 
 }

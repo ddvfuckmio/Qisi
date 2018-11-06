@@ -20,6 +20,7 @@ CREATE TABLE `courses` (
 	`courseId` varchar(50) NOT NULL,
 	`courseName` varchar(50) NOT NULL,
 	`introduction` varchar(100) DEFAULT NULL,
+	`type` varchar(50) NOT NULL,
 	`createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
 	 PRIMARY KEY (`id`),
 	 UNIQUE KEY `courseId` (`courseId`),
@@ -60,11 +61,28 @@ CREATE TABLE `course_chapter_lesson_tasks` (
 	`introduction` text ,
 	`firstCode`  text,
 	`secondCode` text,
+	`maxTime` int(11) unsigned NOT NULL,
+	`maxMemory` int(11) unsigned NOT NULL,
 	`createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
    PRIMARY KEY (`id`),
    UNIQUE KEY `taskId` (`taskId`),
 	 UNIQUE KEY `lessonId_taskIndex` (`lessonId`,`taskIndex`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '课程任务表';
+
+CREATE TABLE `course_chapter_lesson_task_cases` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `taskId` varchar(50) NOT NULL,
+  `caseId` varchar(50) NOT NULL,
+  `input` varchar(255) NOT NULL,
+  `output` varchar(255) NOT NULL,
+  `createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
+   PRIMARY KEY (`id`),
+   UNIQUE KEY `taskId` (`taskId`),
+   UNIQUE KEY `caseId` (`caseId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '测试用例表';
+
+
+
 
 CREATE TABLE `user_codes` (
 	`id` int(11) unsigned NOT NULL AUTO_INCREMENT,

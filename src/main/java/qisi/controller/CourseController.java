@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import qisi.bean.course.*;
-import qisi.bean.json.CoursesQuery;
-import qisi.exception.courseException.CourseNotExistException;
+import qisi.bean.query.CourseChaptersQuery;
+import qisi.bean.query.CoursesQuery;
 import qisi.service.CourseService;
 import qisi.utils.Utils;
 
@@ -63,9 +63,13 @@ public class CourseController {
 	 */
 	@ResponseBody
 	@GetMapping("/course/{courseId}/chapters")
-	public List<Chapter> findChaptersByCourseId(@PathVariable String courseId) {
+	public CourseChaptersQuery findChaptersByCourseId(@PathVariable String courseId) {
+		CourseChaptersQuery courseChaptersQuery = new CourseChaptersQuery();
+		Course course = courseService.findCourseByCourseId(courseId);
 		List<Chapter> chapters = courseService.findChaptersByCourseId(courseId);
-		return chapters;
+		courseChaptersQuery.setCourse(course);
+		courseChaptersQuery.setChapters(chapters);
+		return courseChaptersQuery;
 	}
 
 

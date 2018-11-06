@@ -6,9 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
-import qisi.bean.course.Chapter;
-import qisi.bean.course.Code;
-import qisi.bean.course.Course;
+import qisi.bean.course.*;
 import qisi.bean.json.CodeJudge;
 import qisi.bean.user.User;
 import qisi.utils.Jms;
@@ -61,6 +59,27 @@ public class MockController {
 		return "done";
 	}
 
+	@GetMapping("/mockLessons")
+	public String mockLessons() {
+		List<Lesson> lessons = Mock.mockLessons();
+		courseService.saveLessons(lessons);
+		return "done";
+	}
+
+	@GetMapping("/mockTasks")
+	public String mockTasks() {
+		List<Task> tasks = Mock.mockTasks();
+		courseService.saveTasks(tasks);
+		return "done";
+	}
+
+	@GetMapping("/mockCases")
+	public String mockCases() {
+		List<Case> cases = Mock.mockCases();
+		courseService.saveCases(cases);
+		return "done";
+	}
+
 	@GetMapping("/mockUsers")
 	public String mockUsers() {
 		List<User> users = Mock.mockUsers();
@@ -75,7 +94,7 @@ public class MockController {
 		System.out.println(code);
 		code.setCodeId(Utils.getUUID());
 		code.setCreatedAt(new Date());
-		HashMap<String, String> map = new HashMap<>(16);
+		HashMap<String, String> map = new HashMap<>(32);
 		System.out.println(code.getCodeId());
 		map.put("codeId", code.getCodeId());
 		map.put("code", code.getCode());
@@ -130,4 +149,6 @@ public class MockController {
 		}
 		return msg;
 	}
+
+
 }
