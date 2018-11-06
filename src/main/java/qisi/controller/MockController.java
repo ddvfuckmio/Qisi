@@ -107,7 +107,7 @@ public class MockController {
 
 	@GetMapping("/redis/set")
 	public String setKey() {
-		stringRedisTemplate.opsForValue().set("user", "张杰", 60*5, TimeUnit.SECONDS);
+		stringRedisTemplate.opsForValue().set("user", "张杰", 60 * 5, TimeUnit.SECONDS);
 		return "set key done...";
 	}
 
@@ -124,6 +124,10 @@ public class MockController {
 
 	@GetMapping("/getSession")
 	public String getSession(HttpSession session) {
-		return session.getAttribute("user").toString();
+		String msg = (String) session.getAttribute("user");
+		if (msg == null) {
+			return "无数据";
+		}
+		return msg;
 	}
 }
