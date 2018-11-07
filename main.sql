@@ -81,9 +81,6 @@ CREATE TABLE `course_chapter_lesson_task_cases` (
    UNIQUE KEY `caseId` (`caseId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '测试用例表';
 
-
-
-
 CREATE TABLE `user_codes` (
 	`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 	`codeId` varchar(50) NOT NULL,
@@ -97,27 +94,16 @@ CREATE TABLE `user_codes` (
 	 UNIQUE KEY `codeId` (`codeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '用户代码表';
 
-
--- CREATE TABLE `user_course_progress` (
--- 	`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
--- 	`username` varchar(50) NOT NULL,
--- 	`courseId` varchar(50) NOT NULL,
--- 	`lessonId` varchar(50) NOT NULL,
--- 	`exerciseIndex` int(11) NOT NULL,
--- 	`createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
--- 	 PRIMARY KEY (`id`),
--- 	 UNIQUE KEY `account_courseName` (`username`,`courseId`)
--- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '用户课程进度表';
---
---
--- CREATE TABLE `user_roles` (
--- 	`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
--- 	`username` varchar(50) NOT NULL,
---   `role` varchar(10) DEFAULT NULL,
--- 	`createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
--- 	 PRIMARY KEY (`id`),
--- 	 UNIQUE KEY `account_UNIQUE` (`username`)
--- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '用户权限表';
+CREATE TABLE `user_course_progress` (
+	`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+	`username` varchar(50) NOT NULL,
+	`courseId` varchar(50) NOT NULL,
+	`lessonId` varchar(50) NOT NULL,
+	`taskId` varchar(50) NOT NULL,
+	`createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
+	 PRIMARY KEY (`id`),
+	 UNIQUE KEY `username_courseId` (`username`,`courseId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '用户课程进度表';
 
 
 

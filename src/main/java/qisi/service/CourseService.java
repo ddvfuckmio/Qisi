@@ -37,6 +37,9 @@ public class CourseService {
 	@Autowired
 	private CaseRepository caseRepository;
 
+	@Autowired
+	private ProgressRepository progressRepository;
+
 	/**
 	 * course业务
 	 */
@@ -120,6 +123,14 @@ public class CourseService {
 
 	public void saveCases(List<Case> cases) {
 		caseRepository.saveAll(cases);
+	}
+
+
+	/**
+	 * 用户进度业务
+	 */
+	public void saveProgress(Progress progress) {
+		progressRepository.save(progress);
 	}
 
 }

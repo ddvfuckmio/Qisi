@@ -5,10 +5,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.web.bind.annotation.*;
 import qisi.bean.course.*;
+import qisi.bean.jms.CodeMessage;
 import qisi.bean.json.CodeJudge;
 import qisi.bean.user.User;
+import qisi.utils.CodeMessageConverter;
 import qisi.utils.Jms;
 import qisi.service.CourseService;
 import qisi.service.ProducerService;
@@ -19,10 +22,7 @@ import qisi.utils.Utils;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -88,32 +88,54 @@ public class MockController {
 	}
 
 	@ResponseBody
-	@PostMapping("/mock/commit")
+	@PostMapping("/mockCommit")
 	public CodeJudge mockJms(@RequestBody Code code) {
+
 		Destination destination = new ActiveMQQueue(commitName);
-		System.out.println(code);
+		CodeMessage codeMessage = new CodeMessage();
+
 		code.setCodeId(Utils.getUUID());
 		code.setCreatedAt(new Date());
-		HashMap<String, String> map = new HashMap<>(32);
-		System.out.println(code.getCodeId());
-		map.put("codeId", code.getCodeId());
-		map.put("code", code.getCode());
-		map.put("exerciseId", code.getTaskId());
-		producerService.sendMessage(destination, map);
-		Map resultMap = Jms.consumer(receiveName, code.getCodeId());
-		System.out.println("评测完成...");
-		Boolean pass = (Boolean) resultMap.get("pass");
-		System.out.println("结果..." + pass);
-		CodeJudge codeJudge = new CodeJudge();
-		if (pass) {
-			code.setPass(true);
-			codeJudge.setPass(true);
-			codeJudge.setReason("代码通过了所有的测试用例!");
-		} else {
-			codeJudge.setPass(false);
-			codeJudge.setReason("代码不通过,请检查代码是否符合要求!");
+
+		codeMessage.setCode("测试代码....");
+		codeMessage.setMaxTime(1000);
+		codeMessage.setMaxMemory(1024 * 2);
+		codeMessage.setCodeId(code.getCodeId());
+		codeMessage.setFirstCode("code1...");
+		codeMessage.setSecondCode("code2...");
+		codeMessage.setTotalCases(3);
+
+		List<String> inputs = new ArrayList<>(codeMessage.getTotalCases());
+		List<String> outputs = new ArrayList<>(codeMessage.getTotalCases());
+		for (int i = 0; i < 3; i++) {
+			inputs.add(i + "");
+			outputs.add(i + "");
 		}
-		courseService.saveCode(code);
+
+		codeMessage.setInputs(inputs);
+		codeMessage.setOutputs(outputs);
+
+//		System.out.println(code);
+//		System.out.println(code.getCodeId());
+
+		MessageConverter messageConverter = new CodeMessageConverter();
+		producerService.sendStreamMessage(destination, codeMessage, messageConverter);
+//		Map resultMap = Jms.consumer(receiveName, code.getCodeId());
+//
+//		Boolean pass = (Boolean) resultMap.get("pass");
+
+//		System.out.println("评测完成-->结果..." + pass);
+
+		CodeJudge codeJudge = new CodeJudge();
+//		if (pass) {
+//			code.setPass(true);
+//			codeJudge.setPass(true);
+//			codeJudge.setReason("代码通过了所有的测试用例!");
+//		} else {
+//			codeJudge.setPass(false);
+//			codeJudge.setReason("代码不通过,请检查代码是否符合要求!");
+//		}
+//		courseService.saveCode(code);
 		return codeJudge;
 	}
 
@@ -148,6 +170,20 @@ public class MockController {
 			return "无数据";
 		}
 		return msg;
+	}
+
+	@GetMapping("/mockProgress")
+	public String mockProgress() {
+		Progress progress = new Progress();
+
+		progress.setCourseId("codeId...");
+		progress.setLessonId("lessonId...");
+		progress.setTaskId("taskId...");
+		progress.setUsername("username...");
+		progress.setCreatedAt(new Date());
+
+		courseService.saveProgress(progress);
+		return "done...";
 	}
 
 

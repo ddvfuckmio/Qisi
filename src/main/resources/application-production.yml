@@ -1,6 +1,29 @@
 spring:
+# 配置db
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/qisi
     username: root
     password: root
+# 关闭模板文件缓存
+  groovy:
+    template:
+      cache: false
+# activeMQ 配置
+  activemq:
+    broker-url: tcp://192.168.50.2:61616
+    in-memory: false
+    user: qisi
+    password: fablab151
+    pool:
+      enabled: true
+# 配置全局默认topic模式
+  jms:
+    pub-sub-domain: true
+  redis:
+    host: localhost
+    port: 6379
+# 配置项目路径前缀,端口
+server:
+  port: 8080
+

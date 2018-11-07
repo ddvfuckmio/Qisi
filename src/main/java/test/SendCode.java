@@ -6,8 +6,6 @@ package test;
  */
 
 public class SendCode {
-	private static String ID = "LTAI6yJIyoyYiIlX";
-	private static String KEY = "OiJenjst8mBVoW1yUbNIzqtL5gEsBy";
-
-	
+	private final static String ID = "LTAI6yJIyoyYiIlX";
+	private final static String KEY = "OiJenjst8mBVoW1yUbNIzqtL5gEsBy";
 }

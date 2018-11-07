@@ -1,9 +1,12 @@
 package qisi.utils;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import qisi.bean.jms.CodeMessage;
 
 import javax.jms.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,6 +21,11 @@ public class Jms {
 
 	private static Session getTopicSession() throws JMSException {
 		ConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
+		/**
+		((ActiveMQConnectionFactory) connectionFactory).setUserName("qisi");
+		((ActiveMQConnectionFactory) connectionFactory).setPassword("fablab151");
+		((ActiveMQConnectionFactory) connectionFactory).setBrokerURL("tcp://192.168.50.2:61616");
+		 */
 		Connection connection = connectionFactory.createConnection();
 		connection.start();
 		return connection.createSession(Boolean.TRUE, Session.AUTO_ACKNOWLEDGE);
@@ -34,20 +42,29 @@ public class Jms {
 
 			while (true) {
 				System.out.println("监听开始...");
-				MapMessage mapMessage = (MapMessage) messageConsumer.receive();
-				if (mapMessage != null) {
-					if (codeId.equals(mapMessage.getString("codeId"))) {
-						map.put("codeId", mapMessage.getString("codeId"));
-						map.put("pass", mapMessage.getBoolean("pass"));
-						session.close();
-						System.out.println("return...");
-						return map;
-					} else {
-						System.out.println("当前接受的消息不匹配...");
-					}
-				} else {
-					System.out.println("等待评测中...");
+				CodeMessage codeMessage = new CodeMessage();
+				StreamMessage streamMessage = (StreamMessage) messageConsumer.receive();
+
+				codeMessage.setCodeId(streamMessage.readString());
+				codeMessage.setCode(streamMessage.readString());
+				codeMessage.setFirstCode(streamMessage.readString());
+				codeMessage.setSecondCode(streamMessage.readString());
+				codeMessage.setMaxTime(streamMessage.readInt());
+				codeMessage.setMaxMemory(streamMessage.readInt());
+				codeMessage.setTotalCases(streamMessage.readInt());
+
+				List<String> inputs = new ArrayList<>(codeMessage.getTotalCases());
+				List<String> outputs = new ArrayList<>(codeMessage.getTotalCases());
+
+				for (int i = 0; i < codeMessage.getTotalCases(); i++) {
+					inputs.add(streamMessage.readString());
+					outputs.add(streamMessage.readString());
 				}
+
+				codeMessage.setInputs(inputs);
+				codeMessage.setOutputs(outputs);
+
+				System.out.println(codeMessage);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -76,7 +93,7 @@ public class Jms {
 	public static void main(String[] args) throws JMSException, InterruptedException {
 //		produce("receive", "e089d6b3c9ce45bdbe161daeceead668", true);
 		for (; ; ) {
-			consumer("receive", "e089d6b3c9ce45bdbe161daeceead668");
+			consumer("commit", "e089d6b3c9ce45bdbe161daeceead668");
 		}
 	}
 }

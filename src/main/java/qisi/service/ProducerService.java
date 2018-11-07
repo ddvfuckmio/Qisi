@@ -1,14 +1,13 @@
 package qisi.service;
 
-import org.apache.activemq.command.ActiveMQTempTopic;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsMessagingTemplate;
-import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.stereotype.Service;
+import qisi.bean.jms.CodeMessage;
+import qisi.utils.CodeMessageConverter;
 
 import javax.jms.*;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -26,5 +25,9 @@ public class ProducerService {
 		jmsMessagingTemplate.convertAndSend(destination, map);
 	}
 
+	public void sendStreamMessage(Destination destination, CodeMessage codeMessage, MessageConverter codeMessageConverter) {
+		jmsMessagingTemplate.setJmsMessageConverter(codeMessageConverter);
+		jmsMessagingTemplate.convertAndSend(destination, codeMessage);
+	}
 
 }
