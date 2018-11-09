@@ -9,9 +9,9 @@ import java.util.UUID;
  */
 
 public class Utils {
-	private static final String SALT = "qisi";
+	private static final String SALT = "ddv";
 
-	public static String getUUID(){
+	public static String getUUID() {
 		return UUID.randomUUID().toString().replace("-", "").toLowerCase();
 	}
 
@@ -42,9 +42,5 @@ public class Utils {
 		}
 		return hexValue.toString();
 	}
-	public static void main(String[] args) {
-		for(int i = 0;i<4;i++){
-			System.out.println(getUUID());
-		}
-	}
+
 }

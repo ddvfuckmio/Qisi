@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 public class MockController {
 	protected static final Logger Logger = LoggerFactory.getLogger(MockController.class);
 	private final String commitName = "commit";
-	private final String receiveName = "receive";
+	private final String receiveName = "QISI.commit";
 
 	@Autowired
 	private CourseService courseService;
@@ -91,7 +91,7 @@ public class MockController {
 	@PostMapping("/mockCommit")
 	public CodeJudge mockJms(@RequestBody Code code) {
 
-		Destination destination = new ActiveMQQueue(commitName);
+		Destination destination = new ActiveMQQueue(receiveName);
 		CodeMessage codeMessage = new CodeMessage();
 
 		code.setCodeId(Utils.getUUID());
@@ -104,6 +104,7 @@ public class MockController {
 		codeMessage.setFirstCode("code1...");
 		codeMessage.setSecondCode("code2...");
 		codeMessage.setTotalCases(3);
+		codeMessage.setType("java");
 
 		List<String> inputs = new ArrayList<>(codeMessage.getTotalCases());
 		List<String> outputs = new ArrayList<>(codeMessage.getTotalCases());
@@ -117,7 +118,7 @@ public class MockController {
 
 //		System.out.println(code);
 //		System.out.println(code.getCodeId());
-
+		System.out.println(codeMessage);
 		MessageConverter messageConverter = new CodeMessageConverter();
 		producerService.sendStreamMessage(destination, codeMessage, messageConverter);
 //		Map resultMap = Jms.consumer(receiveName, code.getCodeId());

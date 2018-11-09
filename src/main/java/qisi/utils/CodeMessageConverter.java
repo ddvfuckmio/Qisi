@@ -31,6 +31,7 @@ public class CodeMessageConverter implements MessageConverter {
 		streamMessage.writeInt(codeMessage.getMaxTime());
 		streamMessage.writeInt(codeMessage.getMaxMemory());
 		streamMessage.writeInt(codeMessage.getTotalCases());
+		streamMessage.writeString(codeMessage.getType());
 
 		List<String> inputs = codeMessage.getInputs();
 		List<String> outputs = codeMessage.getOutputs();

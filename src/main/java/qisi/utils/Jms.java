@@ -21,11 +21,11 @@ public class Jms {
 
 	private static Session getTopicSession() throws JMSException {
 		ConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
-		/**
+
 		((ActiveMQConnectionFactory) connectionFactory).setUserName("qisi");
 		((ActiveMQConnectionFactory) connectionFactory).setPassword("fablab151");
 		((ActiveMQConnectionFactory) connectionFactory).setBrokerURL("tcp://192.168.50.2:61616");
-		 */
+
 		Connection connection = connectionFactory.createConnection();
 		connection.start();
 		return connection.createSession(Boolean.TRUE, Session.AUTO_ACKNOWLEDGE);
@@ -52,6 +52,7 @@ public class Jms {
 				codeMessage.setMaxTime(streamMessage.readInt());
 				codeMessage.setMaxMemory(streamMessage.readInt());
 				codeMessage.setTotalCases(streamMessage.readInt());
+				codeMessage.setType(streamMessage.readString());
 
 				List<String> inputs = new ArrayList<>(codeMessage.getTotalCases());
 				List<String> outputs = new ArrayList<>(codeMessage.getTotalCases());
@@ -93,7 +94,7 @@ public class Jms {
 	public static void main(String[] args) throws JMSException, InterruptedException {
 //		produce("receive", "e089d6b3c9ce45bdbe161daeceead668", true);
 		for (; ; ) {
-			consumer("commit", "e089d6b3c9ce45bdbe161daeceead668");
+			consumer("QISI.commit", "e089d6b3c9ce45bdbe161daeceead668");
 		}
 	}
 }

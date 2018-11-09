@@ -27,18 +27,6 @@ public class User implements Serializable {
 	public User() {
 	}
 
-	public User(String username, String password, String sex, String job, String age, String phone, String email, String role, Date createdAt) {
-		this.username = username;
-		this.password = password;
-		this.sex = sex;
-		this.job = job;
-		this.age = age;
-		this.phone = phone;
-		this.email = email;
-		this.role = role;
-		this.createdAt = createdAt;
-	}
-
 	public String getRole() {
 		return role;
 	}

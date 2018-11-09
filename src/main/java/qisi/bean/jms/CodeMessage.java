@@ -16,6 +16,7 @@ public class CodeMessage implements Serializable {
 	private String code;
 	private String firstCode;
 	private String secondCode;
+	private String type;
 	private List<String> inputs;
 	private List<String> outputs;
 
@@ -91,6 +92,14 @@ public class CodeMessage implements Serializable {
 		this.totalCases = totalCases;
 	}
 
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	@Override
 	public String toString() {
 		return "CodeMessage{" +
@@ -101,6 +110,7 @@ public class CodeMessage implements Serializable {
 				", code='" + code + '\'' +
 				", firstCode='" + firstCode + '\'' +
 				", secondCode='" + secondCode + '\'' +
+				", type='" + type + '\'' +
 				", inputs=" + inputs +
 				", outputs=" + outputs +
 				'}';

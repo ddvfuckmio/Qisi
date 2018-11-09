@@ -8,5 +8,5 @@ import qisi.bean.course.Case;
  * @date : 2018/11/6 下午4:01
  */
 
-public interface CaseRepository extends JpaRepository<Case,Integer> {
+public interface CaseRepository extends JpaRepository<Case, Integer> {
 }
