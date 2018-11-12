@@ -2,34 +2,36 @@
 <head>
     <meta http-equiv="Content-Type" content="paper/html; charset=UTF-8"/>
     <title>登录认证</title>
-    <!--<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>-->
-    <!--<script type="text/javascript">-->
+    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <script type="text/javascript">
 
-        <!--function postData() {-->
-            <!--alert('error!')-->
-        <!--}-->
+        // function postData() {
+        //     alert('error!')
+        // }
+        //
+        // function postJson() {
+        //     var data = {
+        //         username: $('#username').val(),
+        //         password: $('#password').val()
+        //     };
+        //     console.log(data)
+        //     $.ajax({
+        //         type: 'POST',
+        //         contentType: 'application/json',
+        //         url: '/user/login',
+        //         data: JSON.stringify(data),
+        //         success: function (response) {
+        //             console.log(response);
+        //             $('#error').attr('text', "red")
+        //             // window.location.href = "main?id=111"
+        //         },
+        //         error: function () {
+        //             alert('error!')
+        //         }
+        //     });
+        // }
 
-        <!--function postJson() {-->
-            <!--var data = {-->
-                <!--username: $('#username').val(),-->
-                <!--password: $('#password').val()-->
-            <!--};-->
-            <!--console.log(data)-->
-            <!--$.ajax({-->
-                <!--type: 'POST',-->
-                <!--contentType: 'application/json',-->
-                <!--url: '/user/login',-->
-                <!--data: JSON.stringify(data),-->
-                <!--// success: function (r) {-->
-                <!--//     console.log(r);-->
-                <!--// },-->
-                <!--error: function () {-->
-                    <!--alert('error!')-->
-                <!--}-->
-            <!--});-->
-        <!--}-->
-
-    <!--</script>-->
+    </script>
 </head>
 <body>
 
@@ -38,8 +40,7 @@
     密码:<input id="password" type="password" th:value="${user?.password}" name="password"/></br>
     <input type="submit" value="登陆"></form>
 </form>
-
-<p th:text="${error}"/>
+<p  value="" th:text="${error}"/>
 <br/>
 </body>
 </html>

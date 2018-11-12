@@ -11,6 +11,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import qisi.bean.user.User;
 
+import java.util.List;
+
 public interface UserRepository extends JpaRepository<User, Integer> {
 
 	/**
@@ -32,7 +34,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	 * @return user
 	 */
 	@Query("from users where username=?1 or phone=?2 or email=?3")
-	public User findUserIfExist(String username, String phone, String email);
+	public List<User> findUserIfExist(String username, String phone, String email);
 
 
 	/**

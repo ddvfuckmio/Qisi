@@ -166,7 +166,7 @@ public class MockController {
 
 	@GetMapping("/getSession")
 	public String getSession(HttpSession session) {
-		String msg = (String) session.getAttribute("user");
+		String msg = (String) session.getAttribute("username");
 		if (msg == null) {
 			return "无数据";
 		}

@@ -1,21 +1,18 @@
 package qisi.bean.user;
 
-/**
- * @author : ddv
- * @date : 2018/10/24 上午11:40
- */
-
-import javax.persistence.*;
-import java.io.Serializable;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
 
-@Entity(name = "users")
-public class User implements Serializable {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+/**
+ * @author : ddv
+ * @date : 2018/11/12 上午9:41
+ */
+
+public class MockUser {
+
 	private String username;
-	private String password;
 	private String sex;
 	private String job;
 	private String age;
@@ -24,7 +21,7 @@ public class User implements Serializable {
 	private String role;
 	private Date createdAt;
 
-	public User() {
+	public MockUser() {
 	}
 
 	public String getRole() {
@@ -51,14 +48,6 @@ public class User implements Serializable {
 		this.age = age;
 	}
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	public Date getCreatedAt() {
 		return createdAt;
 	}
@@ -73,14 +62,6 @@ public class User implements Serializable {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getPassword() {
-		return password;
 	}
 
 	public String getSex() {
@@ -109,10 +90,8 @@ public class User implements Serializable {
 
 	@Override
 	public String toString() {
-		return "User{" +
-				"id=" + id +
-				", username='" + username + '\'' +
-				", password='" + password + '\'' +
+		return "MockUser{" +
+				"username='" + username + '\'' +
 				", sex='" + sex + '\'' +
 				", job='" + job + '\'' +
 				", age='" + age + '\'' +

@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>主界面</title>
+    <meta http-equiv="Content-Type" content="paper/html; charset=UTF-8"/>
+    <title>课程列表</title>
 </head>
 <body>
-   模拟数据完成!
+<div th:each="course : ${courses}">
+    <h1 th:text="${{course.courseName}}"></h1>
+    <p><a th:text="${{course.introduction}}"></a></p>
+    <p><a th:text="${{course.type}}"></a></p>
+</div>
+
 </body>
 </html>

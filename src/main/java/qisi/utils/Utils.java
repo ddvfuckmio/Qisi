@@ -2,6 +2,7 @@ package qisi.utils;
 
 import java.security.MessageDigest;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author : ddv

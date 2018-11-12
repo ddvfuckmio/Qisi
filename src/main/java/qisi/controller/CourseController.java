@@ -11,6 +11,7 @@ import qisi.utils.Utils;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author : ddv
@@ -27,13 +28,14 @@ public class CourseController {
 	/**
 	 * 查询所有课程
 	 */
-	@ResponseBody
+
 	@GetMapping("/courses")
-	public CoursesQuery findAllCourses() {
+	public String findAllCourses(Map<String, Object> map) {
 		CoursesQuery coursesQuery = new CoursesQuery();
 		coursesQuery.setCourses(courseService.findAllCourses());
 		coursesQuery.setTotal(coursesQuery.getCourses().size());
-		return coursesQuery;
+		map.put("courses",coursesQuery.getCourses());
+		return "main";
 	}
 
 	/**

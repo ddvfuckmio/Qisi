@@ -9,10 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import qisi.bean.user.MockUser;
 import qisi.exception.userException.UserNotExistException;
 import qisi.service.UserService;
 import qisi.bean.user.User;
 import qisi.utils.Utils;
+import qisi.utils.Dozer;
 
 import javax.servlet.http.HttpSession;
 import java.util.Date;
@@ -27,7 +29,6 @@ public class UserController {
 
 	@PostMapping("/user/login")
 	public String userLogin(User formUser, Map<String, Object> map, HttpSession session) {
-		session.setAttribute("user", formUser.getUsername());
 		String username = formUser.getUsername();
 		String password = formUser.getPassword();
 		map.put("user", formUser);
@@ -50,12 +51,21 @@ public class UserController {
 			return "login";
 		}
 
-		return "success";
+		map.put("user", user);
+		session.setAttribute("username", formUser.getUsername());
+		return "profile";
 	}
 
+	/**
+	 * 测试请用postman发送json结构
+	 *
+	 * @param formUser
+	 * @param map
+	 * @return
+	 */
 	@PostMapping("/user/register")
-	public String userRegister(@RequestBody User formUser, Map<String, Object> map) {
-		String account = formUser.getUsername();
+	public String userRegister(User formUser, Map<String, Object> map) {
+		String username = formUser.getUsername();
 		String password = formUser.getPassword();
 		String sex = formUser.getSex();
 		String age = formUser.getAge();
@@ -64,7 +74,7 @@ public class UserController {
 		String email = formUser.getEmail();
 		map.put("user", formUser);
 
-		if (account == null || "".equals(account)) {
+		if (username == null || "".equals(username)) {
 			map.put("error", "用户名不能为空");
 			return "register";
 		}
@@ -99,11 +109,16 @@ public class UserController {
 			return "register";
 		}
 
+		if (email == null || "".equals(email)) {
+			map.put("error", "邮箱不能为空");
+			return "register";
+		}
+
 		formUser.setRole("普通用户");
 		formUser.setCreatedAt(new Date());
 
-		User findUser = userService.checkUserIfExist(formUser);
-		if (findUser != null) {
+		List<User> users = userService.checkUserIfExist(formUser);
+		if (users.size() > 0) {
 			map.put("error", "该用户已经注册!");
 			return "register";
 		}
@@ -125,32 +140,49 @@ public class UserController {
 
 	@ResponseBody
 	@GetMapping(value = "/user")
-	public User findUserByUserName(@RequestParam("username") String username) {
+	public MockUser findUserByUserName(@RequestParam("username") String username) {
 		User user = userService.findUserByUsername(username);
 		if (user == null) {
 			throw new UserNotExistException(username);
 		}
-		return user;
+		MockUser mockUser = Dozer.getBean(user, MockUser.class);
+		System.out.println(user);
+		System.out.println(mockUser);
+		return mockUser;
 	}
 
 	@Transactional(rollbackFor = Exception.class)
 	@ResponseBody
 	@PostMapping("/user/password")
-	public String updatePassword(@RequestBody User user) {
-		if (user.getUsername() == null || "".equals(user.getUsername())) {
-			return "用户名非法!";
+	public String updatePassword(User user, HttpSession session) {
+		try {
+			String username = (String) session.getAttribute("username");
+			System.out.println(username);
+			if (user.getUsername() == null || "".equals(user.getUsername())) {
+				return "用户名非法!";
+			}
+
+			if (user.getPassword() == null || "".equals(user.getPassword())) {
+				return "用户密码非法!";
+			}
+
+			user.setPassword(Utils.encode(user.getPassword()));
+			System.out.println(user.getPassword());
+
+			userService.updatePassword(user.getUsername(), user.getPassword());
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-		if (user.getPassword() == null || "".equals(user.getPassword())) {
-			return "用户密码非法!";
-		}
-
-		user.setPassword(Utils.encode(user.getPassword()));
-		System.out.println(user.getPassword());
-
-		userService.updatePassword(user.getUsername(), user.getPassword());
 
 		return "修改完毕!";
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	@ResponseBody
+	@PostMapping("/user/profile")
+	public String updateProfile(User user) {
+
+		return "success!";
 	}
 
 }

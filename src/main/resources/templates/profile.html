@@ -2,19 +2,18 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="paper/html; charset=UTF-8"/>
-    <title>注册界面</title>
+    <title>个人信息</title>
 </head>
 <body>
-<form action="/user/register" method="post">
-    账号:<input type="text" th:value="${user?.username}" name="username"/></br>
-    密码:<input type="password" th:value="${user?.password}" name="password"/></br>
-    性别:<input type="text" th:value="${user?.sex}" name="sex"/></br>
+<h1 th:text="${{user?.username}}"></h1>
+<form action="/user/profile" method="post">
+    账号:<input id="username" type="text" th:value="${user?.username}" name="username"/></br>
+    性别:<input id="sex" type="sex" th:value="${user?.sex}" name="sex"/></br>
     年龄:<input type="text" th:value="${user?.age}" name="age"/></br>
     职业:<input type="text" th:value="${user?.job}" name="job"/></br>
     电话:<input type="text" th:value="${user?.phone}" name="phone"/></br>
     邮箱:<input type="text" th:value="${user?.email}" name="email"/></br>
-    <input type="button" value="注册"></br>
+    <input type="submit" value="修改"></form>
 </form>
-<p th:text="${error}"/>
 </body>
 </html>
