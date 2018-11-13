@@ -2,6 +2,7 @@ package qisi.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import qisi.bean.user.User;
 import qisi.dao.UserRepository;
 
@@ -42,4 +43,8 @@ public class UserService {
 		userRepository.saveAll(users);
 	}
 
+
+	public void updateProfile(User user) {
+		 userRepository.updateProfile(user.getUsername(),user.getSex(),user.getAge(),user.getJob(),user.getPhone(),user.getEmail());
+	}
 }

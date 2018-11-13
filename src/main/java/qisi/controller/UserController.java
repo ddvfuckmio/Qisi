@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import qisi.bean.json.AjaxResponse;
 import qisi.bean.user.MockUser;
 import qisi.exception.userException.UserNotExistException;
 import qisi.service.UserService;
@@ -16,6 +17,7 @@ import qisi.bean.user.User;
 import qisi.utils.Utils;
 import qisi.utils.Dozer;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
@@ -60,11 +62,11 @@ public class UserController {
 	 * 测试请用postman发送json结构
 	 *
 	 * @param formUser
-	 * @param map
+	 * @param request
 	 * @return
 	 */
 	@PostMapping("/user/register")
-	public String userRegister(User formUser, Map<String, Object> map) {
+	public String userRegister(User formUser, HttpServletRequest request) {
 		String username = formUser.getUsername();
 		String password = formUser.getPassword();
 		String sex = formUser.getSex();
@@ -72,45 +74,45 @@ public class UserController {
 		String job = formUser.getJob();
 		String phone = formUser.getPhone();
 		String email = formUser.getEmail();
-		map.put("user", formUser);
+		request.setAttribute("user", formUser);
 
 		if (username == null || "".equals(username)) {
-			map.put("error", "用户名不能为空");
+			request.setAttribute("error", "用户名不能为空");
 			return "register";
 		}
 
 		if (password == null || "".equals(password)) {
-			map.put("error", "密码不能为空");
+			request.setAttribute("error", "密码不能为空");
 			return "register";
 		}
 
 		if (sex == null || "".equals(sex)) {
-			map.put("error", "性别不能为空");
+			request.setAttribute("error", "性别不能为空");
 			return "register";
 		}
 
 		if (age == null || "".equals(age)) {
-			map.put("error", "年龄有误");
+			request.setAttribute("error", "年龄有误");
 			return "register";
 		}
 
 		if (job == null || "".equals(job)) {
-			map.put("error", "职业不能为空");
+			request.setAttribute("error", "职业不能为空");
 			return "register";
 		}
 
 		if (phone == null || "".equals(phone)) {
-			map.put("error", "电话不能为空");
+			request.setAttribute("error", "电话不能为空");
 			return "register";
 		}
 
 		if (email == null || "".equals(email)) {
-			map.put("error", "邮箱不能为空");
+			request.setAttribute("error", "邮箱不能为空");
 			return "register";
 		}
 
 		if (email == null || "".equals(email)) {
-			map.put("error", "邮箱不能为空");
+			request.setAttribute("error", "邮箱不能为空");
 			return "register";
 		}
 
@@ -119,7 +121,7 @@ public class UserController {
 
 		List<User> users = userService.checkUserIfExist(formUser);
 		if (users.size() > 0) {
-			map.put("error", "该用户已经注册!");
+			request.setAttribute("error", "该用户已经注册!");
 			return "register";
 		}
 
@@ -128,7 +130,7 @@ public class UserController {
 
 		userService.userRegister(formUser);
 
-		map.put("msg", "注册成功!");
+		request.setAttribute("msg", "注册成功!");
 		return "login";
 	}
 
@@ -151,38 +153,57 @@ public class UserController {
 		return mockUser;
 	}
 
-	@Transactional(rollbackFor = Exception.class)
 	@ResponseBody
 	@PostMapping("/user/password")
 	public String updatePassword(User user, HttpSession session) {
-		try {
-			String username = (String) session.getAttribute("username");
-			System.out.println(username);
-			if (user.getUsername() == null || "".equals(user.getUsername())) {
-				return "用户名非法!";
-			}
 
-			if (user.getPassword() == null || "".equals(user.getPassword())) {
-				return "用户密码非法!";
-			}
-
-			user.setPassword(Utils.encode(user.getPassword()));
-			System.out.println(user.getPassword());
-
-			userService.updatePassword(user.getUsername(), user.getPassword());
-		} catch (Exception e) {
-			e.printStackTrace();
+		String username = (String) session.getAttribute("username");
+		System.out.println(username);
+		if (user.getUsername() == null || "".equals(user.getUsername())) {
+			return "用户名非法!";
 		}
+
+		if (user.getPassword() == null || "".equals(user.getPassword())) {
+			return "用户密码非法!";
+		}
+
+		user.setPassword(Utils.encode(user.getPassword()));
+		System.out.println(user.getPassword());
+
+		userService.updatePassword(user.getUsername(), user.getPassword());
+
 
 		return "修改完毕!";
 	}
 
-	@Transactional(rollbackFor = Exception.class)
 	@ResponseBody
 	@PostMapping("/user/profile")
-	public String updateProfile(User user) {
+	public AjaxResponse updateProfile(@RequestBody User user, HttpSession session) {
+		AjaxResponse response = new AjaxResponse();
+		System.out.println(user);
 
-		return "success!";
+		List<User> users = userService.checkUserIfExist(user);
+
+		if (users.size() > 1) {
+			response.setStatus(400);
+			response.setMsg("电话或邮箱已被注册!");
+			return response;
+		}
+
+		if (users.size() == 1) {
+			if (!(users.get(0).getUsername().equals(user.getUsername()))) {
+				response.setStatus(400);
+				response.setMsg("请检查电话邮箱是否被注册!");
+				return response;
+			}
+		}
+
+		userService.updateProfile(user);
+
+		response.setStatus(200);
+		response.setMsg("修改成功!");
+
+		return response;
 	}
 
 }

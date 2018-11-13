@@ -1,36 +1,35 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
-    <meta http-equiv="Content-Type" content="paper/html; charset=UTF-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>登录认证</title>
     <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
     <script type="text/javascript">
 
-        // function postData() {
-        //     alert('error!')
-        // }
-        //
-        // function postJson() {
-        //     var data = {
-        //         username: $('#username').val(),
-        //         password: $('#password').val()
-        //     };
-        //     console.log(data)
-        //     $.ajax({
-        //         type: 'POST',
-        //         contentType: 'application/json',
-        //         url: '/user/login',
-        //         data: JSON.stringify(data),
-        //         success: function (response) {
-        //             console.log(response);
-        //             $('#error').attr('text', "red")
-        //             // window.location.href = "main?id=111"
-        //         },
-        //         error: function () {
-        //             alert('error!')
-        //         }
-        //     });
-        // }
+        function post() {
+            var data = {
+                username: $('#username').val(),
+                password: $('#password').val()
+            };
+            window.sessionStorage.setItem('ddv', 'ddv')
+            var name = window.sessionStorage.getItem('ddv')
+            console.log(name)
 
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json',
+                url: '/user/login',
+                data: JSON.stringify(data),
+                success: function (response) {
+                    console.log(response);
+                    $('#p1').text("登录失败!")
+                    // window.location.href = "main?id=111"
+                },
+                error: function () {
+
+                }
+            });
+        }
+        
     </script>
 </head>
 <body>
@@ -40,7 +39,6 @@
     密码:<input id="password" type="password" th:value="${user?.password}" name="password"/></br>
     <input type="submit" value="登陆"></form>
 </form>
-<p  value="" th:text="${error}"/>
-<br/>
+<p id="p1" th:text="${error}"/>
 </body>
 </html>

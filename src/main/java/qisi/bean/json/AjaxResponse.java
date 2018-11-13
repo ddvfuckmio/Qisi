@@ -5,7 +5,7 @@ package qisi.bean.json;
  * @date : 2018/11/12 下午2:29
  */
 
-public class LoginResponse {
+public class AjaxResponse {
 	private int status;
 	private String msg;
 	private String username;
@@ -36,7 +36,7 @@ public class LoginResponse {
 
 	@Override
 	public String toString() {
-		return "LoginResponse{" +
+		return "AjaxResponse{" +
 				"status=" + status +
 				", msg='" + msg + '\'' +
 				", username='" + username + '\'' +

@@ -14,7 +14,7 @@ import java.util.Random;
  */
 
 public class Mock {
-	private final static int COUNT = 100;
+	private final static int COUNT = 10000000;
 	private static String[] courseNames = {"Golang", "Java"};
 	private static String[] courseIds = {"b6a9860c86624a938c7494155f29ae0d", "ec885ae819144bffbbfa1252d13c91ec"};
 	private static String[] chapterIds = {"61ecece3a5084c728b26f02e564a2fc6", "86d511e2ead547daa2103fa702512021", "81bed5cadc734923a362e991aba60b40", "1033596990ca4f9dbf837bb98f6aa79d"};
@@ -22,11 +22,11 @@ public class Mock {
 	private static String[] taskIds = {"2e866bdc6ab44089b395417bc7a59153", "6ea5e2b58c634d0c976ccf62461e6d5c", "701bf592860b4a00b53d6dd46eb2963f", "3dc5a41d151a41e09ceb802ccc36f47a"};
 	private static String[] caseIds = {"ee43b6ba63d549b9ac1436683ddbcea0", "9aa62cf8f32c494ba1ace043db61c7c6", "1a81df1e35554e43bdc01f7384bd26cb", "68b266886028416ebfed3e5903cae899"};
 
-	public static List<User> mockUsers() {
+	public static List<User> mockUsers(int start) {
 		Random random = new Random();
 		String[] jobs = {"学生", "工人", "老师", "人事", "售货员"};
 		List<User> users = new ArrayList<>(COUNT);
-		for (int i = 0; i < COUNT; i++) {
+		for (int i = start; i < COUNT; i++) {
 			String index = String.valueOf(i);
 			String sex = (i & 1) == 0 ? "男" : "女";
 			String job = jobs[random.nextInt(jobs.length)];

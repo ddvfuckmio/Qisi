@@ -1,19 +1,64 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta http-equiv="Content-Type" content="paper/html; charset=UTF-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>个人信息</title>
+    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var name = sessionStorage.getItem('ddv')
+            console.log(name)
+
+        });
+
+        function update() {
+            var data = {
+                username: $('#username').text(),
+                password: $('#password').val(),
+                age: $('#age').val(),
+                sex: $('#sex').val(),
+                job: $('#job').val(),
+                phone: $('#phone').val(),
+                email: $('#email').val()
+            };
+            console.log(data);
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json',
+                url: '/user/profile',
+                data: JSON.stringify(data),
+                success: function (response) {
+                    console.log(response);
+                    $('#error').text(response.msg);
+
+                },
+                error: function () {
+                    $('#error').text("服务器忙!")
+                }
+            });
+        }
+
+    </script>
 </head>
 <body>
-<h1 th:text="${{user?.username}}"></h1>
+<h1 id="username" th:text="${{user?.username}}"></h1>
 <form action="/user/profile" method="post">
-    账号:<input id="username" type="text" th:value="${user?.username}" name="username"/></br>
     性别:<input id="sex" type="sex" th:value="${user?.sex}" name="sex"/></br>
-    年龄:<input type="text" th:value="${user?.age}" name="age"/></br>
-    职业:<input type="text" th:value="${user?.job}" name="job"/></br>
-    电话:<input type="text" th:value="${user?.phone}" name="phone"/></br>
-    邮箱:<input type="text" th:value="${user?.email}" name="email"/></br>
-    <input type="submit" value="修改"></form>
+    年龄:<input id="age" type="text" th:value="${user?.age}" name="age"/></br>
+    职业:<input id="job" type="text" th:value="${user?.job}" name="job"/></br>
+    电话:<input id="phone" type="text" th:value="${user?.phone}" name="phone"/></br>
+    邮箱:<input id="email" type="text" th:value="${user?.email}" name="email"/></br>
+    <input type="button" value="修改" onclick="update()"></form>
 </form>
 </body>
+<p id="error" th:text="${error}"/></br>
+<form action="/user/profile" method="post">
+    性别:<input id="sex" type="sex" th:value="${user?.sex}" name="sex"/></br>
+    年龄:<input id="age" type="text" th:value="${user?.age}" name="age"/></br>
+    职业:<input id="job" type="text" th:value="${user?.job}" name="job"/></br>
+    电话:<input id="phone" type="text" th:value="${user?.phone}" name="phone"/></br>
+    邮箱:<input id="email" type="text" th:value="${user?.email}" name="email"/></br>
+    <input type="button" value="修改" onclick="update()"></form>
+</form>
 </html>
