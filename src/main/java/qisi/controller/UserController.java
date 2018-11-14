@@ -235,7 +235,7 @@ public class UserController {
 		} finally {
 
 		}
-
+		request.setAttribute("error", "上传完毕!");
 		return "profile";
 	}
 
