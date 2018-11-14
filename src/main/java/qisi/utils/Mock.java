@@ -14,7 +14,7 @@ import java.util.Random;
  */
 
 public class Mock {
-	private final static int COUNT = 10000000;
+	private final static int COUNT = 100000;
 	private static String[] courseNames = {"Golang", "Java"};
 	private static String[] courseIds = {"b6a9860c86624a938c7494155f29ae0d", "ec885ae819144bffbbfa1252d13c91ec"};
 	private static String[] chapterIds = {"61ecece3a5084c728b26f02e564a2fc6", "86d511e2ead547daa2103fa702512021", "81bed5cadc734923a362e991aba60b40", "1033596990ca4f9dbf837bb98f6aa79d"};
