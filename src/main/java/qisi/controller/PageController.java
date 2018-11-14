@@ -26,4 +26,9 @@ public class PageController {
 	public String success() {
 		return "main";
 	}
+
+	@RequestMapping("/profile")
+	public String profile() {
+		return "profile";
+	}
 }

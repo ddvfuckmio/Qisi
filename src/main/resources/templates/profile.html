@@ -53,12 +53,8 @@
 </form>
 </body>
 <p id="error" th:text="${error}"/></br>
-<form action="/user/profile" method="post">
-    性别:<input id="sex" type="sex" th:value="${user?.sex}" name="sex"/></br>
-    年龄:<input id="age" type="text" th:value="${user?.age}" name="age"/></br>
-    职业:<input id="job" type="text" th:value="${user?.job}" name="job"/></br>
-    电话:<input id="phone" type="text" th:value="${user?.phone}" name="phone"/></br>
-    邮箱:<input id="email" type="text" th:value="${user?.email}" name="email"/></br>
-    <input type="button" value="修改" onclick="update()"></form>
+<form method="post" action="/upload" enctype="multipart/form-data">
+    <input type="file" name="file" /><br/>
+    <input type="submit" value="上传"/>
 </form>
 </html>

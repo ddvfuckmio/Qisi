@@ -81,7 +81,7 @@ public class MockController {
 	}
 
 	@GetMapping("/mockUsers")
-	public String mockUsers(@RequestParam ("start") int start) {
+	public String mockUsers(@RequestParam("start") int start) {
 		List<User> users = Mock.mockUsers(start);
 		System.out.println("mock 完毕...");
 		userService.mockUsers(users);

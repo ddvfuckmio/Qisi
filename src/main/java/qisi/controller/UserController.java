@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import qisi.bean.json.AjaxResponse;
 import qisi.bean.user.MockUser;
 import qisi.exception.userException.UserNotExistException;
@@ -19,6 +20,10 @@ import qisi.utils.Dozer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -204,6 +209,34 @@ public class UserController {
 		response.setMsg("修改成功!");
 
 		return response;
+	}
+
+	@PostMapping("/upload")
+	public String UploadFile(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
+		FileOutputStream fos;
+		FileInputStream in;
+		if (file.isEmpty()) {
+			request.setAttribute("error", "请选择文件!");
+			return "profile";
+		}
+		System.out.println(file.getOriginalFilename());
+		try {
+			fos = new FileOutputStream("images/" + file.getOriginalFilename());
+			in = (FileInputStream) file.getInputStream();
+			byte[] bytes = new byte[2048];
+			int len;
+			while ((len = (in.read(bytes))) != -1) {
+				fos.write(bytes, 0, len);
+			}
+			fos.close();
+			in.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+
+		}
+
+		return "profile";
 	}
 
 }

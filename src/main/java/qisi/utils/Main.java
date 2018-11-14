@@ -1,5 +1,6 @@
 package qisi.utils;
 
+import java.io.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -8,26 +9,23 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 public class Main {
-	private static ConcurrentHashMap<String, String> hashMap = new ConcurrentHashMap<>();
-	private static ConcurrentHashMap<String, String> hashMap2 = new ConcurrentHashMap<>();
+
 
 	public static void main(String[] args) {
 
-		for (int i = 0; i < 10; i++) {
-			new Thread(
-					() -> {
-						while (true) {
-							String uuid = Utils.getUUID();
-							hashMap.put(uuid, uuid);
-							hashMap2.put(uuid, uuid);
-							System.out.println(
-									uuid + " " + Thread.currentThread().getName());
-						}
-					})
-					.start();
-		}
-
-		for (; ; ) {
+		File file = new File("images/基础7.mp4");
+		try {
+			InputStream in = new FileInputStream(file);
+			FileOutputStream fos = new FileOutputStream("images/copy.mp4");
+			byte[] bytes = new byte[1024];
+			int len ;
+			while ((len = (in.read(bytes))) != -1) {
+				fos.write(bytes, 0, len);
+			}
+			fos.close();
+			in.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }
