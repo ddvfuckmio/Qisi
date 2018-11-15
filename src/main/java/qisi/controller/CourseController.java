@@ -9,6 +9,7 @@ import qisi.bean.query.CoursesQuery;
 import qisi.service.CourseService;
 import qisi.utils.Utils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -30,11 +31,11 @@ public class CourseController {
 	 */
 
 	@GetMapping("/courses")
-	public String findAllCourses(Map<String, Object> map) {
+	public String findAllCourses(HttpServletRequest request) {
 		CoursesQuery coursesQuery = new CoursesQuery();
 		coursesQuery.setCourses(courseService.findAllCourses());
 		coursesQuery.setTotal(coursesQuery.getCourses().size());
-		map.put("courses",coursesQuery.getCourses());
+		request.setAttribute("courses",coursesQuery.getCourses());
 		return "main";
 	}
 

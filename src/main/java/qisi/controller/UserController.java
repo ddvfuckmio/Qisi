@@ -21,9 +21,6 @@ import qisi.utils.Dozer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +69,7 @@ public class UserController {
 	 */
 	@PostMapping("/user/register")
 	public String userRegister(User formUser, HttpServletRequest request) {
+		System.out.println("开始注册...");
 		String username = formUser.getUsername();
 		String password = formUser.getPassword();
 		String sex = formUser.getSex();
@@ -83,42 +81,42 @@ public class UserController {
 
 		if (username == null || "".equals(username)) {
 			request.setAttribute("error", "用户名不能为空");
-			return "register";
+			return "/register.html";
 		}
 
 		if (password == null || "".equals(password)) {
 			request.setAttribute("error", "密码不能为空");
-			return "register";
+			return "/register.html";
 		}
 
 		if (sex == null || "".equals(sex)) {
 			request.setAttribute("error", "性别不能为空");
-			return "register";
+			return "/register.html";
 		}
 
 		if (age == null || "".equals(age)) {
 			request.setAttribute("error", "年龄有误");
-			return "register";
+			return "/register.html";
 		}
 
 		if (job == null || "".equals(job)) {
 			request.setAttribute("error", "职业不能为空");
-			return "register";
+			return "/register.html";
 		}
 
 		if (phone == null || "".equals(phone)) {
 			request.setAttribute("error", "电话不能为空");
-			return "register";
+			return "/register.html";
 		}
 
 		if (email == null || "".equals(email)) {
 			request.setAttribute("error", "邮箱不能为空");
-			return "register";
+			return "/register.html";
 		}
 
 		if (email == null || "".equals(email)) {
 			request.setAttribute("error", "邮箱不能为空");
-			return "register";
+			return "/register.html";
 		}
 
 		formUser.setRole("普通用户");
@@ -127,7 +125,7 @@ public class UserController {
 		List<User> users = userService.checkUserIfExist(formUser);
 		if (users.size() > 0) {
 			request.setAttribute("error", "该用户已经注册!");
-			return "register";
+			return "/register.html";
 		}
 
 		password = Utils.encode(password);
@@ -136,7 +134,7 @@ public class UserController {
 		userService.userRegister(formUser);
 
 		request.setAttribute("msg", "注册成功!");
-		return "login";
+		return "/login.html";
 	}
 
 	@ResponseBody

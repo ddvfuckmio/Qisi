@@ -161,12 +161,13 @@ public class MockController {
 
 	@GetMapping("/setSession")
 	public String setSession(HttpSession session) {
-		session.setAttribute("user", "session");
+		session.setAttribute("username", "ddv");
 		return "session存取完毕!";
 	}
 
 	@GetMapping("/getSession")
 	public String getSession(HttpSession session) {
+		System.out.println(session.getMaxInactiveInterval());
 		String msg = (String) session.getAttribute("username");
 		if (msg == null) {
 			return "无数据";

@@ -31,4 +31,7 @@ spring:
 # 配置项目路径前缀,端口
 server:
   port: 8080
+  servlet:
+    session:
+      timeout: 1m
 
