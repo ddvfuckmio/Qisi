@@ -18,7 +18,7 @@ import javax.jms.Topic;
  */
 @Configuration
 @EnableJms
-public class JmsConfig {
+public class Jms {
 	@Value("spring-jms")
 	public String Topic = "";
 

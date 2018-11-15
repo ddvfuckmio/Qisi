@@ -12,7 +12,6 @@
             };
             window.sessionStorage.setItem('ddv', 'ddv')
             var name = window.sessionStorage.getItem('ddv')
-            console.log(name)
 
             $.ajax({
                 type: 'POST',
@@ -29,7 +28,7 @@
                 }
             });
         }
-        
+
     </script>
 </head>
 <body>
@@ -37,8 +36,9 @@
 <form action="/user/login" method="post">
     账号:<input id="username" type="text" th:value="${user?.username}" name="username"/></br>
     密码:<input id="password" type="password" th:value="${user?.password}" name="password"/></br>
-    <input type="submit" value="登陆"></form>
+    <input type="submit" value="登陆">
 </form>
+<a href="/pages/register">注册</a>
 <p id="p1" th:text="${error}"/>
 </body>
 </html>

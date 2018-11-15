@@ -33,7 +33,6 @@ public class SessionFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
 		HttpSession session = request.getSession();
 		String url = request.getRequestURI();
-		System.out.println(url);
 		if (set.contains(url)) {
 			filterChain.doFilter(servletRequest, servletResponse);
 		} else {

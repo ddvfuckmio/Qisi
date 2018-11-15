@@ -28,10 +28,10 @@ spring:
       max-file-size: 1024MB
       max-request-size: 2048MB
       enabled: true
-# 配置项目路径前缀,端口
+# 配置项目路径前缀,端口,session
 server:
   port: 8080
   servlet:
     session:
-      timeout: 1m
+      timeout: 60m
 
