@@ -1,6 +1,11 @@
 package qisi.utils;
 
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -9,21 +14,35 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 public class Main {
-
+	private static HashMap<Integer, Integer> hashMap = new HashMap<>();
 
 	public static void main(String[] args) {
-		System.out.println(1);
-		File file = new File("images/基础7.mp4");
+		normal();
+
+
+	}
+
+	private static void normal() {
+		File file = new File("images/dva.mp4");
 		try {
-			InputStream in = new FileInputStream(file);
-			FileOutputStream fos = new FileOutputStream("images/copy.mp4");
+			FileOutputStream fos = new FileOutputStream("images/b.mp4");
+			FileInputStream in = new FileInputStream(file);
+			FileChannel channel = fos.getChannel();
+
+			ByteBuffer buffer = ByteBuffer.allocate(1024*1024*1024*5);
 			byte[] bytes = new byte[1024];
-			int len ;
-			while ((len = (in.read(bytes))) != -1) {
-				fos.write(bytes, 0, len);
+			while (in.read(bytes) != -1) {
+				buffer.put(bytes);
+
 			}
+			buffer.flip();
+			channel.write(buffer);
+			channel.close();
 			fos.close();
-			in.close();
+			long start = System.currentTimeMillis();
+
+			long end = System.currentTimeMillis();
+			System.out.println((end - start) / 1000 + "." + (end - start) % 1000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -18,18 +18,18 @@ public class Chapter {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String courseId;
-	private String ChapterId;
-	private String ChapterName;
-	private int ChapterIndex;
+	private String chapterId;
+	private String chapterName;
+	private int chapterIndex;
 	private Date createdAt;
 
 	public Chapter() {
 	}
 
 	public Chapter(String chapterId, String chapterName, int chapterIndex, Date createdAt) {
-		ChapterId = chapterId;
-		ChapterName = chapterName;
-		ChapterIndex = chapterIndex;
+		this.chapterId = chapterId;
+		this.chapterName = chapterName;
+		this.chapterIndex = chapterIndex;
 		this.createdAt = createdAt;
 	}
 
@@ -42,27 +42,27 @@ public class Chapter {
 	}
 
 	public String getChapterId() {
-		return ChapterId;
+		return chapterId;
 	}
 
 	public void setChapterId(String chapterId) {
-		ChapterId = chapterId;
+		this.chapterId = chapterId;
 	}
 
 	public String getChapterName() {
-		return ChapterName;
+		return chapterName;
 	}
 
 	public void setChapterName(String chapterName) {
-		ChapterName = chapterName;
+		this.chapterName = chapterName;
 	}
 
 	public int getChapterIndex() {
-		return ChapterIndex;
+		return chapterIndex;
 	}
 
 	public void setChapterIndex(int chapterIndex) {
-		ChapterIndex = chapterIndex;
+		this.chapterIndex = chapterIndex;
 	}
 
 	public Date getCreatedAt() {
@@ -86,9 +86,9 @@ public class Chapter {
 		return "Chapter{" +
 				"id=" + id +
 				", courseId='" + courseId + '\'' +
-				", ChapterId='" + ChapterId + '\'' +
-				", ChapterName='" + ChapterName + '\'' +
-				", ChapterIndex=" + ChapterIndex +
+				", chapterId='" + chapterId + '\'' +
+				", chapterName='" + chapterName + '\'' +
+				", chapterIndex=" + chapterIndex +
 				", createdAt=" + createdAt +
 				'}';
 	}

@@ -35,8 +35,8 @@ public class CourseController {
 		CoursesQuery coursesQuery = new CoursesQuery();
 		coursesQuery.setCourses(courseService.findAllCourses());
 		coursesQuery.setTotal(coursesQuery.getCourses().size());
-		request.setAttribute("courses",coursesQuery.getCourses());
-		return "main";
+		request.setAttribute("courses", coursesQuery.getCourses());
+		return "courses";
 	}
 
 	/**
@@ -64,15 +64,13 @@ public class CourseController {
 	 * courseId
 	 * 按课程ID获取该课程下的所有目录
 	 */
-	@ResponseBody
 	@GetMapping("/course/{courseId}/chapters")
-	public CourseChaptersQuery findChaptersByCourseId(@PathVariable String courseId) {
-		CourseChaptersQuery courseChaptersQuery = new CourseChaptersQuery();
-		Course course = courseService.findCourseByCourseId(courseId);
+	public String findChaptersByCourseId(@PathVariable String courseId, Map map) {
+
 		List<Chapter> chapters = courseService.findChaptersByCourseId(courseId);
-		courseChaptersQuery.setCourse(course);
-		courseChaptersQuery.setChapters(chapters);
-		return courseChaptersQuery;
+
+		map.put("chapters", chapters);
+		return "chapter";
 	}
 
 
@@ -107,7 +105,7 @@ public class CourseController {
 	 * 查询某节课对应的所有task
 	 */
 	@ResponseBody
-	@GetMapping("/lesson/{lessonId}")
+	@GetMapping("/lesson/{lessonId}/tasks")
 	public List<Task> findExercisesByLessonId(@PathVariable String lessonId) {
 		List<Task> tasks = courseService.findTasksByLessonId(lessonId);
 		return tasks;

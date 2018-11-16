@@ -3,8 +3,6 @@ package qisi.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * @author : ddv
  * @date : 2018/10/25 上午9:58
@@ -26,7 +24,7 @@ public class PageController {
 
 	@RequestMapping("/main")
 	public String success() {
-		return "main";
+		return "courses";
 	}
 
 	@RequestMapping("/profile")

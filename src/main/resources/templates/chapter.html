@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>章节列表</title>
+</head>
+<body>
+<div th:each="chapter : ${chapters}">
+    <table border="1">
+        <tr>
+            <th>章节名称</th>
+            <td th:text="${chapter?.chapterName}"></td>
+        </tr>
+        <!--<a th:href="@{'/course/'+${course.courseId}+'/chapters'}">了解详情</a>-->
+        <!--<input type="hidden" name="courseId" th:value="${course?.courseId}"/>-->
+    </table>
+</div>
+
+</body>
+</html>
