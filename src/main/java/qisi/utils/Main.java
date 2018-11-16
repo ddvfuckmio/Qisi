@@ -12,7 +12,7 @@ public class Main {
 
 
 	public static void main(String[] args) {
-
+		System.out.println(1);
 		File file = new File("images/基础7.mp4");
 		try {
 			InputStream in = new FileInputStream(file);
