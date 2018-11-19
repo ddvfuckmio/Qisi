@@ -174,7 +174,7 @@ public class UserController {
 		System.out.println(user.getPassword());
 
 		userService.updatePassword(user.getUsername(), user.getPassword());
-		
+
 		return "修改完毕!";
 	}
 
