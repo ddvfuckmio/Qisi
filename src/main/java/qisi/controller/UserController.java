@@ -31,6 +31,14 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	/**
+	 * 用户登录
+	 *
+	 * @param formUser
+	 * @param map
+	 * @param session
+	 * @return
+	 */
 	@PostMapping("/user/login")
 	public String userLogin(User formUser, Map<String, Object> map, HttpSession session) {
 		String username = formUser.getUsername();
@@ -61,7 +69,7 @@ public class UserController {
 	}
 
 	/**
-	 * 测试请用postman发送json结构
+	 * 用户注册
 	 *
 	 * @param formUser
 	 * @param request
@@ -69,7 +77,6 @@ public class UserController {
 	 */
 	@PostMapping("/user/register")
 	public String userRegister(User formUser, HttpServletRequest request) {
-		System.out.println("开始注册...");
 		String username = formUser.getUsername();
 		String password = formUser.getPassword();
 		String sex = formUser.getSex();
@@ -80,42 +87,37 @@ public class UserController {
 		request.setAttribute("user", formUser);
 
 		if (username == null || "".equals(username)) {
-			request.setAttribute("error", "用户名不能为空");
+			request.setAttribute("error", "用户名不能为空!");
 			return "/register.html";
 		}
 
 		if (password == null || "".equals(password)) {
-			request.setAttribute("error", "密码不能为空");
+			request.setAttribute("error", "密码不能为空!");
 			return "/register.html";
 		}
 
 		if (sex == null || "".equals(sex)) {
-			request.setAttribute("error", "性别不能为空");
+			request.setAttribute("error", "性别不能为空!");
 			return "/register.html";
 		}
 
 		if (age == null || "".equals(age)) {
-			request.setAttribute("error", "年龄有误");
+			request.setAttribute("error", "年龄有误!");
 			return "/register.html";
 		}
 
 		if (job == null || "".equals(job)) {
-			request.setAttribute("error", "职业不能为空");
+			request.setAttribute("error", "职业不能为空!");
 			return "/register.html";
 		}
 
-		if (phone == null || "".equals(phone)) {
-			request.setAttribute("error", "电话不能为空");
+		if (!Utils.checkPhone(phone)) {
+			request.setAttribute("error", "无效电话号码!");
 			return "/register.html";
 		}
 
-		if (email == null || "".equals(email)) {
-			request.setAttribute("error", "邮箱不能为空");
-			return "/register.html";
-		}
-
-		if (email == null || "".equals(email)) {
-			request.setAttribute("error", "邮箱不能为空");
+		if (!Utils.checkEmail(email)) {
+			request.setAttribute("error", "无效邮箱地址!");
 			return "/register.html";
 		}
 
@@ -139,7 +141,7 @@ public class UserController {
 
 	@ResponseBody
 	@GetMapping("/users")
-	public List<User> getUsers(HttpSession session) {
+	public List<User> getUsers() {
 		return userService.getUsers();
 	}
 
@@ -148,11 +150,9 @@ public class UserController {
 	public MockUser findUserByUserName(@RequestParam("username") String username) {
 		User user = userService.findUserByUsername(username);
 		if (user == null) {
-			throw new UserNotExistException(username);
+			return null;
 		}
 		MockUser mockUser = Dozer.getBean(user, MockUser.class);
-		System.out.println(user);
-		System.out.println(mockUser);
 		return mockUser;
 	}
 
@@ -174,8 +174,7 @@ public class UserController {
 		System.out.println(user.getPassword());
 
 		userService.updatePassword(user.getUsername(), user.getPassword());
-
-
+		
 		return "修改完毕!";
 	}
 
