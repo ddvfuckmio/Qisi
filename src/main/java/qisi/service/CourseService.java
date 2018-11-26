@@ -60,6 +60,9 @@ public class CourseService {
 		courseRepository.saveAll(courses);
 	}
 
+	public Course findCourseByTaskId(String taskId) {
+		return courseRepository.findCourseByTaskId(taskId);
+	}
 
 	/**
 	 * chapter业务
@@ -111,6 +114,14 @@ public class CourseService {
 
 	public void saveTasks(List<Task> tasks) {
 		taskRepository.saveAll(tasks);
+	}
+
+
+	/**
+	 * 测试用例业务
+	 */
+	public List<Case> findCasesByTaskId(String taskId){
+		return caseRepository.findCasesByTaskId(taskId);
 	}
 
 	/**

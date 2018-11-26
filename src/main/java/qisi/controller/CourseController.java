@@ -13,10 +13,12 @@ import qisi.bean.query.CoursesQuery;
 import qisi.service.CourseService;
 import qisi.service.ProducerService;
 import qisi.utils.CodeMessageConverter;
+import qisi.utils.Jms;
 import qisi.utils.Utils;
 
 import javax.jms.Destination;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +32,7 @@ import java.util.Map;
 @Controller
 public class CourseController {
 	private final String commitName = "commit";
-	private final String receiveName = "QISI.commit";
+	private final String receiveName = "receive";
 	private static final String CHAPTER_HTML = "chapters";
 
 	@Autowired
@@ -113,48 +115,56 @@ public class CourseController {
 
 	@ResponseBody
 	@PostMapping("/code/commit")
-	public CodeJudge mockJms(@RequestBody Code code) {
-		System.out.println(code);
+	public CodeJudge mockJms(@RequestBody Code code, HttpSession session) {
+		String username = (String) session.getAttribute("username");
+		Destination destination = new ActiveMQQueue(commitName);
+		CodeMessage codeMessage = new CodeMessage();
 
-//		Destination destination = new ActiveMQQueue(receiveName);
-//		CodeMessage codeMessage = new CodeMessage();
-//
-//		code.setCodeId(Utils.getUUID());
-//		code.setCreatedAt(new Date());
-//
-//
-//		List<String> inputs = new ArrayList<>(codeMessage.getTotalCases());
-//		List<String> outputs = new ArrayList<>(codeMessage.getTotalCases());
-//		for (int i = 0; i < 3; i++) {
-//			inputs.add(i + "");
-//			outputs.add(i + "");
-//		}
-//
-//		codeMessage.setInputs(inputs);
-//		codeMessage.setOutputs(outputs);
-//
-////		System.out.println(code);
-////		System.out.println(code.getCodeId());
-//		System.out.println(codeMessage);
-//		MessageConverter messageConverter = new CodeMessageConverter();
-//		producerService.sendStreamMessage(destination, codeMessage, messageConverter);
-////		Map resultMap = Jms.consumer(receiveName, code.getCodeId());
-//
-//		Boolean pass = (Boolean) resultMap.get("pass");
+		code.setCodeId("6a9827d044504c5faf00103a2f0c1d7c");
+		code.setCreatedAt(new Date());
+		code.setUsername(username);
 
-//		System.out.println("评测完成-->结果..." + pass);
+		Task task = courseService.findTaskByTaskId(code.getTaskId());
 
+		List<Case> cases = courseService.findCasesByTaskId(code.getTaskId());
+
+		List<String> inputs = new ArrayList<>(cases.size());
+		List<String> outputs = new ArrayList<>(cases.size());
+		for (int i = 0; i < cases.size(); i++) {
+			inputs.add(cases.get(i).getInput());
+			outputs.add(cases.get(i).getOutput());
+		}
+
+		codeMessage.setCodeId(code.getCodeId());
+		codeMessage.setTotalCases(cases.size());
+		codeMessage.setMaxTime(task.getMaxTime());
+		codeMessage.setMaxMemory(task.getMaxMemory());
+		codeMessage.setFirstCode(task.getFirstCode());
+		codeMessage.setSecondCode(task.getSecondCode());
+		codeMessage.setCode(code.getCode());
+		codeMessage.setInputs(inputs);
+		codeMessage.setOutputs(outputs);
+		codeMessage.setType(courseService.findCourseByTaskId(code.getTaskId()).getType());
+
+		System.out.println(codeMessage);
+
+		producerService.sendStreamMessage(destination, codeMessage, new CodeMessageConverter());
+		boolean pass = Jms.consumer(receiveName, code.getCodeId());
+
+		System.out.println("评测完成-->结果..." + pass);
+//
 		CodeJudge codeJudge = new CodeJudge();
-//		if (pass) {
-//			code.setPass(true);
-//			codeJudge.setPass(true);
-//			codeJudge.setReason("代码通过了所有的测试用例!");
-//		} else {
-//			codeJudge.setPass(false);
-//			codeJudge.setReason("代码不通过,请检查代码是否符合要求!");
-//		}
-//		courseService.saveCode(code);
-		codeJudge.setMsg("测试未通过!");
+		if (pass) {
+			code.setPass(true);
+			codeJudge.setPass(true);
+			codeJudge.setMsg("代码成功通过了所有的测试用例!");
+		} else {
+			code.setPass(false);
+			codeJudge.setPass(false);
+			codeJudge.setMsg("评测未通过!");
+			codeJudge.setReason("代码不通过,请检查代码是否符合要求!");
+		}
+		courseService.saveCode(code);
 		return codeJudge;
 	}
 

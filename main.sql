@@ -77,8 +77,7 @@ CREATE TABLE `course_chapter_lesson_task_cases` (
   `output` varchar(255) NOT NULL,
   `createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
    PRIMARY KEY (`id`),
-   UNIQUE KEY `taskId` (`taskId`),
-   UNIQUE KEY `caseId` (`caseId`)
+   UNIQUE KEY `taskId_caseId` (`taskId`,`caseId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '测试用例表';
 
 CREATE TABLE `user_codes` (

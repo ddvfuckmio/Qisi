@@ -50,4 +50,13 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
 	@Query("from courses where courseId=?1")
 	public Course findCourseByCourseId(String courseId);
 
+
+	/**
+	 * 根据taskId查找course信息
+	 *
+	 * @param taskId
+	 * @return
+	 */
+	@Query("select d from course_chapter_lesson_tasks a inner join course_chapter_lessons b on a.lessonId = b.lessonId inner join course_chapters c on b.chapterId = c.chapterId inner join courses d on c.courseId = d.courseId and a.taskId=?1")
+	public Course findCourseByTaskId(String taskId);
 }

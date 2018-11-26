@@ -21,13 +21,10 @@ public class Main {
 	private static HashMap<Integer, Integer> hashMap = new HashMap<>();
 
 	public static void main(String[] args) {
-		System.out.println(Utils.encode("222"));
+		for (int i = 0; i < 5; i++) {
+			System.out.println(Utils.getUUID());
+		}
 	}
-
-	private static void change(String msg) {
-		msg = "123";
-	}
-
 
 	private static void fileWriter() {
 		File file = new File("images/dva.mp4");

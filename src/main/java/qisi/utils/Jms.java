@@ -22,19 +22,18 @@ public class Jms {
 	private static Session getTopicSession() throws JMSException {
 		ConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
 
-		((ActiveMQConnectionFactory) connectionFactory).setUserName("qisi");
-		((ActiveMQConnectionFactory) connectionFactory).setPassword("fablab151");
-		((ActiveMQConnectionFactory) connectionFactory).setBrokerURL("tcp://192.168.50.2:61616");
+		((ActiveMQConnectionFactory) connectionFactory).setUserName("admin");
+		((ActiveMQConnectionFactory) connectionFactory).setPassword("admin");
+		((ActiveMQConnectionFactory) connectionFactory).setBrokerURL("tcp://localhost:61616");
 
 		Connection connection = connectionFactory.createConnection();
 		connection.start();
 		return connection.createSession(Boolean.TRUE, Session.AUTO_ACKNOWLEDGE);
 	}
 
-	public static Map<String, Object> consumer(String queueName, String codeId) {
+	public static void checkSendJms(String queueName) {
 
-		Session session = null;
-		Map<String, Object> map = new HashMap<>(16);
+		Session session;
 		try {
 			session = getTopicSession();
 			Queue queue = session.createQueue(queueName);
@@ -51,8 +50,8 @@ public class Jms {
 				codeMessage.setSecondCode(streamMessage.readString());
 				codeMessage.setMaxTime(streamMessage.readInt());
 				codeMessage.setMaxMemory(streamMessage.readInt());
-				codeMessage.setTotalCases(streamMessage.readInt());
 				codeMessage.setType(streamMessage.readString());
+				codeMessage.setTotalCases(streamMessage.readInt());
 
 				List<String> inputs = new ArrayList<>(codeMessage.getTotalCases());
 				List<String> outputs = new ArrayList<>(codeMessage.getTotalCases());
@@ -71,30 +70,45 @@ public class Jms {
 			e.printStackTrace();
 		}
 
-		return null;
+
 	}
 
 	public static void produce(String queueName, String codeId, boolean pass) throws JMSException {
-		Session session = null;
-
-		session = getTopicSession();
+		Session session = getTopicSession();
 		Queue queue = session.createQueue(queueName);
 		MessageProducer messageProducer = session.createProducer(queue);
-		System.out.println(pass);
 		MapMessage mapMessage = session.createMapMessage();
 		mapMessage.setString("codeId", codeId);
 		mapMessage.setBoolean("pass", pass);
 		messageProducer.send(mapMessage);
-
 		session.commit();
 		session.close();
+		return;
+	}
 
+	public static boolean consumer(String queueName, String codeId) {
+		Session session = null;
+		Queue queue = null;
+		try {
+			session = getTopicSession();
+			queue = session.createQueue(queueName);
+			MessageConsumer messageConsumer = session.createConsumer(queue);
+			while (true) {
+				MapMessage map = (MapMessage) messageConsumer.receive();
+				if (map.getString("codeId").equals(codeId)) {
+					session.close();
+					return map.getBoolean("pass");
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return false;
 	}
 
 	public static void main(String[] args) throws JMSException, InterruptedException {
-//		produce("receive", "e089d6b3c9ce45bdbe161daeceead668", true);
-		for (; ; ) {
-			consumer("QISI.commit", "e089d6b3c9ce45bdbe161daeceead668");
-		}
+//		checkSendJms("commit");
+		produce("receive", "6a9827d044504c5faf00103a2f0c1d7c", true);
 	}
 }
