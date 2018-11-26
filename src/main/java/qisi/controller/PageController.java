@@ -31,4 +31,5 @@ public class PageController {
 	public String profile() {
 		return "profile";
 	}
+
 }

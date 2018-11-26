@@ -38,7 +38,6 @@ public class SessionFilter implements Filter {
 		} else {
 			String username = (String) session.getAttribute("username");
 			if (username != null && !"".equals(username)) {
-				System.out.println(username);
 				filterChain.doFilter(servletRequest, servletResponse);
 			} else {
 				response.sendRedirect(request.getContextPath() + "/pages/login");

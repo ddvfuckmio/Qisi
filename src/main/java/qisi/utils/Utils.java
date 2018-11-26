@@ -25,7 +25,6 @@ public class Utils {
 		return UUID.randomUUID().toString().replace("-", "").toLowerCase();
 	}
 
-
 	public static String encode(String password) {
 		password = password + SALT;
 		MessageDigest md5 = null;

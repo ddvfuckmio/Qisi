@@ -1,15 +1,23 @@
 package qisi.controller;
 
+import org.apache.activemq.command.ActiveMQQueue;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import qisi.bean.course.*;
+import qisi.bean.jms.CodeMessage;
+import qisi.bean.json.CodeJudge;
 import qisi.bean.query.CourseChaptersQuery;
 import qisi.bean.query.CoursesQuery;
 import qisi.service.CourseService;
+import qisi.service.ProducerService;
+import qisi.utils.CodeMessageConverter;
 import qisi.utils.Utils;
 
+import javax.jms.Destination;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -21,15 +29,19 @@ import java.util.Map;
 
 @Controller
 public class CourseController {
+	private final String commitName = "commit";
+	private final String receiveName = "QISI.commit";
+	private static final String CHAPTER_HTML = "chapters";
 
 	@Autowired
 	private CourseService courseService;
 
+	@Autowired
+	private ProducerService producerService;
 
 	/**
 	 * 查询所有课程
 	 */
-
 	@GetMapping("/courses")
 	public String findAllCourses(HttpServletRequest request) {
 		CoursesQuery coursesQuery = new CoursesQuery();
@@ -59,92 +71,91 @@ public class CourseController {
 		return courseService.findCourseByCourseId(courseId);
 	}
 
-
 	/**
 	 * courseId
 	 * 按课程ID获取该课程下的所有目录
 	 */
 	@GetMapping("/course/{courseId}/chapters")
-	public String findChaptersByCourseId(@PathVariable String courseId, Map map) {
-
+	public String findChaptersByCourseId(@PathVariable String courseId, HttpServletRequest request) {
 		List<Chapter> chapters = courseService.findChaptersByCourseId(courseId);
-
-		map.put("chapters", chapters);
-		return "chapter";
+		request.setAttribute("chapters", chapters);
+		return CHAPTER_HTML;
 	}
 
 
-	/**
-	 * 查询所有目录
-	 */
-	@ResponseBody
-	@GetMapping("/chapters")
-	public List<Chapter> findChapters() {
-		List<Chapter> chapters = courseService.findAllChapters();
-		return chapters;
-	}
-
-	@ResponseBody
-	@GetMapping("/chapter")
-	public Integer countByCourseId(@RequestParam("courseId") String courseId) {
-		return courseService.countByCourseId(courseId);
-	}
-
-	/**
-	 * 查询所有lesson
-	 */
-	@ResponseBody
-	@GetMapping("/lessons")
-	public List<Lesson> findLessons() {
-		List<Lesson> lessons = courseService.findAllLessons();
-		return lessons;
+	@GetMapping("/chapter/{chapterId}/lessons")
+	public String countByCourseId(@PathVariable("chapterId") String chapterId, HttpServletRequest request) {
+		List<Lesson> lessons = courseService.findLessonsByChapterId(chapterId);
+		request.setAttribute("lessons", lessons);
+		return "lessons";
 	}
 
 	/**
 	 * lessonId
 	 * 查询某节课对应的所有task
 	 */
-	@ResponseBody
 	@GetMapping("/lesson/{lessonId}/tasks")
-	public List<Task> findExercisesByLessonId(@PathVariable String lessonId) {
+	public String findExercisesByLessonId(@PathVariable String lessonId, HttpServletRequest request) {
 		List<Task> tasks = courseService.findTasksByLessonId(lessonId);
-		return tasks;
-	}
-
-
-	/**
-	 * 获取所有训练信息
-	 */
-	@ResponseBody
-	@GetMapping("/tasks")
-	public List<Task> findTasks() {
-		return courseService.findTasks();
+		request.setAttribute("tasks", tasks);
+		return "tasks";
 	}
 
 	/**
 	 * 根据训练ID获取训练信息
 	 */
-	@ResponseBody
 	@GetMapping("/task/{taskId}")
-	public Task findExerciseByExercise(@PathVariable("taskId") String taskId) {
-		return courseService.findTaskByTaskId(taskId);
+	public String findExerciseByExercise(@PathVariable("taskId") String taskId, HttpServletRequest request) {
+		request.setAttribute("task", courseService.findTaskByTaskId(taskId));
+		return "task";
 	}
 
-	/**
-	 * 提交代码
-	 *
-	 * @param code
-	 * @param exerciseId
-	 * @return
-	 */
+
 	@ResponseBody
-	@PostMapping("/code/{exerciseId}")
-	public String commitCode(@RequestBody Code code, @PathVariable String exerciseId) {
-		code.setTaskId(exerciseId);
-		code.setCodeId(Utils.getUUID());
-		code.setCreatedAt(new Date());
-		courseService.saveCode(code);
-		return "保存完毕!";
+	@PostMapping("/code/commit")
+	public CodeJudge mockJms(@RequestBody Code code) {
+		System.out.println(code);
+
+//		Destination destination = new ActiveMQQueue(receiveName);
+//		CodeMessage codeMessage = new CodeMessage();
+//
+//		code.setCodeId(Utils.getUUID());
+//		code.setCreatedAt(new Date());
+//
+//
+//		List<String> inputs = new ArrayList<>(codeMessage.getTotalCases());
+//		List<String> outputs = new ArrayList<>(codeMessage.getTotalCases());
+//		for (int i = 0; i < 3; i++) {
+//			inputs.add(i + "");
+//			outputs.add(i + "");
+//		}
+//
+//		codeMessage.setInputs(inputs);
+//		codeMessage.setOutputs(outputs);
+//
+////		System.out.println(code);
+////		System.out.println(code.getCodeId());
+//		System.out.println(codeMessage);
+//		MessageConverter messageConverter = new CodeMessageConverter();
+//		producerService.sendStreamMessage(destination, codeMessage, messageConverter);
+////		Map resultMap = Jms.consumer(receiveName, code.getCodeId());
+//
+//		Boolean pass = (Boolean) resultMap.get("pass");
+
+//		System.out.println("评测完成-->结果..." + pass);
+
+		CodeJudge codeJudge = new CodeJudge();
+//		if (pass) {
+//			code.setPass(true);
+//			codeJudge.setPass(true);
+//			codeJudge.setReason("代码通过了所有的测试用例!");
+//		} else {
+//			codeJudge.setPass(false);
+//			codeJudge.setReason("代码不通过,请检查代码是否符合要求!");
+//		}
+//		courseService.saveCode(code);
+		codeJudge.setMsg("测试未通过!");
+		return codeJudge;
 	}
 
 

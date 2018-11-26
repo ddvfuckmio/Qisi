@@ -9,13 +9,9 @@ public class CodeJudge {
 
 	private boolean pass;
 	private String reason;
+	private String msg;
 
 	public CodeJudge() {
-	}
-
-	public CodeJudge(boolean pass, String reason) {
-		this.pass = pass;
-		this.reason = reason;
 	}
 
 	public boolean isPass() {
@@ -34,11 +30,11 @@ public class CodeJudge {
 		this.reason = reason;
 	}
 
-	@Override
-	public String toString() {
-		return "CodeJudge{" +
-				"pass=" + pass +
-				", reason='" + reason + '\'' +
-				'}';
+	public String getMsg() {
+		return msg;
+	}
+
+	public void setMsg(String msg) {
+		this.msg = msg;
 	}
 }

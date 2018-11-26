@@ -133,4 +133,7 @@ public class CourseService {
 		progressRepository.save(progress);
 	}
 
+	public List<Lesson> findLessonsByChapterId(String chapterId) {
+		return lessonRepository.findByChapterId(chapterId);
+	}
 }

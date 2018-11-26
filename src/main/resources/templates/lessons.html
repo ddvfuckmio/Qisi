@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>训练列表</title>
+</head>
+<body>
+<div th:each="lesson : ${lessons}">
+    <table border="1">
+        <tr>
+            <th>训练名称</th>
+            <td th:text="${lesson?.lessonName}"></td>
+        </tr>
+    </table>
+    <a th:href="@{'/lesson/'+${lesson.lessonId}+'/tasks'}">训练详情</a>
+</div>
+<input type="hidden" name="lessonId" th:value="${lesson?.lessonId}"/>
+</body>
+</html>

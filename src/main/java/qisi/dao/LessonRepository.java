@@ -13,4 +13,12 @@ import java.util.List;
  */
 
 public interface LessonRepository extends JpaRepository<Lesson, Integer> {
+	/**
+	 * 根据 chapterId查询lesson
+	 *
+	 * @param chapterId
+	 * @return
+	 */
+	@Query("from course_chapter_lessons where chapterId =?1")
+	List<Lesson> findByChapterId(String chapterId);
 }

@@ -87,7 +87,7 @@ public class Jms {
 		messageProducer.send(mapMessage);
 
 		session.commit();
-
+		session.close();
 
 	}
 

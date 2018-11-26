@@ -39,12 +39,31 @@
             });
         }
 
+        function updatePassword() {
+            var data = {
+                password: $('#newPassword').val()
+            }
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json',
+                url: '/user/password',
+                data: JSON.stringify(data),
+                success: function (response) {
+                    $('#pwdMsg').text(response.msg);
+
+                },
+                error: function () {
+                    $('#pwdMsg').text("服务器忙!")
+                }
+            });
+        }
+
     </script>
 </head>
 <body>
 <h1 id="username" th:text="${{user?.username}}"></h1>
 <form action="/user/profile" method="post">
-    性别:<input id="sex" type="sex" th:value="${user?.sex}" name="sex"/></br>
+    性别:<input id="sex" type="text" th:value="${user?.sex}" name="sex"/></br>
     年龄:<input id="age" type="text" th:value="${user?.age}" name="age"/></br>
     职业:<input id="job" type="text" th:value="${user?.job}" name="job"/></br>
     电话:<input id="phone" type="text" th:value="${user?.phone}" name="phone"/></br>
@@ -57,5 +76,11 @@
     <input type="file" name="file"/><br/>
     <input type="submit" value="上传"/>
 </form>
+<form action="/user/profile" method="post">
+    新密码:<input id="newPassword" type="text" name="newPassword"/></br>
+    <input type="button" value="修改" onclick="updatePassword()"></form>
+</form>
+<p id="pwdMsg" th:text="${pwdMsg}"/></br>
+<a href="/courses">课程页面</a>
 <input type="hidden" name="username" th:value="${user?.username}">
 </html>

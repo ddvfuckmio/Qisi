@@ -19,7 +19,7 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
 	 * @param lessonId
 	 * @return List<Task>
 	 */
-	@Query("from course_chapter_lesson_tasks where lessonId=?1 order by taskId")
+	@Query("from course_chapter_lesson_tasks where lessonId=?1")
 	public List<Task> findTasksByLessonId(String lessonId);
 
 	/**

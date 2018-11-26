@@ -11,9 +11,9 @@
             <th>章节名称</th>
             <td th:text="${chapter?.chapterName}"></td>
         </tr>
-        <!--<a th:href="@{'/course/'+${course.courseId}+'/chapters'}">了解详情</a>-->
-        <!--<input type="hidden" name="courseId" th:value="${course?.courseId}"/>-->
     </table>
+    <a th:href="@{'/chapter/'+${chapter.chapterId}+'/lessons'}">章节详情</a>
+    <input type="hidden" name="chapterId" th:value="${chapter?.chapterId}"/>
 </div>
 
 </body>

@@ -21,9 +21,7 @@ public class Main {
 	private static HashMap<Integer, Integer> hashMap = new HashMap<>();
 
 	public static void main(String[] args) {
-		String msg = "";
-		change(msg);
-		System.out.println(msg);
+		System.out.println(Utils.encode("222"));
 	}
 
 	private static void change(String msg) {

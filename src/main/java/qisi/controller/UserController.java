@@ -7,12 +7,10 @@ package qisi.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import qisi.bean.json.AjaxResponse;
 import qisi.bean.user.MockUser;
-import qisi.exception.userException.UserNotExistException;
 import qisi.service.UserService;
 import qisi.bean.user.User;
 import qisi.utils.Utils;
@@ -27,6 +25,9 @@ import java.util.Map;
 
 @Controller
 public class UserController {
+	private static final String LOGIN_HTML = "/login.html";
+	private static final String PROFILE_HTML = "/profile.html";
+	private static final String REGISTER_HTML = "/register.html";
 
 	@Autowired
 	private UserService userService;
@@ -43,16 +44,17 @@ public class UserController {
 	public String userLogin(User formUser, Map<String, Object> map, HttpSession session) {
 		String username = formUser.getUsername();
 		String password = formUser.getPassword();
+
 		map.put("user", formUser);
 
 		if (!Utils.fieldValue(username)) {
 			map.put("error", "用户名格式有误!");
-			return "login";
+			return LOGIN_HTML;
 		}
 
 		if (!Utils.fieldValue(password)) {
 			map.put("error", "用户密码不能为空!");
-			return "login";
+			return LOGIN_HTML;
 		}
 
 		password = Utils.encode(formUser.getPassword());
@@ -60,12 +62,12 @@ public class UserController {
 
 		if (user == null || !password.equals(user.getPassword())) {
 			map.put("error", "用户名与密码不匹配!");
-			return "login";
+			return LOGIN_HTML;
 		}
 
 		map.put("user", user);
 		session.setAttribute("username", formUser.getUsername());
-		return "profile";
+		return PROFILE_HTML;
 	}
 
 	/**
@@ -73,21 +75,23 @@ public class UserController {
 	 *
 	 * @param formUser
 	 * @param request
-	 * @return
+	 * @return 登录页面
 	 */
 	@PostMapping("/user/register")
 	public String userRegister(User formUser, HttpServletRequest request) {
 		request.setAttribute("user", formUser);
 		AjaxResponse ajax = new AjaxResponse();
+
 		if (!Utils.checkFormUser(formUser, ajax)) {
 			request.setAttribute("error", ajax.getMsg());
-			return "/register.html";
+			return REGISTER_HTML;
 		}
 
 		List<User> users = userService.checkUserIfExist(formUser);
+
 		if (users.size() > 0) {
 			request.setAttribute("error", "该用户已经注册!");
-			return "/register.html";
+			return REGISTER_HTML;
 		}
 
 		formUser.setRole("普通用户");
@@ -97,55 +101,47 @@ public class UserController {
 		userService.userRegister(formUser);
 
 		request.setAttribute("msg", "注册成功!");
-		return "/login.html";
+		return LOGIN_HTML;
 	}
 
-	@ResponseBody
-	@GetMapping("/users")
-	public List<User> getUsers() {
-		return userService.getUsers();
-	}
-
-	@ResponseBody
-	@GetMapping(value = "/user")
-	public MockUser findUserByUserName(@RequestParam("username") String username) {
-		User user = userService.findUserByUsername(username);
-		if (user == null) {
-			return null;
-		}
-		MockUser mockUser = Dozer.getBean(user, MockUser.class);
-		return mockUser;
-	}
-
+	/**
+	 * 修改用户密码
+	 *
+	 * @param user    用户信息载体(只包含密码)
+	 * @param session 全局session
+	 * @return 修改密码结果
+	 */
 	@ResponseBody
 	@PostMapping("/user/password")
-	public String updatePassword(User user, HttpSession session) {
-
+	public AjaxResponse updatePassword(@RequestBody User user, HttpSession session) {
+		AjaxResponse ajaxResponse = new AjaxResponse();
 		String username = (String) session.getAttribute("username");
-		System.out.println(username);
-		if (user.getUsername() == null || "".equals(user.getUsername())) {
-			return "用户名非法!";
-		}
 
-		if (user.getPassword() == null || "".equals(user.getPassword())) {
-			return "用户密码非法!";
-		}
 
+		if (!Utils.fieldValue(user.getPassword())) {
+			ajaxResponse.setMsg("密码格式有误!");
+			return ajaxResponse;
+		}
 		user.setPassword(Utils.encode(user.getPassword()));
-		System.out.println(user.getPassword());
 
-		userService.updatePassword(user.getUsername(), user.getPassword());
-
-		return "修改完毕!";
+		userService.updatePassword(username, user.getPassword());
+		ajaxResponse.setMsg("修改成功!");
+		return ajaxResponse;
 	}
 
+	/**
+	 * 用户个人信息更新
+	 *
+	 * @param user    用户信息载体
+	 * @param session 全局session
+	 * @return 修改结果
+	 */
 	@ResponseBody
 	@PostMapping("/user/profile")
 	public AjaxResponse updateProfile(@RequestBody User user, HttpSession session) {
 		AjaxResponse response = new AjaxResponse();
-
-		if (!Utils.checkFormUser(user, null
-		)) {
+		user.setPassword("password");
+		if (!Utils.checkFormUser(user, response)) {
 			return response;
 		}
 
@@ -173,14 +169,13 @@ public class UserController {
 		return response;
 	}
 
-
 	@PostMapping("/upload")
-	public String UploadFile(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
+	public String uploadFile(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
 		FileOutputStream fos;
 		FileInputStream in;
 		if (file.isEmpty()) {
 			request.setAttribute("error", "请选择文件!");
-			return "profile";
+			return PROFILE_HTML;
 		}
 		System.out.println(file.getOriginalFilename());
 		try {
@@ -199,7 +194,31 @@ public class UserController {
 
 		}
 		request.setAttribute("error", "上传完毕!");
-		return "profile";
+		return PROFILE_HTML;
+	}
+
+	/**
+	 * 获取所有用户信息
+	 *
+	 * @return 用户json列表
+	 */
+	@ResponseBody
+	@GetMapping("/users")
+	public List<User> getUsers() {
+		return userService.getUsers();
+	}
+
+	/**
+	 * 根据用户名获取用户信息
+	 *
+	 * @param username 用户名
+	 * @return 用户个人信息
+	 */
+	@ResponseBody
+	@GetMapping(value = "/user/{username}")
+	public MockUser findUserByUserName(@PathVariable("username") String username) {
+		User user = userService.findUserByUsername(username);
+		return user == null ? null : Dozer.getBean(user, MockUser.class);
 	}
 
 }
