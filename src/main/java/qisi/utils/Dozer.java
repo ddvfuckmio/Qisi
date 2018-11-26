@@ -17,9 +17,7 @@ public class Dozer {
 		S rs = null;
 		try {
 			rs = s.newInstance();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		Mapper mapper = DozerBeanMapperBuilder.buildDefault();

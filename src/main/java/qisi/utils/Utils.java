@@ -1,6 +1,9 @@
 package qisi.utils;
 
 import com.sun.org.apache.regexp.internal.RE;
+import org.springframework.web.bind.annotation.RequestBody;
+import qisi.bean.json.AjaxResponse;
+import qisi.bean.user.User;
 
 import java.security.MessageDigest;
 import java.util.UUID;
@@ -62,6 +65,58 @@ public class Utils {
 			return false;
 		}
 		return Pattern.matches(REGEX_EMAIL, email);
+	}
+
+	public static boolean fieldValue(String value) {
+		if (value == null || "".equals(value) || value.contains(" ")) {
+			return false;
+		}
+		return true;
+	}
+
+	public static boolean checkFormUser(User user, AjaxResponse response) {
+		response.setStatus(400);
+		if (user == null) {
+			response.setMsg("用户信息有误!");
+			return false;
+		}
+		if (!Utils.fieldValue(user.getUsername())) {
+			response.setMsg("用户名格式有误!");
+			return false;
+		}
+
+		if (!Utils.fieldValue(user.getPassword())) {
+			response.setMsg("用户密码格式有误!");
+			return false;
+		}
+
+		if (!Utils.fieldValue(user.getSex())) {
+			response.setMsg("性别格式有误!");
+			return false;
+		}
+
+		if (!Utils.fieldValue(user.getAge())) {
+			response.setMsg("年龄格式有误!");
+			return false;
+		}
+
+		if (!Utils.fieldValue(user.getJob())) {
+			response.setMsg("职业格式有误!");
+			return false;
+		}
+
+		if (!Utils.checkPhone(user.getPhone())) {
+
+			response.setMsg("无效的电话号码!");
+			return false;
+		}
+
+		if (!Utils.checkEmail(user.getEmail())) {
+			response.setMsg("无效的电子邮箱!");
+			return false;
+		}
+		response.setStatus(200);
+		return true;
 	}
 
 }

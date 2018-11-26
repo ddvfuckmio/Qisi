@@ -34,10 +34,10 @@ public class UserController {
 	/**
 	 * 用户登录
 	 *
-	 * @param formUser
-	 * @param map
-	 * @param session
-	 * @return
+	 * @param formUser 表单用户数据
+	 * @param map      页面回显数据
+	 * @param session  全局session
+	 * @return 登录页面/个人信息页面
 	 */
 	@PostMapping("/user/login")
 	public String userLogin(User formUser, Map<String, Object> map, HttpSession session) {
@@ -45,12 +45,12 @@ public class UserController {
 		String password = formUser.getPassword();
 		map.put("user", formUser);
 
-		if (username == null || "".equals(username)) {
-			map.put("error", "用户名不能为空!");
+		if (!Utils.fieldValue(username)) {
+			map.put("error", "用户名格式有误!");
 			return "login";
 		}
 
-		if (password == null || "".equals(password)) {
+		if (!Utils.fieldValue(password)) {
 			map.put("error", "用户密码不能为空!");
 			return "login";
 		}
@@ -77,52 +77,12 @@ public class UserController {
 	 */
 	@PostMapping("/user/register")
 	public String userRegister(User formUser, HttpServletRequest request) {
-		String username = formUser.getUsername();
-		String password = formUser.getPassword();
-		String sex = formUser.getSex();
-		String age = formUser.getAge();
-		String job = formUser.getJob();
-		String phone = formUser.getPhone();
-		String email = formUser.getEmail();
 		request.setAttribute("user", formUser);
-
-		if (username == null || "".equals(username)) {
-			request.setAttribute("error", "用户名不能为空!");
+		AjaxResponse ajax = new AjaxResponse();
+		if (!Utils.checkFormUser(formUser, ajax)) {
+			request.setAttribute("error", ajax.getMsg());
 			return "/register.html";
 		}
-
-		if (password == null || "".equals(password)) {
-			request.setAttribute("error", "密码不能为空!");
-			return "/register.html";
-		}
-
-		if (sex == null || "".equals(sex)) {
-			request.setAttribute("error", "性别不能为空!");
-			return "/register.html";
-		}
-
-		if (age == null || "".equals(age)) {
-			request.setAttribute("error", "年龄有误!");
-			return "/register.html";
-		}
-
-		if (job == null || "".equals(job)) {
-			request.setAttribute("error", "职业不能为空!");
-			return "/register.html";
-		}
-
-		if (!Utils.checkPhone(phone)) {
-			request.setAttribute("error", "无效电话号码!");
-			return "/register.html";
-		}
-
-		if (!Utils.checkEmail(email)) {
-			request.setAttribute("error", "无效邮箱地址!");
-			return "/register.html";
-		}
-
-		formUser.setRole("普通用户");
-		formUser.setCreatedAt(new Date());
 
 		List<User> users = userService.checkUserIfExist(formUser);
 		if (users.size() > 0) {
@@ -130,8 +90,9 @@ public class UserController {
 			return "/register.html";
 		}
 
-		password = Utils.encode(password);
-		formUser.setPassword(password);
+		formUser.setRole("普通用户");
+		formUser.setCreatedAt(new Date());
+		formUser.setPassword(Utils.encode(formUser.getPassword()));
 
 		userService.userRegister(formUser);
 
@@ -182,7 +143,11 @@ public class UserController {
 	@PostMapping("/user/profile")
 	public AjaxResponse updateProfile(@RequestBody User user, HttpSession session) {
 		AjaxResponse response = new AjaxResponse();
-		System.out.println(user);
+
+		if (!Utils.checkFormUser(user, null
+		)) {
+			return response;
+		}
 
 		List<User> users = userService.checkUserIfExist(user);
 
@@ -207,6 +172,7 @@ public class UserController {
 
 		return response;
 	}
+
 
 	@PostMapping("/upload")
 	public String UploadFile(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
