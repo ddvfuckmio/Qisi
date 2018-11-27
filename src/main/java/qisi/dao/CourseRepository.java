@@ -29,7 +29,7 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
 	 * @return Course
 	 */
 	@Query("from courses where courseName=?1")
-	public Course findCourseByName(String courseName);
+	public List<Course> findCourseByName(String courseName);
 
 	/**
 	 * 根据courseId修改courseName

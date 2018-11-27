@@ -12,7 +12,7 @@ import qisi.bean.query.CoursesQuery;
 import qisi.service.CourseService;
 import qisi.service.ProducerService;
 import qisi.utils.CodeMessageConverter;
-import qisi.utils.Jms;
+import qisi.utils.ListenConsumer;
 import qisi.utils.Utils;
 
 import javax.jms.Destination;
@@ -24,17 +24,22 @@ import java.util.List;
 import java.util.concurrent.*;
 
 /**
+ * 课程相关API
+ * ResponseBody 此注解标志RestAPI, 并且返回数据JSON格式
+ *
  * @author : ddv
  * @date : 2018/10/29 下午1:25
  */
 
 @Controller
 public class CourseController {
-	private final String COMMIT_QUEUE = "commit";
-	private final String RECEIVE_QUEUE = "receive";
-	private final String CHAPTER_HTML = "chapters";
-	private final int MAX_WAIT = 10;
-	private final int POOL_SIZE = 1;
+	private static final String COMMIT_QUEUE = "commit";
+	private static final String RECEIVE_QUEUE = "receive";
+	private static final int MAX_WAIT = 10;
+	private static final int POOL_SIZE = 1;
+
+	private static final String CHAPTER_HTML = "chapters.html";
+	private static final String TASKS_HTML = "tasks.html";
 
 	@Autowired
 	private CourseService courseService;
@@ -43,7 +48,10 @@ public class CourseController {
 	private ProducerService producerService;
 
 	/**
-	 * 查询所有课程
+	 * 所有课程列表
+	 *
+	 * @param request
+	 * @return
 	 */
 	@GetMapping("/courses")
 	public String findAllCourses(HttpServletRequest request) {
@@ -55,18 +63,22 @@ public class CourseController {
 	}
 
 	/**
-	 * courseName
-	 * 按课程名获取课程信息
+	 * 根据courseName查询courses
+	 *
+	 * @param courseName
+	 * @return
 	 */
 	@ResponseBody
 	@GetMapping("/course")
-	public Course findCourseByName(@RequestParam("courseName") String courseName) {
+	public List<Course> findCourseByName(@RequestParam("courseName") String courseName) {
 		return courseService.findCourseByName(courseName);
 	}
 
 	/**
-	 * courseId
 	 * 按课程ID获取课程信息
+	 *
+	 * @param courseId
+	 * @return
 	 */
 	@ResponseBody
 	@GetMapping("/course/{courseId}")
@@ -75,8 +87,11 @@ public class CourseController {
 	}
 
 	/**
-	 * courseId
 	 * 按课程ID获取该课程下的所有目录
+	 *
+	 * @param courseId
+	 * @param request
+	 * @return
 	 */
 	@GetMapping("/course/{courseId}/chapters")
 	public String findChaptersByCourseId(@PathVariable String courseId, HttpServletRequest request) {
@@ -85,7 +100,13 @@ public class CourseController {
 		return CHAPTER_HTML;
 	}
 
-
+	/**
+	 * 对应chapter下的lessons
+	 *
+	 * @param chapterId 章节Id
+	 * @param request   数据回显
+	 * @return 训练页面
+	 */
 	@GetMapping("/chapter/{chapterId}/lessons")
 	public String countByCourseId(@PathVariable("chapterId") String chapterId, HttpServletRequest request) {
 		List<Lesson> lessons = courseService.findLessonsByChapterId(chapterId);
@@ -94,18 +115,25 @@ public class CourseController {
 	}
 
 	/**
-	 * lessonId
-	 * 查询某节课对应的所有task
+	 * 查询lesson对应的所有task
+	 *
+	 * @param lessonId
+	 * @param request
+	 * @return
 	 */
 	@GetMapping("/lesson/{lessonId}/tasks")
 	public String findExercisesByLessonId(@PathVariable String lessonId, HttpServletRequest request) {
 		List<Task> tasks = courseService.findTasksByLessonId(lessonId);
 		request.setAttribute("tasks", tasks);
-		return "tasks";
+		return TASKS_HTML;
 	}
 
 	/**
-	 * 根据训练ID获取训练信息
+	 * 获取对应Task
+	 *
+	 * @param taskId
+	 * @param request
+	 * @return
 	 */
 	@GetMapping("/task/{taskId}")
 	public String findExerciseByExercise(@PathVariable("taskId") String taskId, HttpServletRequest request) {
@@ -113,7 +141,13 @@ public class CourseController {
 		return "task";
 	}
 
-
+	/**
+	 * 提交代码
+	 *
+	 * @param code
+	 * @param session
+	 * @return
+	 */
 	@ResponseBody
 	@PostMapping("/code/commit")
 	public CodeJudge commitCode(@RequestBody Code code, HttpSession session) {
@@ -126,7 +160,7 @@ public class CourseController {
 		ExecutorService executor = new ScheduledThreadPoolExecutor(POOL_SIZE,
 				new BasicThreadFactory.Builder().namingPattern("ddv").daemon(true).build());
 
-		code.setCodeId("6a9827d044504c5faf00103a2f0c1d7c");
+		code.setCodeId(Utils.getUUID());
 		code.setCreatedAt(new Date());
 		code.setUsername(username);
 
@@ -208,18 +242,3 @@ public class CourseController {
 
 }
 
-class ListenConsumer implements Callable<Boolean> {
-
-	private String receiveName;
-	private String codeId;
-
-	public ListenConsumer(String receiveName, String codeId) {
-		this.receiveName = receiveName;
-		this.codeId = codeId;
-	}
-
-	@Override
-	public Boolean call() {
-		return Jms.consumer(receiveName, codeId);
-	}
-}

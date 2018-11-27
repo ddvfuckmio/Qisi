@@ -52,7 +52,7 @@ public class CourseService {
 		return courseRepository.findAllCourses();
 	}
 
-	public Course findCourseByName(String courseName) {
+	public List<Course> findCourseByName(String courseName) {
 		return courseRepository.findCourseByName(courseName);
 	}
 
@@ -157,7 +157,7 @@ public class CourseService {
 	}
 
 	public Chapter findChapterByLessonId(String lessonId) {
-		return chapterRepository.findByLessonId(lessonId);
+		return chapterRepository.findChapterByLessonId(lessonId);
 	}
 
 	public void updateProgress(Progress progress) {
