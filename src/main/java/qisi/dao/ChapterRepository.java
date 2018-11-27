@@ -37,6 +37,6 @@ public interface ChapterRepository extends JpaRepository<Chapter, Integer> {
 	 * @param lessonId
 	 * @return
 	 */
-	@Query("from course_chapters where lessonId =?1")
+	@Query("select a from course_chapters a inner join course_chapter_lessons b on a.chapterId = b.chapterId where b.lessonId =?1")
 	Chapter findByLessonId(String lessonId);
 }

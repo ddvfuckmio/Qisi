@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 
 public class Utils {
 	private static final String SALT = "ddv";
+	private static final String SPACE = " ";
 	private static final String REGEX_EMAIL = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
 	private static final String REGEX_PHONE = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(166)|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
 
@@ -67,7 +68,7 @@ public class Utils {
 	}
 
 	public static boolean fieldValue(String value) {
-		if (value == null || "".equals(value) || value.contains(" ")) {
+		if (value == null || "".equals(value) || value.contains(SPACE)) {
 			return false;
 		}
 		return true;

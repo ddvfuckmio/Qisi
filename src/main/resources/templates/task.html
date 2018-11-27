@@ -11,13 +11,14 @@
                 taskId: $('#taskId').val(),
                 code: $('#code').val(),
             };
-            $('#msg').text("发送中...")
+            // $('#msg').text("发送中...")
             $.ajax({
                 type: 'POST',
                 contentType: 'application/json',
                 url: '/code/commit',
                 data: JSON.stringify(data),
                 success: function (response) {
+                    console.log(response)
                     $('#msg').text(response.msg)
                 },
                 error: function () {

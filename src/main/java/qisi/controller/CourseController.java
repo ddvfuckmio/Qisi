@@ -30,10 +30,11 @@ import java.util.concurrent.*;
 
 @Controller
 public class CourseController {
-	private final String commitName = "commit";
-	private final String receiveName = "receive";
-	private static final String CHAPTER_HTML = "chapters";
-	private static final int MAX_WAIT = 60;
+	private final String COMMIT_QUEUE = "commit";
+	private final String RECEIVE_QUEUE = "receive";
+	private final String CHAPTER_HTML = "chapters";
+	private final int MAX_WAIT = 10;
+	private final int POOL_SIZE = 1;
 
 	@Autowired
 	private CourseService courseService;
@@ -115,14 +116,14 @@ public class CourseController {
 
 	@ResponseBody
 	@PostMapping("/code/commit")
-	public CodeJudge mockJms(@RequestBody Code code, HttpSession session) {
+	public CodeJudge commitCode(@RequestBody Code code, HttpSession session) {
 
 		String username = (String) session.getAttribute("username");
 		boolean pass = false;
 		CodeJudge codeJudge = new CodeJudge();
-		Destination destination = new ActiveMQQueue(commitName);
+		Destination destination = new ActiveMQQueue(COMMIT_QUEUE);
 		CodeMessage codeMessage = new CodeMessage();
-		ExecutorService executor = new ScheduledThreadPoolExecutor(1,
+		ExecutorService executor = new ScheduledThreadPoolExecutor(POOL_SIZE,
 				new BasicThreadFactory.Builder().namingPattern("ddv").daemon(true).build());
 
 		code.setCodeId("6a9827d044504c5faf00103a2f0c1d7c");
@@ -152,21 +153,18 @@ public class CourseController {
 		codeMessage.setOutputs(outputs);
 		codeMessage.setType(courseService.findCourseByTaskId(code.getTaskId()).getType());
 
-		System.out.println(codeMessage);
-
 		producerService.sendStreamMessage(destination, codeMessage, new CodeMessageConverter());
-		Future<Boolean> future = executor.submit(new ListenConsumer(receiveName, code.getCodeId()));
+		Future<Boolean> future = executor.submit(new ListenConsumer(RECEIVE_QUEUE, code.getCodeId()));
 
 		try {
 			if (future.get(MAX_WAIT, TimeUnit.SECONDS)) {
 				pass = true;
 			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
 		} catch (TimeoutException e) {
-			System.out.println("评测超时...");
+			codeJudge.setMsg("评测系统忙,请稍后提交!");
+			return codeJudge;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		if (!executor.isShutdown()) {
@@ -186,20 +184,24 @@ public class CourseController {
 		courseService.saveCode(code);
 		Course course = courseService.findCourseByTaskId(code.getTaskId());
 		Progress progress = courseService.findProgressByUsernameAndCourseId(username, course.getCourseId());
-		if (progress == null) {
-			progress = new Progress();
-			progress.setProgressId(Utils.getUUID());
-			progress.setCourseId(course.getCourseId());
-			progress.setChapterId(chapter.getChapterId());
-			progress.setLessonId(lesson.getLessonId());
-			progress.setTaskId(task.getTaskId());
-			progress.setCreatedAt(new Date());
-			courseService.saveProgress(progress);
-		} else {
-			progress.setChapterId(chapter.getChapterId());
-			progress.setLessonId(lesson.getLessonId());
-			progress.setTaskId(task.getTaskId());
-			courseService.updateProgress(progress);
+		if (pass) {
+			if (progress == null) {
+				progress = new Progress();
+				progress.setProgressId(Utils.getUUID());
+				progress.setCourseId(course.getCourseId());
+				progress.setChapterId(chapter.getChapterId());
+				progress.setLessonId(lesson.getLessonId());
+				progress.setTaskId(task.getTaskId());
+				progress.setCreatedAt(new Date());
+				progress.setUsername(username);
+				courseService.saveProgress(progress);
+			} else {
+				progress.setChapterId(chapter.getChapterId());
+				progress.setLessonId(lesson.getLessonId());
+				progress.setTaskId(task.getTaskId());
+				progress.setUsername(username);
+				courseService.updateProgress(progress);
+			}
 		}
 		return codeJudge;
 	}

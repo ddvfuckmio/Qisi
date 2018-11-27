@@ -16,7 +16,6 @@ public class QisiApplicationTests {
 
 	@Test
 	public void contextLoads() {
-		System.out.println(courseService.findCourseByTaskId("2e866bdc6ab44089b395417bc7a59153"));
 	}
 
 }

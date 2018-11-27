@@ -82,6 +82,7 @@ public class Jms {
 		mapMessage.setBoolean("pass", pass);
 		messageProducer.send(mapMessage);
 		session.commit();
+		messageProducer.close();
 		session.close();
 		return;
 	}

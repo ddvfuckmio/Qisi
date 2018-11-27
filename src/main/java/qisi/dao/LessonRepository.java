@@ -28,6 +28,6 @@ public interface LessonRepository extends JpaRepository<Lesson, Integer> {
 	 * @param taskId
 	 * @return
 	 */
-	@Query("from course_chapter_lessons where taskId =?1")
+	@Query("select a from course_chapter_lessons a inner join course_chapter_lesson_tasks b on a.lessonId = b.lessonId where b.taskId =?1")
 	Lesson findByTaskId(String taskId);
 }
