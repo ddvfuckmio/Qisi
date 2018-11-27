@@ -95,12 +95,15 @@ CREATE TABLE `user_codes` (
 
 CREATE TABLE `user_course_progress` (
 	`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+	`progressId` varchar(50) NOT NULL,
 	`username` varchar(50) NOT NULL,
 	`courseId` varchar(50) NOT NULL,
+	`chapterId` varchar(50) NOT NULL,
 	`lessonId` varchar(50) NOT NULL,
 	`taskId` varchar(50) NOT NULL,
 	`createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
 	 PRIMARY KEY (`id`),
+	 UNIQUE KEY `progressId` (`progressId`),
 	 UNIQUE KEY `username_courseId` (`username`,`courseId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '用户课程进度表';
 

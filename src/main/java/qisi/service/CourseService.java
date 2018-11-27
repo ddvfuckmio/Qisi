@@ -147,4 +147,20 @@ public class CourseService {
 	public List<Lesson> findLessonsByChapterId(String chapterId) {
 		return lessonRepository.findByChapterId(chapterId);
 	}
+
+	public Progress findProgressByUsernameAndCourseId(String username, String courseId) {
+		return progressRepository.findProgressByUsernameAndCourseId(username,courseId);
+	}
+
+	public Lesson findLessonByTaskId(String taskId) {
+		return lessonRepository.findByTaskId(taskId);
+	}
+
+	public Chapter findChapterByLessonId(String lessonId) {
+		return chapterRepository.findByLessonId(lessonId);
+	}
+
+	public void updateProgress(Progress progress) {
+		progressRepository.updateProgress(progress.getProgressId(),progress.getChapterId(),progress.getLessonId(),progress.getTaskId());
+	}
 }

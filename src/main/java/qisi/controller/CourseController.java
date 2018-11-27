@@ -1,14 +1,13 @@
 package qisi.controller;
 
 import org.apache.activemq.command.ActiveMQQueue;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import qisi.bean.course.*;
 import qisi.bean.jms.CodeMessage;
 import qisi.bean.json.CodeJudge;
-import qisi.bean.query.CourseChaptersQuery;
 import qisi.bean.query.CoursesQuery;
 import qisi.service.CourseService;
 import qisi.service.ProducerService;
@@ -22,7 +21,7 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.*;
 
 /**
  * @author : ddv
@@ -34,6 +33,7 @@ public class CourseController {
 	private final String commitName = "commit";
 	private final String receiveName = "receive";
 	private static final String CHAPTER_HTML = "chapters";
+	private static final int MAX_WAIT = 60;
 
 	@Autowired
 	private CourseService courseService;
@@ -116,16 +116,22 @@ public class CourseController {
 	@ResponseBody
 	@PostMapping("/code/commit")
 	public CodeJudge mockJms(@RequestBody Code code, HttpSession session) {
+
 		String username = (String) session.getAttribute("username");
+		boolean pass = false;
+		CodeJudge codeJudge = new CodeJudge();
 		Destination destination = new ActiveMQQueue(commitName);
 		CodeMessage codeMessage = new CodeMessage();
+		ExecutorService executor = new ScheduledThreadPoolExecutor(1,
+				new BasicThreadFactory.Builder().namingPattern("ddv").daemon(true).build());
 
 		code.setCodeId("6a9827d044504c5faf00103a2f0c1d7c");
 		code.setCreatedAt(new Date());
 		code.setUsername(username);
 
 		Task task = courseService.findTaskByTaskId(code.getTaskId());
-
+		Lesson lesson = courseService.findLessonByTaskId(code.getTaskId());
+		Chapter chapter = courseService.findChapterByLessonId(lesson.getLessonId());
 		List<Case> cases = courseService.findCasesByTaskId(code.getTaskId());
 
 		List<String> inputs = new ArrayList<>(cases.size());
@@ -149,11 +155,24 @@ public class CourseController {
 		System.out.println(codeMessage);
 
 		producerService.sendStreamMessage(destination, codeMessage, new CodeMessageConverter());
-		boolean pass = Jms.consumer(receiveName, code.getCodeId());
+		Future<Boolean> future = executor.submit(new ListenConsumer(receiveName, code.getCodeId()));
 
-		System.out.println("评测完成-->结果..." + pass);
-//
-		CodeJudge codeJudge = new CodeJudge();
+		try {
+			if (future.get(MAX_WAIT, TimeUnit.SECONDS)) {
+				pass = true;
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		} catch (TimeoutException e) {
+			System.out.println("评测超时...");
+		}
+
+		if (!executor.isShutdown()) {
+			executor.shutdown();
+		}
+
 		if (pass) {
 			code.setPass(true);
 			codeJudge.setPass(true);
@@ -165,8 +184,40 @@ public class CourseController {
 			codeJudge.setReason("代码不通过,请检查代码是否符合要求!");
 		}
 		courseService.saveCode(code);
+		Course course = courseService.findCourseByTaskId(code.getTaskId());
+		Progress progress = courseService.findProgressByUsernameAndCourseId(username, course.getCourseId());
+		if (progress == null) {
+			progress = new Progress();
+			progress.setProgressId(Utils.getUUID());
+			progress.setCourseId(course.getCourseId());
+			progress.setChapterId(chapter.getChapterId());
+			progress.setLessonId(lesson.getLessonId());
+			progress.setTaskId(task.getTaskId());
+			progress.setCreatedAt(new Date());
+			courseService.saveProgress(progress);
+		} else {
+			progress.setChapterId(chapter.getChapterId());
+			progress.setLessonId(lesson.getLessonId());
+			progress.setTaskId(task.getTaskId());
+			courseService.updateProgress(progress);
+		}
 		return codeJudge;
 	}
 
+}
 
+class ListenConsumer implements Callable<Boolean> {
+
+	private String receiveName;
+	private String codeId;
+
+	public ListenConsumer(String receiveName, String codeId) {
+		this.receiveName = receiveName;
+		this.codeId = codeId;
+	}
+
+	@Override
+	public Boolean call() {
+		return Jms.consumer(receiveName, codeId);
+	}
 }

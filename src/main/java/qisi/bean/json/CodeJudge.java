@@ -37,4 +37,13 @@ public class CodeJudge {
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
+
+	@Override
+	public String toString() {
+		return "CodeJudge{" +
+				"pass=" + pass +
+				", reason='" + reason + '\'' +
+				", msg='" + msg + '\'' +
+				'}';
+	}
 }

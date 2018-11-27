@@ -30,4 +30,13 @@ public interface ChapterRepository extends JpaRepository<Chapter, Integer> {
 	 * @return
 	 */
 	public Integer countByCourseId(String courseId);
+
+	/**
+	 * 条件查询
+	 *
+	 * @param lessonId
+	 * @return
+	 */
+	@Query("from course_chapters where lessonId =?1")
+	Chapter findByLessonId(String lessonId);
 }

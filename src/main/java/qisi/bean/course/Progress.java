@@ -16,8 +16,10 @@ public class Progress {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	private String progressId;
 	private String username;
 	private String courseId;
+	private String chapterId;
 	private String lessonId;
 	private String taskId;
 	private Date createdAt;
@@ -70,12 +72,30 @@ public class Progress {
 		this.createdAt = createdAt;
 	}
 
+	public String getProgressId() {
+		return progressId;
+	}
+
+	public void setProgressId(String progressId) {
+		this.progressId = progressId;
+	}
+
+	public String getChapterId() {
+		return chapterId;
+	}
+
+	public void setChapterId(String chapterId) {
+		this.chapterId = chapterId;
+	}
+
 	@Override
 	public String toString() {
 		return "Progress{" +
 				"id=" + id +
+				", progressId='" + progressId + '\'' +
 				", username='" + username + '\'' +
 				", courseId='" + courseId + '\'' +
+				", chapterId='" + chapterId + '\'' +
 				", lessonId='" + lessonId + '\'' +
 				", taskId='" + taskId + '\'' +
 				", createdAt=" + createdAt +
