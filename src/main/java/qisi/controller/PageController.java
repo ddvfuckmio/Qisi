@@ -4,6 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
+ * 首页API
+ *
  * @author : ddv
  * @date : 2018/10/25 上午9:58
  */

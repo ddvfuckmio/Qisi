@@ -1,10 +1,5 @@
 package qisi.controller;
 
-/**
- * @author : ddv
- * @date : 2018/10/24 上午11:47
- */
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -23,11 +18,20 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 用户相关API
+ * ResponseBody 此注解标志RestAPI, 并且返回数据JSON格式
+ *
+ * @author : ddv
+ * @date : 2018/10/24 上午11:47
+ */
+
+
 @Controller
 public class UserController {
-	private static final String LOGIN_HTML = "/login.html";
-	private static final String PROFILE_HTML = "/profile.html";
-	private static final String REGISTER_HTML = "/register.html";
+	private static final String LOGIN_HTML = "login.html";
+	private static final String PROFILE_HTML = "profile.html";
+	private static final String REGISTER_HTML = "register.html";
 
 	@Autowired
 	private UserService userService;
@@ -73,9 +77,9 @@ public class UserController {
 	/**
 	 * 用户注册
 	 *
-	 * @param formUser
-	 * @param request
-	 * @return 登录页面
+	 * @param formUser 表单用户
+	 * @param request  回显数据
+	 * @return 登录/注册页面
 	 */
 	@PostMapping("/user/register")
 	public String userRegister(User formUser, HttpServletRequest request) {
@@ -109,7 +113,7 @@ public class UserController {
 	 *
 	 * @param user    用户信息载体(只包含密码)
 	 * @param session 全局session
-	 * @return 修改密码结果
+	 * @return AjaxResponse
 	 */
 	@ResponseBody
 	@PostMapping("/user/password")
@@ -134,14 +138,20 @@ public class UserController {
 	 *
 	 * @param user    用户信息载体
 	 * @param session 全局session
-	 * @return 修改结果
+	 * @return AjaxResponse
 	 */
 	@ResponseBody
 	@PostMapping("/user/profile")
 	public AjaxResponse updateProfile(@RequestBody User user, HttpSession session) {
 		AjaxResponse response = new AjaxResponse();
 		user.setPassword("password");
+		response.setStatus(400);
+		response.setMsg("非法操作!");
 		if (!Utils.checkFormUser(user, response)) {
+			return response;
+		}
+
+		if (!user.getUsername().equals(session.getAttribute("username"))) {
 			return response;
 		}
 
@@ -169,6 +179,11 @@ public class UserController {
 		return response;
 	}
 
+	/**
+	 * @param request 回显数据
+	 * @param file    上传文件
+	 * @return 个人信息页面
+	 */
 	@PostMapping("/upload")
 	public String uploadFile(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
 		FileOutputStream fos;
@@ -195,30 +210,6 @@ public class UserController {
 		}
 		request.setAttribute("error", "上传完毕!");
 		return PROFILE_HTML;
-	}
-
-	/**
-	 * 获取所有用户信息
-	 *
-	 * @return 用户json列表
-	 */
-	@ResponseBody
-	@GetMapping("/users")
-	public List<User> getUsers() {
-		return userService.getUsers();
-	}
-
-	/**
-	 * 根据用户名获取用户信息
-	 *
-	 * @param username 用户名
-	 * @return 用户个人信息
-	 */
-	@ResponseBody
-	@GetMapping(value = "/user/{username}")
-	public MockUser findUserByUserName(@PathVariable("username") String username) {
-		User user = userService.findUserByUsername(username);
-		return user == null ? null : Dozer.getBean(user, MockUser.class);
 	}
 
 }

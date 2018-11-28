@@ -36,15 +36,14 @@ public class UserService {
 	}
 
 	public void updatePassword(String username, String password) {
-		 userRepository.updatePassword(username, password);
+		userRepository.updatePassword(username, password);
 	}
 
 	public void mockUsers(List<User> users) {
 		userRepository.saveAll(users);
 	}
 
-
 	public void updateProfile(User user) {
-		 userRepository.updateProfile(user.getUsername(),user.getSex(),user.getAge(),user.getJob(),user.getPhone(),user.getEmail());
+		userRepository.updateProfile(user.getUsername(), user.getSex(), user.getAge(), user.getJob(), user.getPhone(), user.getEmail());
 	}
 }

@@ -35,11 +35,14 @@ import java.util.concurrent.*;
 public class CourseController {
 	private static final String COMMIT_QUEUE = "commit";
 	private static final String RECEIVE_QUEUE = "receive";
-	private static final int MAX_WAIT = 10;
+	private static final int MAX_WAIT = 60;
 	private static final int POOL_SIZE = 1;
 
+	private static final String COURSES_HTML = "courses.html";
 	private static final String CHAPTER_HTML = "chapters.html";
+	private static final String LESSONS_HTML = "lessons.html";
 	private static final String TASKS_HTML = "tasks.html";
+	private static final String TASK_HTML = "task.html";
 
 	@Autowired
 	private CourseService courseService;
@@ -50,8 +53,8 @@ public class CourseController {
 	/**
 	 * 所有课程列表
 	 *
-	 * @param request
-	 * @return
+	 * @param request 数据回显
+	 * @return courses列表
 	 */
 	@GetMapping("/courses")
 	public String findAllCourses(HttpServletRequest request) {
@@ -59,39 +62,15 @@ public class CourseController {
 		coursesQuery.setCourses(courseService.findAllCourses());
 		coursesQuery.setTotal(coursesQuery.getCourses().size());
 		request.setAttribute("courses", coursesQuery.getCourses());
-		return "courses";
-	}
-
-	/**
-	 * 根据courseName查询courses
-	 *
-	 * @param courseName
-	 * @return
-	 */
-	@ResponseBody
-	@GetMapping("/course")
-	public List<Course> findCourseByName(@RequestParam("courseName") String courseName) {
-		return courseService.findCourseByName(courseName);
-	}
-
-	/**
-	 * 按课程ID获取课程信息
-	 *
-	 * @param courseId
-	 * @return
-	 */
-	@ResponseBody
-	@GetMapping("/course/{courseId}")
-	public Course findCourseByCourseId(@PathVariable("courseId") String courseId) {
-		return courseService.findCourseByCourseId(courseId);
+		return COURSES_HTML;
 	}
 
 	/**
 	 * 按课程ID获取该课程下的所有目录
 	 *
-	 * @param courseId
-	 * @param request
-	 * @return
+	 * @param courseId courseId
+	 * @param request  数据回显
+	 * @return chapters列表
 	 */
 	@GetMapping("/course/{courseId}/chapters")
 	public String findChaptersByCourseId(@PathVariable String courseId, HttpServletRequest request) {
@@ -103,7 +82,7 @@ public class CourseController {
 	/**
 	 * 对应chapter下的lessons
 	 *
-	 * @param chapterId 章节Id
+	 * @param chapterId chapterId
 	 * @param request   数据回显
 	 * @return 训练页面
 	 */
@@ -111,15 +90,15 @@ public class CourseController {
 	public String countByCourseId(@PathVariable("chapterId") String chapterId, HttpServletRequest request) {
 		List<Lesson> lessons = courseService.findLessonsByChapterId(chapterId);
 		request.setAttribute("lessons", lessons);
-		return "lessons";
+		return LESSONS_HTML;
 	}
 
 	/**
 	 * 查询lesson对应的所有task
 	 *
-	 * @param lessonId
-	 * @param request
-	 * @return
+	 * @param lessonId lessonId
+	 * @param request  数据回显
+	 * @return tasks列表
 	 */
 	@GetMapping("/lesson/{lessonId}/tasks")
 	public String findExercisesByLessonId(@PathVariable String lessonId, HttpServletRequest request) {
@@ -131,27 +110,54 @@ public class CourseController {
 	/**
 	 * 获取对应Task
 	 *
-	 * @param taskId
-	 * @param request
-	 * @return
+	 * @param taskId  taskId
+	 * @param request 数据回显
+	 * @return task页面
 	 */
 	@GetMapping("/task/{taskId}")
 	public String findExerciseByExercise(@PathVariable("taskId") String taskId, HttpServletRequest request) {
 		request.setAttribute("task", courseService.findTaskByTaskId(taskId));
-		return "task";
+		return TASK_HTML;
 	}
 
 	/**
-	 * 提交代码
+	 * 根据courseName查询courses
 	 *
-	 * @param code
-	 * @param session
-	 * @return
+	 * @param courseName courseName
+	 * @return courses
+	 */
+	@ResponseBody
+	@GetMapping("/course")
+	public List<Course> findCourseByName(@RequestParam("courseName") String courseName) {
+		return courseService.findCourseByName(courseName);
+	}
+
+	/**
+	 * 根据courseId查询course
+	 *
+	 * @param courseId courseId
+	 * @return course
+	 */
+	@ResponseBody
+	@GetMapping("/course/{courseId}")
+	public Course findCourseByCourseId(@PathVariable("courseId") String courseId) {
+		return courseService.findCourseByCourseId(courseId);
+	}
+
+	/**
+	 * 提交代码信息到消息队列,串行拉取评测结果
+	 * 最大等待60s 否则直接返回代码未通过评测
+	 * 通过 存储提交记录,并更新用户课程进度
+	 * 未通过 只存储提交记录
+	 * 拉取需要观察GC状态
+	 *
+	 * @param code    code
+	 * @param session session
+	 * @return CodeJudge结果
 	 */
 	@ResponseBody
 	@PostMapping("/code/commit")
 	public CodeJudge commitCode(@RequestBody Code code, HttpSession session) {
-
 		String username = (String) session.getAttribute("username");
 		boolean pass = false;
 		CodeJudge codeJudge = new CodeJudge();
@@ -196,6 +202,9 @@ public class CourseController {
 			}
 		} catch (TimeoutException e) {
 			codeJudge.setMsg("评测系统忙,请稍后提交!");
+			if (!executor.isShutdown()) {
+				executor.shutdown();
+			}
 			return codeJudge;
 		} catch (Exception e) {
 			e.printStackTrace();

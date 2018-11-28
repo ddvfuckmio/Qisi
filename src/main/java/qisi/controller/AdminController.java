@@ -1,40 +1,36 @@
 package qisi.controller;
 
-import org.apache.activemq.command.ActiveMQQueue;
+import org.aspectj.weaver.loadtime.Aj;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.web.bind.annotation.*;
 import qisi.bean.course.*;
-import qisi.bean.jms.CodeMessage;
-import qisi.bean.json.CodeJudge;
+import qisi.bean.json.AjaxResponse;
+import qisi.bean.user.MockUser;
 import qisi.bean.user.User;
-import qisi.utils.CodeMessageConverter;
-import qisi.utils.Jms;
+import qisi.utils.*;
 import qisi.service.CourseService;
 import qisi.service.ProducerService;
 import qisi.service.UserService;
-import qisi.utils.Mock;
-import qisi.utils.Utils;
 
-import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 测试API
+ *
  * @author : ddv
  * @date : 2018/10/29 下午1:55
  */
 
 @RestController
-public class MockController {
-	protected static final Logger Logger = LoggerFactory.getLogger(MockController.class);
-	private final String commitName = "commit";
-	private final String receiveName = "QISI.commit";
+@RequestMapping("/admin")
+public class AdminController {
+	private final String receive = "receive";
 
 	@Autowired
 	private CourseService courseService;
@@ -80,6 +76,20 @@ public class MockController {
 		return "done";
 	}
 
+	@GetMapping("/mockProgress")
+	public String mockProgress() {
+		Progress progress = new Progress();
+		progress.setProgressId(Utils.getUUID());
+		progress.setCourseId("codeId...");
+		progress.setChapterId("chapterId...");
+		progress.setLessonId("lessonId...");
+		progress.setTaskId("taskId...");
+		progress.setUsername("username...");
+		progress.setCreatedAt(new Date());
+		courseService.saveProgress(progress);
+		return "done...";
+	}
+
 	@GetMapping("/mockUsers")
 	public String mockUsers(@RequestParam("start") int start) {
 		List<User> users = Mock.mockUsers(start);
@@ -88,10 +98,14 @@ public class MockController {
 		return "done";
 	}
 
-	@PostMapping("/mock/judge")
-	public String mockJudge(@RequestParam String codeId, @RequestParam Boolean pass) throws JMSException {
+	@GetMapping("/judge")
+	public String mockJudge(@RequestParam String codeId, @RequestParam Boolean pass) {
 		System.out.println(codeId + pass);
-		Jms.produce(receiveName, codeId, pass);
+		try {
+			Jms.produce(receive, codeId, pass);
+		} catch (JMSException e) {
+			e.printStackTrace();
+		}
 		return "judge job done...";
 	}
 
@@ -106,35 +120,52 @@ public class MockController {
 		return stringRedisTemplate.opsForValue().get(key);
 	}
 
-	@GetMapping("/setSession")
-	public String setSession(HttpSession session) {
-		session.setAttribute("username", "ddv");
-		return "session存取完毕!";
+
+	/**
+	 * 获取所有用户信息
+	 *
+	 * @return 用户json列表
+	 */
+	@GetMapping("/users")
+	public List<User> getUsers() {
+		return userService.getUsers();
 	}
 
-	@GetMapping("/getSession")
-	public String getSession(HttpSession session) {
-		System.out.println(session.getMaxInactiveInterval());
-		String msg = (String) session.getAttribute("username");
-		if (msg == null) {
-			return "无数据";
+	/**
+	 * 根据用户名获取用户信息
+	 *
+	 * @param username 用户名
+	 * @return 用户个人信息
+	 */
+	@GetMapping(value = "/user/{username}")
+	public MockUser findUserByUserName(@PathVariable("username") String username) {
+		User user = userService.findUserByUsername(username);
+		return user == null ? null : Dozer.getBean(user, MockUser.class);
+	}
+
+	@PostMapping("/addCourses")
+	public AjaxResponse addCourses(@RequestBody List<Course> courses) {
+		AjaxResponse ajaxResponse = new AjaxResponse();
+		for (int i = 0; i < courses.size(); i++) {
+			courses.get(i).setCourseId(Utils.getUUID());
+			courses.get(i).setCreatedAt(new Date());
 		}
-		return msg;
+		try {
+			courseService.saveCourses(courses);
+		} catch (Exception e) {
+			ajaxResponse.setStatus(400);
+			ajaxResponse.setMsg("添加失败!");
+			return ajaxResponse;
+		}
+
+		ajaxResponse.setStatus(200);
+		ajaxResponse.setMsg("添加成功!");
+		return ajaxResponse;
 	}
 
-	@GetMapping("/mockProgress")
-	public String mockProgress() {
-		Progress progress = new Progress();
-
-		progress.setCourseId("codeId...");
-		progress.setLessonId("lessonId...");
-		progress.setTaskId("taskId...");
-		progress.setUsername("username...");
-		progress.setCreatedAt(new Date());
-
-		courseService.saveProgress(progress);
-		return "done...";
+	@GetMapping("/getCourses")
+	public List<Course> getCourses() {
+		return courseService.findAllCourses();
 	}
-
 
 }

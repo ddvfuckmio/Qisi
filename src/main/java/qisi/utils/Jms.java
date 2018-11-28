@@ -1,6 +1,8 @@
 package qisi.utils;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import qisi.bean.jms.CodeMessage;
 
 import javax.jms.*;
@@ -19,12 +21,14 @@ import java.util.Map;
 
 public class Jms {
 
+	protected static final Logger logger = LoggerFactory.getLogger(Jms.class);
+
 	private static Session getTopicSession() throws JMSException {
 		ConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
 
 		((ActiveMQConnectionFactory) connectionFactory).setUserName("admin");
 		((ActiveMQConnectionFactory) connectionFactory).setPassword("admin");
-		((ActiveMQConnectionFactory) connectionFactory).setBrokerURL("tcp://localhost:61616");
+		((ActiveMQConnectionFactory) connectionFactory).setBrokerURL("tcp://127.0.0.1:61616");
 
 		Connection connection = connectionFactory.createConnection();
 		connection.start();
@@ -88,21 +92,25 @@ public class Jms {
 	}
 
 	public static boolean consumer(String queueName, String codeId) {
-		Session session = null;
-		Queue queue = null;
+		Session session;
+		Queue queue;
 		try {
 			session = getTopicSession();
 			queue = session.createQueue(queueName);
 			MessageConsumer messageConsumer = session.createConsumer(queue);
+			logger.debug("等待评测系统评测!-->");
 			while (true) {
 				MapMessage map = (MapMessage) messageConsumer.receive();
 				if (map.getString("codeId").equals(codeId)) {
 					session.close();
+					logger.debug("评测结果匹配!");
 					return map.getBoolean("pass");
+				} else {
+					logger.debug("评测结果不匹配!");
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.debug("评测出错!-->:", e.getStackTrace());
 		}
 
 		return false;
@@ -110,6 +118,8 @@ public class Jms {
 
 	public static void main(String[] args) throws JMSException, InterruptedException {
 //		checkSendJms("commit");
-		produce("receive", "6a9827d044504c5faf00103a2f0c1d7c", true);
+//		produce("receive", "6a9827d044504c5faf00103a2f0c1d7c", true);
+		boolean sign = consumer("receive", "12121");
+		System.out.println(sign);
 	}
 }

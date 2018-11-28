@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import qisi.bean.json.AjaxResponse;
 import qisi.bean.user.User;
 
+import javax.jms.JMSException;
 import java.security.MessageDigest;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
