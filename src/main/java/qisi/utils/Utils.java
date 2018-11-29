@@ -1,15 +1,10 @@
 package qisi.utils;
 
-import com.sun.org.apache.regexp.internal.RE;
-import org.springframework.web.bind.annotation.RequestBody;
-import qisi.bean.json.AjaxResponse;
+import qisi.bean.json.ApiResult;
 import qisi.bean.user.User;
 
-import javax.jms.JMSException;
 import java.security.MessageDigest;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -75,7 +70,7 @@ public class Utils {
 		return true;
 	}
 
-	public static boolean checkFormUser(User user, AjaxResponse response) {
+	public static boolean checkFormUser(User user, ApiResult response) {
 		response.setStatus(400);
 		if (user == null) {
 			response.setMsg("用户信息有误!");

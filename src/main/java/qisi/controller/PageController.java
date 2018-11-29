@@ -24,14 +24,4 @@ public class PageController {
 		return "register";
 	}
 
-	@RequestMapping("/main")
-	public String success() {
-		return "courses";
-	}
-
-	@RequestMapping("/profile")
-	public String profile() {
-		return "profile";
-	}
-
 }

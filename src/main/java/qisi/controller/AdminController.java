@@ -1,13 +1,12 @@
 package qisi.controller;
 
-import org.aspectj.weaver.loadtime.Aj;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import qisi.bean.course.*;
-import qisi.bean.json.AjaxResponse;
+import qisi.bean.json.ApiResult;
 import qisi.bean.user.MockUser;
 import qisi.bean.user.User;
 import qisi.utils.*;
@@ -16,12 +15,11 @@ import qisi.service.ProducerService;
 import qisi.service.UserService;
 
 import javax.jms.JMSException;
-import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 测试API
+ * 管理员及测试API
  *
  * @author : ddv
  * @date : 2018/10/29 下午1:55
@@ -30,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
+	protected static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 	private final String receive = "receive";
 
 	@Autowired
@@ -98,7 +97,7 @@ public class AdminController {
 		return "done";
 	}
 
-	@GetMapping("/judge")
+	@GetMapping("/mockJudge")
 	public String mockJudge(@RequestParam String codeId, @RequestParam Boolean pass) {
 		System.out.println(codeId + pass);
 		try {
@@ -132,7 +131,7 @@ public class AdminController {
 	}
 
 	/**
-	 * 根据用户名获取用户信息
+	 * 根据用户名获取用户
 	 *
 	 * @param username 用户名
 	 * @return 用户个人信息
@@ -144,8 +143,8 @@ public class AdminController {
 	}
 
 	@PostMapping("/addCourses")
-	public AjaxResponse addCourses(@RequestBody List<Course> courses) {
-		AjaxResponse ajaxResponse = new AjaxResponse();
+	public ApiResult addCourses(@RequestBody List<Course> courses) {
+
 		for (int i = 0; i < courses.size(); i++) {
 			courses.get(i).setCourseId(Utils.getUUID());
 			courses.get(i).setCreatedAt(new Date());
@@ -153,19 +152,90 @@ public class AdminController {
 		try {
 			courseService.saveCourses(courses);
 		} catch (Exception e) {
-			ajaxResponse.setStatus(400);
-			ajaxResponse.setMsg("添加失败!");
-			return ajaxResponse;
+			return ApiResult.ERROR();
 		}
+		return ApiResult.SUCCESS();
+	}
 
-		ajaxResponse.setStatus(200);
-		ajaxResponse.setMsg("添加成功!");
-		return ajaxResponse;
+	@PostMapping("/addChapters")
+	public ApiResult addChapters(@RequestBody List<Chapter> chapters) {
+		for (int i = 0; i < chapters.size(); i++) {
+			chapters.get(i).setChapterId(Utils.getUUID());
+			chapters.get(i).setCreatedAt(new Date());
+		}
+		try {
+			courseService.saveChapters(chapters);
+		} catch (Exception e) {
+			return ApiResult.ERROR();
+		}
+		return ApiResult.SUCCESS();
+	}
+
+	@PostMapping("/addLessons")
+	public ApiResult addLessons(@RequestBody List<Lesson> lessons) {
+		for (int i = 0; i < lessons.size(); i++) {
+			lessons.get(i).setLessonId(Utils.getUUID());
+			lessons.get(i).setCreatedAt(new Date());
+		}
+		try {
+			courseService.saveLessons(lessons);
+		} catch (Exception e) {
+			return ApiResult.ERROR();
+		}
+		return ApiResult.SUCCESS();
+	}
+
+	@PostMapping("/addTasks")
+	public ApiResult addTasks(@RequestBody List<Task> tasks) {
+		for (int i = 0; i < tasks.size(); i++) {
+			tasks.get(i).setTaskId(Utils.getUUID());
+			tasks.get(i).setCreatedAt(new Date());
+		}
+		try {
+			courseService.saveTasks(tasks);
+		} catch (Exception e) {
+			return ApiResult.ERROR();
+		}
+		return ApiResult.SUCCESS();
+	}
+
+	@PostMapping("/addCases")
+	public ApiResult addCases(@RequestBody List<Case> cases) {
+		for (int i = 0; i < cases.size(); i++) {
+			cases.get(i).setCaseId(Utils.getUUID());
+			cases.get(i).setCreatedAt(new Date());
+		}
+		try {
+			courseService.saveCases(cases);
+		} catch (Exception e) {
+			return ApiResult.ERROR();
+		}
+		return ApiResult.SUCCESS();
 	}
 
 	@GetMapping("/getCourses")
 	public List<Course> getCourses() {
 		return courseService.findAllCourses();
+	}
+
+	@GetMapping("/getChapters")
+	public List<Chapter> getChapters() {
+		return courseService.findAllChapters();
+	}
+
+	@GetMapping("/getLessons")
+	public List<Lesson> getLessons() {
+		return courseService.findAllLessons();
+	}
+
+	@GetMapping("/getTasks")
+	public List<Task> getTasks() {
+		return courseService.findAllTasks();
+	}
+
+	@GetMapping("/getCases")
+	public List<Case> getCases() {
+		return courseService.findAllCases();
 	}
 
 }

@@ -4,12 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import qisi.bean.json.AjaxResponse;
-import qisi.bean.user.MockUser;
+import qisi.bean.json.ApiResult;
 import qisi.service.UserService;
 import qisi.bean.user.User;
 import qisi.utils.Utils;
-import qisi.utils.Dozer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -84,7 +82,7 @@ public class UserController {
 	@PostMapping("/user/register")
 	public String userRegister(User formUser, HttpServletRequest request) {
 		request.setAttribute("user", formUser);
-		AjaxResponse ajax = new AjaxResponse();
+		ApiResult ajax = new ApiResult();
 
 		if (!Utils.checkFormUser(formUser, ajax)) {
 			request.setAttribute("error", ajax.getMsg());
@@ -113,37 +111,36 @@ public class UserController {
 	 *
 	 * @param user    用户信息载体(只包含密码)
 	 * @param session 全局session
-	 * @return AjaxResponse
+	 * @return ApiResult
 	 */
 	@ResponseBody
 	@PostMapping("/user/password")
-	public AjaxResponse updatePassword(@RequestBody User user, HttpSession session) {
-		AjaxResponse ajaxResponse = new AjaxResponse();
+	public ApiResult updatePassword(@RequestBody User user, HttpSession session) {
+		ApiResult apiResult = new ApiResult();
 		String username = (String) session.getAttribute("username");
 
-
 		if (!Utils.fieldValue(user.getPassword())) {
-			ajaxResponse.setMsg("密码格式有误!");
-			return ajaxResponse;
+			apiResult.setMsg("密码格式有误!");
+			return apiResult;
 		}
 		user.setPassword(Utils.encode(user.getPassword()));
 
 		userService.updatePassword(username, user.getPassword());
-		ajaxResponse.setMsg("修改成功!");
-		return ajaxResponse;
+		apiResult.setMsg("修改成功!");
+		return apiResult;
 	}
 
 	/**
-	 * 用户个人信息更新
+	 * 用户更新个人信息
 	 *
 	 * @param user    用户信息载体
 	 * @param session 全局session
-	 * @return AjaxResponse
+	 * @return ApiResult
 	 */
 	@ResponseBody
 	@PostMapping("/user/profile")
-	public AjaxResponse updateProfile(@RequestBody User user, HttpSession session) {
-		AjaxResponse response = new AjaxResponse();
+	public ApiResult updateProfile(@RequestBody User user, HttpSession session) {
+		ApiResult response = new ApiResult();
 		user.setPassword("password");
 		response.setStatus(400);
 		response.setMsg("非法操作!");

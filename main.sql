@@ -85,7 +85,7 @@ CREATE TABLE `user_codes` (
 	`codeId` varchar(50) NOT NULL,
 	`username` varchar(50) NOT NULL,
 	`taskId` varchar(50) NOT NULL,
-	`code` text NOT NULL,
+	`status` text NOT NULL,
 	`pass` tinyint(1) NOT NULL DEFAULT 0 COMMENT '代码是否通过',
 	`createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
 	 PRIMARY KEY (`id`),

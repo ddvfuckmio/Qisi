@@ -7,9 +7,7 @@ import qisi.bean.jms.CodeMessage;
 
 import javax.jms.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author : ddv
@@ -20,21 +18,33 @@ import java.util.Map;
  */
 
 public class Jms {
+	private static final String MESSAGE_PRE = "--->";
 
-	protected static final Logger logger = LoggerFactory.getLogger(Jms.class);
+	private static final String DEVELOP_URL = "tcp://127.0.0.1:61616";
+	private static final String DEVELOP_USERNAME = "admin";
+	private static final String DEVELOP_PASSWORD = "admin";
+
+	private static final String PRODUCTION_URL = "tcp://192.168.50.2:61616";
+	private static final String PRODUCTION_USERNAME = "qisi";
+	private static final String PRODUCTION_PASSWORD = "fablab151";
 
 	private static Session getTopicSession() throws JMSException {
 		ConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
 
-		((ActiveMQConnectionFactory) connectionFactory).setUserName("admin");
-		((ActiveMQConnectionFactory) connectionFactory).setPassword("admin");
-		((ActiveMQConnectionFactory) connectionFactory).setBrokerURL("tcp://127.0.0.1:61616");
+		((ActiveMQConnectionFactory) connectionFactory).setUserName(DEVELOP_USERNAME);
+		((ActiveMQConnectionFactory) connectionFactory).setPassword(DEVELOP_PASSWORD);
+		((ActiveMQConnectionFactory) connectionFactory).setBrokerURL(DEVELOP_URL);
 
 		Connection connection = connectionFactory.createConnection();
 		connection.start();
 		return connection.createSession(Boolean.TRUE, Session.AUTO_ACKNOWLEDGE);
 	}
 
+	/**
+	 * 检查发送的commitCode消息
+	 *
+	 * @param queueName 队列名
+	 */
 	public static void checkSendJms(String queueName) {
 
 		Session session;
@@ -44,7 +54,6 @@ public class Jms {
 			MessageConsumer messageConsumer = session.createConsumer(queue);
 
 			while (true) {
-				System.out.println("监听开始...");
 				CodeMessage codeMessage = new CodeMessage();
 				StreamMessage streamMessage = (StreamMessage) messageConsumer.receive();
 
@@ -68,7 +77,6 @@ public class Jms {
 				codeMessage.setInputs(inputs);
 				codeMessage.setOutputs(outputs);
 
-				System.out.println(codeMessage);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -88,29 +96,35 @@ public class Jms {
 		session.commit();
 		messageProducer.close();
 		session.close();
-		return;
 	}
 
+	/**
+	 * 拉取评测结果
+	 *
+	 * @param queueName 队列名
+	 * @param codeId    codeId
+	 * @return 是否通过
+	 */
 	public static boolean consumer(String queueName, String codeId) {
-		Session session;
-		Queue queue;
+		Session session = null;
+		Queue queue = null;
 		try {
 			session = getTopicSession();
 			queue = session.createQueue(queueName);
 			MessageConsumer messageConsumer = session.createConsumer(queue);
-			logger.debug("等待评测系统评测!-->");
 			while (true) {
+				System.out.println("等待评测系统评测!-->");
 				MapMessage map = (MapMessage) messageConsumer.receive();
 				if (map.getString("codeId").equals(codeId)) {
 					session.close();
-					logger.debug("评测结果匹配!");
+					System.out.println("评测结果匹配!");
 					return map.getBoolean("pass");
 				} else {
-					logger.debug("评测结果不匹配!");
+					System.out.println("评测结果不匹配!");
 				}
 			}
 		} catch (Exception e) {
-			logger.debug("评测出错!-->:", e.getStackTrace());
+			System.out.println(MESSAGE_PRE + "评测出错!" + e.getMessage());
 		}
 
 		return false;
@@ -118,8 +132,8 @@ public class Jms {
 
 	public static void main(String[] args) throws JMSException, InterruptedException {
 //		checkSendJms("commit");
-//		produce("receive", "6a9827d044504c5faf00103a2f0c1d7c", true);
-		boolean sign = consumer("receive", "12121");
-		System.out.println(sign);
+		produce("receive", "a32bcab2a5394766828d888fdbb5e012", true);
+//		boolean sign = consumer("receive", "a32bcab2a5394766828d888fdbb5e012");
+//		System.out.println(sign);
 	}
 }

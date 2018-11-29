@@ -2,6 +2,8 @@ package qisi.controller;
 
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +46,8 @@ public class CourseController {
 	private static final String TASKS_HTML = "tasks.html";
 	private static final String TASK_HTML = "task.html";
 
+	private static final Logger logger = LoggerFactory.getLogger(CourseController.class);
+
 	@Autowired
 	private CourseService courseService;
 
@@ -51,7 +55,7 @@ public class CourseController {
 	private ProducerService producerService;
 
 	/**
-	 * 所有课程列表
+	 * 课程列表
 	 *
 	 * @param request 数据回显
 	 * @return courses列表
@@ -192,6 +196,8 @@ public class CourseController {
 		codeMessage.setInputs(inputs);
 		codeMessage.setOutputs(outputs);
 		codeMessage.setType(courseService.findCourseByTaskId(code.getTaskId()).getType());
+
+		System.out.println(code.getCodeId());
 
 		producerService.sendStreamMessage(destination, codeMessage, new CodeMessageConverter());
 		Future<Boolean> future = executor.submit(new ListenConsumer(RECEIVE_QUEUE, code.getCodeId()));

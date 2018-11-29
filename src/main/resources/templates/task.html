@@ -9,13 +9,13 @@
         function commit() {
             var data = {
                 taskId: $('#taskId').val(),
-                code: $('#code').val(),
+                status: $('#status').val(),
             };
             $('#msg').text("发送中...")
             $.ajax({
                 type: 'POST',
                 contentType: 'application/json',
-                url: '/code/commit',
+                url: '/status/commit',
                 data: JSON.stringify(data),
                 success: function (response) {
                     console.log(response)
@@ -49,7 +49,7 @@
     </tr>
 </table>
 代码:</br>
-<textarea id="code" style="width:500px;height:200px;border:1;background-color:antiquewhite"></textarea>
+<textarea id="status" style="width:500px;height:200px;border:1;background-color:antiquewhite"></textarea>
 </br>
 <button type="button" value="提交" onclick="commit()">提交代码</button>
 <p id="msg" th:text="${error}"/>

@@ -16,7 +16,7 @@ import java.util.List;
 public class CourseService {
 
 	/**
-	 * course业务层封装了course,lesson,exercise,code等持久层对象
+	 * course业务层封装了course,chapter,lesson,task,code,progress 等持久层对象
 	 */
 
 	@Autowired
@@ -43,7 +43,6 @@ public class CourseService {
 	/**
 	 * course业务
 	 */
-
 	public Course findCourseByCourseId(String courseId) {
 		return courseRepository.findCourseByCourseId(courseId);
 	}
@@ -76,6 +75,17 @@ public class CourseService {
 		return chapterRepository.findChaptersByCourseId(courseId);
 	}
 
+	public Chapter findChapterByLessonId(String lessonId) {
+		return chapterRepository.findChapterByLessonId(lessonId);
+	}
+
+
+	/**
+	 * 分页查询备用
+	 *
+	 * @param courseId
+	 * @return
+	 */
 	public Integer countByCourseId(String courseId) {
 		return chapterRepository.countByCourseId(courseId);
 	}
@@ -96,11 +106,19 @@ public class CourseService {
 		lessonRepository.saveAll(lessons);
 	}
 
+	public List<Lesson> findLessonsByChapterId(String chapterId) {
+		return lessonRepository.findByChapterId(chapterId);
+	}
+
+	public Lesson findLessonByTaskId(String taskId) {
+		return lessonRepository.findByTaskId(taskId);
+	}
+
+
 	/**
 	 * task业务
 	 */
-
-	public List<Task> findTasks() {
+	public List<Task> findAllTasks() {
 		return taskRepository.findAll();
 	}
 
@@ -118,10 +136,18 @@ public class CourseService {
 
 
 	/**
-	 * 测试用例业务
+	 * case业务
 	 */
-	public List<Case> findCasesByTaskId(String taskId){
+	public List<Case> findCasesByTaskId(String taskId) {
 		return caseRepository.findCasesByTaskId(taskId);
+	}
+
+	public List<Case> findAllCases() {
+		return caseRepository.findAll();
+	}
+
+	public void saveCases(List<Case> cases) {
+		caseRepository.saveAll(cases);
 	}
 
 	/**
@@ -132,35 +158,19 @@ public class CourseService {
 		codeRepository.save(code);
 	}
 
-	public void saveCases(List<Case> cases) {
-		caseRepository.saveAll(cases);
-	}
-
-
 	/**
-	 * 用户进度业务
+	 * progress业务
 	 */
 	public void saveProgress(Progress progress) {
 		progressRepository.save(progress);
 	}
 
-	public List<Lesson> findLessonsByChapterId(String chapterId) {
-		return lessonRepository.findByChapterId(chapterId);
-	}
-
 	public Progress findProgressByUsernameAndCourseId(String username, String courseId) {
-		return progressRepository.findProgressByUsernameAndCourseId(username,courseId);
-	}
-
-	public Lesson findLessonByTaskId(String taskId) {
-		return lessonRepository.findByTaskId(taskId);
-	}
-
-	public Chapter findChapterByLessonId(String lessonId) {
-		return chapterRepository.findChapterByLessonId(lessonId);
+		return progressRepository.findProgressByUsernameAndCourseId(username, courseId);
 	}
 
 	public void updateProgress(Progress progress) {
-		progressRepository.updateProgress(progress.getProgressId(),progress.getChapterId(),progress.getLessonId(),progress.getTaskId());
+		progressRepository.updateProgress(progress.getProgressId(), progress.getChapterId(), progress.getLessonId(), progress.getTaskId());
 	}
+
 }
