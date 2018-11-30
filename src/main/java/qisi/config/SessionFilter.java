@@ -25,6 +25,7 @@ public class SessionFilter implements Filter {
 		set.add("/user/login");
 		set.add("/user/register");
 		set.add("/pages/register");
+		set.add("swagger-ui.html ");
 	}
 
 	@Override

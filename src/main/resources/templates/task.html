@@ -9,13 +9,13 @@
         function commit() {
             var data = {
                 taskId: $('#taskId').val(),
-                status: $('#status').val(),
+                code: $('#status').val(),
             };
             $('#msg').text("发送中...")
             $.ajax({
                 type: 'POST',
                 contentType: 'application/json',
-                url: '/status/commit',
+                url: '/code/commit',
                 data: JSON.stringify(data),
                 success: function (response) {
                     console.log(response)

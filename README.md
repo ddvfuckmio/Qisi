@@ -38,6 +38,9 @@
 是否有死线程,死连接现象
 ```
 ##API
+
+http://localhost:8080/swagger-ui.html#/
+
 所有的API都在controller包中
 API分为两种
 * 跳转页面API  跳转页面
@@ -46,24 +49,24 @@ API分为两种
 controller中有二者的区分注释
 
 ###UserController
-* 用户登录
-* 用户注册
-* 用户更新密码
-* 用户更新个人信息
-* 用户上传文件 (暂存image文件夹 上传文件限制1024MB)
+* /user/login          用户登录
+* /user/register       用户注册
+* /user/password       用户更新密码
+* /user/profile        用户更新个人信息
+* /upload              用户上传文件 (暂存image文件夹 上传文件限制1024MB)
 
-###AdminController
-* 获取所有用户
-* 获取用户根据用户名
-* 添加/获取Courses
-* 添加/获取Chapters
-* 添加/获取Lessons
-* 添加/获取Tasks
-* 添加/获取Cases
+###AdminController (pre="/admin 获取将add修改为get即可)
+* /users                      获取所有用户
+* /user/{username}            获取用户根据用户名
+* /addCourses                 添加/获取Courses
+* /addChapters                添加/获取Chapters
+* /addLessons                 添加/获取Lessons   
+* /addTasks                   添加/获取Tasks
+* /addCases                   添加/获取Cases
 
 ###PageController
-* 登录页面
-* 注册页面
+* /pages/login    登录页面 
+* /pages/register 注册页面
 
 ###CourseController
 * /courses                     课程列表
@@ -73,4 +76,4 @@ controller中有二者的区分注释
 * /task/{taskId}               对应任务详情
 * /course?courseName           根据courseName查找
 * /course/{courseId}           根据courseId查找
-
+* /code/commit                 提交代码

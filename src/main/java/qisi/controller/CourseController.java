@@ -197,7 +197,7 @@ public class CourseController {
 		codeMessage.setOutputs(outputs);
 		codeMessage.setType(courseService.findCourseByTaskId(code.getTaskId()).getType());
 
-		System.out.println(code.getCodeId());
+		logger.info(code.getCodeId());
 
 		producerService.sendStreamMessage(destination, codeMessage, new CodeMessageConverter());
 		Future<Boolean> future = executor.submit(new ListenConsumer(RECEIVE_QUEUE, code.getCodeId()));
