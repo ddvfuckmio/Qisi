@@ -15,6 +15,7 @@ import qisi.service.ProducerService;
 import qisi.service.UserService;
 
 import javax.jms.JMSException;
+import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -118,6 +119,13 @@ public class AdminController {
 	public String setKey(@RequestParam("key") String key) {
 		return stringRedisTemplate.opsForValue().get(key);
 	}
+
+	@GetMapping("/removeSession")
+	public String removeSession(HttpSession session){
+		session.removeAttribute("username");
+		return "done";
+	}
+
 
 
 	/**

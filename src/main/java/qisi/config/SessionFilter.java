@@ -1,12 +1,15 @@
 package qisi.config;
 
 
+import qisi.bean.json.ApiResult;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -41,7 +44,16 @@ public class SessionFilter implements Filter {
 			if (username != null && !"".equals(username)) {
 				filterChain.doFilter(servletRequest, servletResponse);
 			} else {
-				response.sendRedirect(request.getContextPath() + "/pages/login");
+				if (isAjax(request)) {
+					PrintWriter writer = response.getWriter();
+					writer.write("需要登录的API!");
+					writer.close();
+					response.flushBuffer();
+					return;
+				} else {
+					response.sendRedirect(request.getContextPath() + "/pages/login");
+				}
+
 			}
 		}
 		return;
@@ -51,4 +63,9 @@ public class SessionFilter implements Filter {
 	public void destroy() {
 
 	}
+
+	public static boolean isAjax(HttpServletRequest request) {
+		return (request.getHeader("X-Requested-With") != null && "XMLHttpRequest".equals(request.getHeader("X-Requested-With").toString()));
+	}
+
 }
