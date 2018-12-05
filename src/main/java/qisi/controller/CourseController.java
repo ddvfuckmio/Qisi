@@ -91,7 +91,7 @@ public class CourseController {
 	 * @return 训练页面
 	 */
 	@GetMapping("/chapter/{chapterId}/lessons")
-	public String countByCourseId(@PathVariable("chapterId") String chapterId, HttpServletRequest request) {
+	public String findLessonsByChapterId(@PathVariable("chapterId") String chapterId, HttpServletRequest request) {
 		List<Lesson> lessons = courseService.findLessonsByChapterId(chapterId);
 		request.setAttribute("lessons", lessons);
 		return LESSONS_HTML;
@@ -105,7 +105,7 @@ public class CourseController {
 	 * @return tasks列表
 	 */
 	@GetMapping("/lesson/{lessonId}/tasks")
-	public String findExercisesByLessonId(@PathVariable String lessonId, HttpServletRequest request) {
+	public String findTasksByLessonId(@PathVariable String lessonId, HttpServletRequest request) {
 		List<Task> tasks = courseService.findTasksByLessonId(lessonId);
 		request.setAttribute("tasks", tasks);
 		return TASKS_HTML;
@@ -119,7 +119,7 @@ public class CourseController {
 	 * @return task页面
 	 */
 	@GetMapping("/task/{taskId}")
-	public String findExerciseByExercise(@PathVariable("taskId") String taskId, HttpServletRequest request) {
+	public String findTaskByTaskId(@PathVariable("taskId") String taskId, HttpServletRequest request) {
 		request.setAttribute("task", courseService.findTaskByTaskId(taskId));
 		return TASK_HTML;
 	}

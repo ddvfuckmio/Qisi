@@ -21,6 +21,10 @@ import java.util.HashSet;
 @WebFilter(filterName = "sessionFilter", urlPatterns = {"/*"})
 public class SessionFilter implements Filter {
 	private static HashSet<String> set = new HashSet<>();
+	private static final String NEED_LOGIN = "{\n" +
+			"  \"status\": 401,\n" +
+			"  \"msg\":\"认证过期,请重新登录!\"\n" +
+			"}";
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -45,8 +49,9 @@ public class SessionFilter implements Filter {
 				filterChain.doFilter(servletRequest, servletResponse);
 			} else {
 				if (isAjax(request)) {
+					response.setHeader("Content-type", "application/json;charset=UTF-8");
 					PrintWriter writer = response.getWriter();
-					writer.write("需要登录的API!");
+					writer.write(NEED_LOGIN);
 					writer.close();
 					response.flushBuffer();
 					return;
