@@ -16,8 +16,7 @@
  2: maven支持
  3: mysql支持
  4: activeMQ支持
- 5  redis支持
- 6: 修改application.yml中的
+ 5: 修改application.yml中的
  spring:
     profiles:
        active: dev --> production

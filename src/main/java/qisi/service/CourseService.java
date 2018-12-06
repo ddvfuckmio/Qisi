@@ -63,6 +63,10 @@ public class CourseService {
 		return courseRepository.findCourseByTaskId(taskId);
 	}
 
+	public List<Course> findAllPublishedCourses() {
+		return courseRepository.findAllPublishedCourses();
+	}
+
 	/**
 	 * chapter业务
 	 */
@@ -172,5 +176,6 @@ public class CourseService {
 	public void updateProgress(Progress progress) {
 		progressRepository.updateProgress(progress.getProgressId(), progress.getChapterId(), progress.getLessonId(), progress.getTaskId());
 	}
+
 
 }

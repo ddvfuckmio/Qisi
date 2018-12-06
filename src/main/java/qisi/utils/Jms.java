@@ -116,6 +116,7 @@ public class Jms {
 			queue = session.createQueue(queueName);
 			MessageConsumer messageConsumer = session.createConsumer(queue);
 			while (true) {
+				System.out.println("监听开始....");
 				MapMessage map = (MapMessage) messageConsumer.receive();
 				if (map.getString("codeId").equals(codeId)) {
 					session.close();

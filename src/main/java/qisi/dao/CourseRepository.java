@@ -15,12 +15,20 @@ import java.util.List;
 public interface CourseRepository extends JpaRepository<Course, Integer> {
 
 	/**
-	 * 查找所有的课程
+	 * 查询所有的课程
 	 *
 	 * @return List<Course>
 	 */
 	@Query("from courses order by id")
 	public List<Course> findAllCourses();
+
+	/**
+	 * 查询已经发版的课程
+	 *
+	 * @return List<Course>
+	 */
+	@Query("from courses where isPublished = '1'")
+	public List<Course> findAllPublishedCourses();
 
 	/**
 	 * 指定课程名查找

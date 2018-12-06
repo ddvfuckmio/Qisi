@@ -21,6 +21,7 @@ public class Course {
 	private String courseName;
 	private String introduction;
 	private String type;
+	private boolean isPublished;
 	private Date createdAt;
 
 	public Course() {
@@ -81,6 +82,14 @@ public class Course {
 		this.createdAt = createdAt;
 	}
 
+	public boolean isPublished() {
+		return isPublished;
+	}
+
+	public void setPublished(boolean published) {
+		isPublished = published;
+	}
+
 	@Override
 	public String toString() {
 		return "Course{" +
@@ -89,6 +98,7 @@ public class Course {
 				", courseName='" + courseName + '\'' +
 				", introduction='" + introduction + '\'' +
 				", type='" + type + '\'' +
+				", isPublished=" + isPublished +
 				", createdAt=" + createdAt +
 				'}';
 	}

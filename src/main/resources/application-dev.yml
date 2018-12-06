@@ -25,8 +25,8 @@ spring:
     port: 6379
   servlet:
     multipart:
-      max-file-size: 1024MB
-      max-request-size: 1024MB
+      max-file-size: 10MB
+      max-request-size: 10MB
       enabled: true
 # 配置项目路径前缀,端口,session
 server:

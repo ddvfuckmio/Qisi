@@ -16,6 +16,12 @@ import javax.servlet.http.HttpServletRequest;
 public class GlobalExceptionHandler {
 
 	@ResponseBody
+	@ExceptionHandler(value = AdminAuthorityException.class)
+	public ApiResult AdminAuthorityExceptionHandler() {
+		return ApiResult.FAILED("违法的管理员操作!");
+	}
+
+	@ResponseBody
 	@ExceptionHandler(value = com.alibaba.fastjson.JSONException.class)
 	public ApiResult JsonExceptionHandler() {
 		return ApiResult.ERROR();

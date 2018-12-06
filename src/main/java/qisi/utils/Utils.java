@@ -1,5 +1,6 @@
 package qisi.utils;
 
+import qisi.bean.admin.AdminUser;
 import qisi.bean.json.ApiResult;
 import qisi.bean.user.User;
 

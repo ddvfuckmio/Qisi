@@ -55,6 +55,7 @@ public class Mock {
 			course.setCourseName(courseNames[i]);
 			course.setIntroduction(courseNames[i] + " 快速入门");
 			course.setType(courseNames[i]);
+			course.setPublished(true);
 			courses.add(course);
 			course.setCreatedAt(new Date());
 			course = null;

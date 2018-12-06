@@ -39,7 +39,7 @@ public class ApiResult {
 	}
 
 	public static ApiResult FAILED(String msg) {
-		return new ApiResult(400, msg);
+		return new ApiResult(401, msg);
 	}
 
 	public static ApiResult ILLEGAL() {

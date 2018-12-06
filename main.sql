@@ -21,6 +21,7 @@ CREATE TABLE `courses` (
 	`courseName` varchar(50) NOT NULL,
 	`introduction` varchar(100) DEFAULT NULL,
 	`type` varchar(50) NOT NULL,
+	`isPublished` tinyint(1) DEFAULT 0,
 	`createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
 	 PRIMARY KEY (`id`),
 	 UNIQUE KEY `courseId` (`courseId`),
@@ -106,6 +107,16 @@ CREATE TABLE `user_course_progress` (
 	 UNIQUE KEY `progressId` (`progressId`),
 	 UNIQUE KEY `username_courseId` (`username`,`courseId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '用户课程进度表';
+
+CREATE TABLE `admin_users` (
+	`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+	`username` varchar(50) NOT NULL,
+	`password` varchar(50) NOT NULL,
+	`createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
+	 PRIMARY KEY (`id`),
+	 UNIQUE KEY `username_UNIQUE` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '管理员表';
+
 
 
 

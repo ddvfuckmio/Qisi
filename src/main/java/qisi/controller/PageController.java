@@ -24,4 +24,9 @@ public class PageController {
 		return "register";
 	}
 
+	@RequestMapping("/admin/login")
+	public String adminLogin() {
+		return "admin_login";
+	}
+
 }

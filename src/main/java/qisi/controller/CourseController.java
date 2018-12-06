@@ -37,7 +37,7 @@ import java.util.concurrent.*;
 public class CourseController {
 	private static final String COMMIT_QUEUE = "commit";
 	private static final String RECEIVE_QUEUE = "receive";
-	private static final int MAX_WAIT = 30;
+	private static final int MAX_WAIT = 60;
 	private static final int POOL_SIZE = 1;
 
 	private static final String COURSES_HTML = "courses.html";
@@ -63,7 +63,7 @@ public class CourseController {
 	@GetMapping("/courses")
 	public String findAllCourses(HttpServletRequest request) {
 		CoursesQuery coursesQuery = new CoursesQuery();
-		coursesQuery.setCourses(courseService.findAllCourses());
+		coursesQuery.setCourses(courseService.findAllPublishedCourses());
 		coursesQuery.setTotal(coursesQuery.getCourses().size());
 		request.setAttribute("courses", coursesQuery.getCourses());
 		return COURSES_HTML;
@@ -229,8 +229,7 @@ public class CourseController {
 		} else {
 			code.setPass(false);
 			codeJudge.setPass(false);
-			codeJudge.setMsg("评测未通过!");
-			codeJudge.setReason("代码不通过,请检查代码是否符合要求!");
+			codeJudge.setMsg("代码未通过,请检查代码是否符合要求!");
 		}
 		courseService.saveCode(code);
 		Course course = courseService.findCourseByTaskId(code.getTaskId());

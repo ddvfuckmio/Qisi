@@ -29,9 +29,11 @@ public class SessionFilter implements Filter {
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		set.add("/pages/login");
+		set.add("/pages/register");
+		set.add("/pages/admin/login");
 		set.add("/user/login");
 		set.add("/user/register");
-		set.add("/pages/register");
+		set.add("/admin/login");
 		set.add("/swagger-ui.html");
 	}
 
@@ -69,7 +71,7 @@ public class SessionFilter implements Filter {
 
 	}
 
-	public static boolean isAjax(HttpServletRequest request) {
+	private static boolean isAjax(HttpServletRequest request) {
 		return (request.getHeader("X-Requested-With") != null && "XMLHttpRequest".equals(request.getHeader("X-Requested-With").toString()));
 	}
 

@@ -101,10 +101,10 @@
         </dependency>
 
         <!--redis依赖-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-data-redis</artifactId>-->
+        <!--</dependency>-->
 
         <!--阿里云短信接口-->
         <!--<dependency>-->
@@ -120,6 +120,7 @@
             <!--<version>1.1.0</version>-->
         <!--</dependency>-->
 
+        <!---->
         <dependency>
             <groupId>com.github.dozermapper</groupId>
             <artifactId>dozer-core</artifactId>
