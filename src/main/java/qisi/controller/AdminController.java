@@ -121,17 +121,16 @@ public class AdminController {
 	}
 
 	@GetMapping("/removeSession")
-	public String removeSession(HttpSession session){
+	public String removeSession(HttpSession session) {
 		session.removeAttribute("username");
 		return "done";
 	}
 
 
-
 	/**
 	 * 获取所有用户信息
 	 *
-	 * @return 用户json列表
+	 * @return 用户列表
 	 */
 	@GetMapping("/users")
 	public List<User> getUsers() {
@@ -139,10 +138,10 @@ public class AdminController {
 	}
 
 	/**
-	 * 根据用户名获取用户
+	 * 根据用户名查询用户
 	 *
 	 * @param username 用户名
-	 * @return 用户个人信息
+	 * @return 用户信息
 	 */
 	@GetMapping(value = "/user/{username}")
 	public MockUser findUserByUserName(@PathVariable("username") String username) {
@@ -150,6 +149,12 @@ public class AdminController {
 		return user == null ? null : Dozer.getBean(user, MockUser.class);
 	}
 
+	/**
+	 * 添加课程
+	 *
+	 * @param courses course列表
+	 * @return ApiResult
+	 */
 	@PostMapping("/addCourses")
 	public ApiResult addCourses(@RequestBody List<Course> courses) {
 
@@ -165,6 +170,12 @@ public class AdminController {
 		return ApiResult.SUCCESS();
 	}
 
+	/**
+	 * 添加目录
+	 *
+	 * @param chapters chapters列表
+	 * @return ApiResult
+	 */
 	@PostMapping("/addChapters")
 	public ApiResult addChapters(@RequestBody List<Chapter> chapters) {
 		for (int i = 0; i < chapters.size(); i++) {
@@ -179,6 +190,12 @@ public class AdminController {
 		return ApiResult.SUCCESS();
 	}
 
+	/**
+	 * 添加训练
+	 *
+	 * @param lessons lessons列表
+	 * @return ApiResult
+	 */
 	@PostMapping("/addLessons")
 	public ApiResult addLessons(@RequestBody List<Lesson> lessons) {
 		for (int i = 0; i < lessons.size(); i++) {
@@ -193,6 +210,12 @@ public class AdminController {
 		return ApiResult.SUCCESS();
 	}
 
+	/**
+	 * 添加任务
+	 *
+	 * @param tasks tasks列表
+	 * @return ApiResult
+	 */
 	@PostMapping("/addTasks")
 	public ApiResult addTasks(@RequestBody List<Task> tasks) {
 		for (int i = 0; i < tasks.size(); i++) {
@@ -207,6 +230,12 @@ public class AdminController {
 		return ApiResult.SUCCESS();
 	}
 
+	/**
+	 * 添加测试用例
+	 *
+	 * @param cases cases列表
+	 * @return ApiResult
+	 */
 	@PostMapping("/addCases")
 	public ApiResult addCases(@RequestBody List<Case> cases) {
 		for (int i = 0; i < cases.size(); i++) {
@@ -220,6 +249,7 @@ public class AdminController {
 		}
 		return ApiResult.SUCCESS();
 	}
+
 
 	@GetMapping("/getCourses")
 	public List<Course> getCourses() {

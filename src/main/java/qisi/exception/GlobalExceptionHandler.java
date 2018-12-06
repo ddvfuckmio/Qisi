@@ -17,13 +17,13 @@ public class GlobalExceptionHandler {
 
 	@ResponseBody
 	@ExceptionHandler(value = com.alibaba.fastjson.JSONException.class)
-	public ApiResult JsonExceptionHandler(){
-		return ApiResult.ILLEGAL();
+	public ApiResult JsonExceptionHandler() {
+		return ApiResult.ERROR();
 	}
 
 	@ResponseBody
-	@ExceptionHandler(value=Exception.class)
-	public String globalExceptionHandler(HttpServletRequest request,Exception exception) throws Exception{
+	@ExceptionHandler(value = Exception.class)
+	public String globalExceptionHandler(HttpServletRequest request, Exception exception) throws Exception {
 		return "服务器繁忙,请稍后再试!";
 	}
 

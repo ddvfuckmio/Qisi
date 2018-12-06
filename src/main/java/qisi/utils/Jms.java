@@ -3,7 +3,9 @@ package qisi.utils;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jms.JmsException;
 import qisi.bean.jms.CodeMessage;
+import qisi.controller.CourseController;
 
 import javax.jms.*;
 import java.util.ArrayList;
@@ -108,26 +110,27 @@ public class Jms {
 	public static boolean consumer(String queueName, String codeId) {
 		Session session = null;
 		Queue queue = null;
+
 		try {
 			session = getTopicSession();
 			queue = session.createQueue(queueName);
 			MessageConsumer messageConsumer = session.createConsumer(queue);
 			while (true) {
-				System.out.println("等待评测系统评测!-->");
 				MapMessage map = (MapMessage) messageConsumer.receive();
 				if (map.getString("codeId").equals(codeId)) {
 					session.close();
-					System.out.println("评测结果匹配!");
+					System.out.println("代码评测完成!");
 					return map.getBoolean("pass");
 				} else {
-					System.out.println("评测结果不匹配!");
+					System.out.println(("评测结果不匹配!"));
 				}
 			}
-		} catch (Exception e) {
-			System.out.println(MESSAGE_PRE + "评测出错!" + e.getMessage());
+		} catch (JMSException e) {
+			System.out.println("评测超时返回");
+			return false;
 		}
 
-		return false;
+
 	}
 
 	public static void main(String[] args) throws JMSException, InterruptedException {

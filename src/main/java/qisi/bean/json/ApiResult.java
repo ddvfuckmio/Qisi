@@ -43,11 +43,11 @@ public class ApiResult {
 	}
 
 	public static ApiResult ILLEGAL() {
-		return new ApiResult(400, "请求数据格式有误!");
+		return new ApiResult(401, "需要登录的API!");
 	}
 
 	public static ApiResult ERROR() {
-		return new ApiResult(400, "失败!");
+		return new ApiResult(400, "请求数据格式有误!");
 	}
 
 }

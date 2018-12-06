@@ -1,5 +1,6 @@
 package qisi.controller;
 
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,6 +44,7 @@ public class UserController {
 	 * @param session  全局session
 	 * @return 登录页面/个人信息页面
 	 */
+	@ApiOperation(value = "用户登录", notes = "用户登录接口")
 	@PostMapping("/user/login")
 	public String userLogin(User formUser, Map<String, Object> map, HttpSession session) {
 		String username = formUser.getUsername();
@@ -80,6 +82,7 @@ public class UserController {
 	 * @param request  回显数据
 	 * @return 登录/注册页面
 	 */
+	@ApiOperation(value = "用户注册", notes = "用户注册接口")
 	@PostMapping("/user/register")
 	public String userRegister(User formUser, HttpServletRequest request) {
 		request.setAttribute("user", formUser);
@@ -114,6 +117,7 @@ public class UserController {
 	 * @param session 全局session
 	 * @return ApiResult
 	 */
+	@ApiOperation(value = "用户修改密码", notes = "修改密码接口")
 	@ResponseBody
 	@PostMapping("/user/password")
 	public ApiResult updatePassword(@RequestBody User user, HttpSession session) {
@@ -138,6 +142,7 @@ public class UserController {
 	 * @param session 全局session
 	 * @return ApiResult
 	 */
+	@ApiOperation(value = "用户个人信息", notes = "个人信息修改接口")
 	@ResponseBody
 	@PostMapping("/user/profile")
 	public ApiResult updateProfile(@RequestBody User user, HttpSession session) {
@@ -182,6 +187,7 @@ public class UserController {
 	 * @param file    上传文件
 	 * @return 个人信息页面
 	 */
+	@ApiOperation(value = "用户上传文件", notes = "文件上传接口")
 	@PostMapping("/upload")
 	public String uploadFile(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
 		FileOutputStream fos;

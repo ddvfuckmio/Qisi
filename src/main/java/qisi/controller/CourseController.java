@@ -37,7 +37,7 @@ import java.util.concurrent.*;
 public class CourseController {
 	private static final String COMMIT_QUEUE = "commit";
 	private static final String RECEIVE_QUEUE = "receive";
-	private static final int MAX_WAIT = 60;
+	private static final int MAX_WAIT = 30;
 	private static final int POOL_SIZE = 1;
 
 	private static final String COURSES_HTML = "courses.html";
@@ -211,9 +211,11 @@ public class CourseController {
 			if (!executor.isShutdown()) {
 				executor.shutdown();
 			}
+			future.cancel(Boolean.TRUE);
 			return codeJudge;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.info("评测系统繁忙关闭", e.getStackTrace());
+			return codeJudge;
 		}
 
 		if (!executor.isShutdown()) {
