@@ -116,4 +116,8 @@ public class Utils {
 		return true;
 	}
 
+	public static void main(String[] args){
+	    String pre  = "/admin";
+	    System.out.println("/admin".contains(pre));
+	}
 }

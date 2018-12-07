@@ -1,7 +1,10 @@
 package qisi.config;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import qisi.bean.json.ApiResult;
+import qisi.service.AdminService;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -17,9 +20,11 @@ import java.util.HashSet;
  * @author : ddv
  * @date : 2018/11/15 上午9:40
  */
-
+@Component
 @WebFilter(filterName = "sessionFilter", urlPatterns = {"/*"})
 public class SessionFilter implements Filter {
+	@Autowired
+	private AdminService adminService;
 	private static HashSet<String> set = new HashSet<>();
 	private static final String NEED_LOGIN = "{\n" +
 			"  \"status\": 401,\n" +
@@ -34,7 +39,6 @@ public class SessionFilter implements Filter {
 		set.add("/user/login");
 		set.add("/user/register");
 		set.add("/admin/login");
-		set.add("/swagger-ui.html");
 	}
 
 	@Override
@@ -48,14 +52,18 @@ public class SessionFilter implements Filter {
 		} else {
 			String username = (String) session.getAttribute("username");
 			if (username != null && !"".equals(username)) {
+				if (url.contains("/admin")) {
+					if (adminService.findAdminUserByUsername(username) == null) {
+						if (isAjax(request)) {
+							ajaxHandler(response);
+						}
+						response.sendRedirect(request.getContextPath() + "/pages/admin/login");
+					}
+				}
 				filterChain.doFilter(servletRequest, servletResponse);
 			} else {
 				if (isAjax(request)) {
-					response.setHeader("Content-type", "application/json;charset=UTF-8");
-					PrintWriter writer = response.getWriter();
-					writer.write(NEED_LOGIN);
-					writer.close();
-					response.flushBuffer();
+					ajaxHandler(response);
 					return;
 				} else {
 					response.sendRedirect(request.getContextPath() + "/pages/login");
@@ -63,6 +71,15 @@ public class SessionFilter implements Filter {
 
 			}
 		}
+		return;
+	}
+
+	private void ajaxHandler(HttpServletResponse response) throws IOException {
+		response.setHeader("Content-type", "application/json;charset=UTF-8");
+		PrintWriter writer = response.getWriter();
+		writer.write(NEED_LOGIN);
+		writer.close();
+		response.flushBuffer();
 		return;
 	}
 

@@ -50,7 +50,7 @@ public class AdminController {
 	private HttpSession session;
 
 	@PostMapping("/login")
-	public String adminLogin(AdminUser adminUser, HttpServletRequest request, HttpSession session) {
+	public String adminLogin(AdminUser adminUser, HttpServletRequest request) {
 		request.setAttribute("user", adminUser);
 		if (adminUser == null || adminUser.getUsername() == null || adminUser.getPassword() == null) {
 			request.setAttribute("msg", "请正确填写用户信息!");
@@ -144,6 +144,13 @@ public class AdminController {
 	}
 
 	@ResponseBody
+	@GetMapping("/getSession")
+	public String getSession() {
+		return (String) session.getAttribute("username");
+
+	}
+
+	@ResponseBody
 	@GetMapping("/removeSession")
 	public String removeSession() {
 		session.removeAttribute("username");
@@ -174,9 +181,6 @@ public class AdminController {
 	@ResponseBody
 	@GetMapping(value = "/user/{username}")
 	public MockUser findUserByUserName(@PathVariable("username") String username) throws AdminAuthorityException {
-		if (!verifyAdmin((String) session.getAttribute("username"))) {
-			throw new AdminAuthorityException("违法的管理员操作!");
-		}
 		User user = userService.findUserByUsername(username);
 		return user == null ? null : Dozer.getBean(user, MockUser.class);
 	}
@@ -190,13 +194,6 @@ public class AdminController {
 	@ResponseBody
 	@PostMapping("/addCourses")
 	public ApiResult addCourses(@RequestBody List<Course> courses) throws AdminAuthorityException {
-		if (!verifyAdmin((String) session.getAttribute("username"))) {
-			throw new AdminAuthorityException("违法的管理员操作!");
-		}
-
-		if (!verifyAdmin((String) session.getAttribute("username"))) {
-			return ApiResult.FAILED("违法的管理员操作!");
-		}
 		for (int i = 0; i < courses.size(); i++) {
 			courses.get(i).setCourseId(Utils.getUUID());
 			courses.get(i).setCreatedAt(new Date());
@@ -218,9 +215,7 @@ public class AdminController {
 	@ResponseBody
 	@PostMapping("/addChapters")
 	public ApiResult addChapters(@RequestBody List<Chapter> chapters) throws AdminAuthorityException {
-		if (!verifyAdmin((String) session.getAttribute("username"))) {
-			throw new AdminAuthorityException("违法的管理员操作!");
-		}
+
 		for (int i = 0; i < chapters.size(); i++) {
 			chapters.get(i).setChapterId(Utils.getUUID());
 			chapters.get(i).setCreatedAt(new Date());
@@ -242,9 +237,7 @@ public class AdminController {
 	@ResponseBody
 	@PostMapping("/addLessons")
 	public ApiResult addLessons(@RequestBody List<Lesson> lessons) throws AdminAuthorityException {
-		if (!verifyAdmin((String) session.getAttribute("username"))) {
-			throw new AdminAuthorityException("违法的管理员操作!");
-		}
+
 		for (int i = 0; i < lessons.size(); i++) {
 			lessons.get(i).setLessonId(Utils.getUUID());
 			lessons.get(i).setCreatedAt(new Date());
@@ -265,10 +258,8 @@ public class AdminController {
 	 */
 	@ResponseBody
 	@PostMapping("/addTasks")
-	public ApiResult addTasks(@RequestBody List<Task> tasks) throws AdminAuthorityException {
-		if (!verifyAdmin((String) session.getAttribute("username"))) {
-			throw new AdminAuthorityException("违法的管理员操作!");
-		}
+	public ApiResult addTasks(@RequestBody List<Task> tasks) {
+
 		for (int i = 0; i < tasks.size(); i++) {
 			tasks.get(i).setTaskId(Utils.getUUID());
 			tasks.get(i).setCreatedAt(new Date());
@@ -289,10 +280,8 @@ public class AdminController {
 	 */
 	@ResponseBody
 	@PostMapping("/addCases")
-	public ApiResult addCases(@RequestBody List<Case> cases) throws AdminAuthorityException {
-		if (!verifyAdmin((String) session.getAttribute("username"))) {
-			throw new AdminAuthorityException("违法的管理员操作!");
-		}
+	public ApiResult addCases(@RequestBody List<Case> cases) {
+
 		for (int i = 0; i < cases.size(); i++) {
 			cases.get(i).setCaseId(Utils.getUUID());
 			cases.get(i).setCreatedAt(new Date());
@@ -335,8 +324,4 @@ public class AdminController {
 		return courseService.findAllCases();
 	}
 
-
-	private boolean verifyAdmin(String username) {
-		return adminService.findAdminUserByUsername(username) != null;
-	}
 }

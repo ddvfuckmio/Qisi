@@ -15,6 +15,9 @@ public class AdminService {
 	private AdminUserRepository adminUserRepository;
 
 	public AdminUser findAdminUserByUsername(String username) {
+		if (username == null) {
+			return null;
+		}
 		return adminUserRepository.findAdminUserByUsername(username);
 	}
 }
