@@ -1,5 +1,6 @@
 package qisi.controller;
 
+import io.swagger.annotations.ApiOperation;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
@@ -60,6 +61,7 @@ public class CourseController {
 	 * @param request 数据回显
 	 * @return courses列表
 	 */
+	@ApiOperation(value = "课程列表", notes = "获取已发版的课程列表")
 	@GetMapping("/courses")
 	public String findAllCourses(HttpServletRequest request) {
 		CoursesQuery coursesQuery = new CoursesQuery();
@@ -76,6 +78,7 @@ public class CourseController {
 	 * @param request  数据回显
 	 * @return chapters列表
 	 */
+	@ApiOperation(value = "章节列表", notes = "某课程下的章节列表")
 	@GetMapping("/course/{courseId}/chapters")
 	public String findChaptersByCourseId(@PathVariable String courseId, HttpServletRequest request) {
 		List<Chapter> chapters = courseService.findChaptersByCourseId(courseId);
@@ -90,6 +93,7 @@ public class CourseController {
 	 * @param request   数据回显
 	 * @return 训练页面
 	 */
+	@ApiOperation(value = "训练列表", notes = "某章节下的训练列表")
 	@GetMapping("/chapter/{chapterId}/lessons")
 	public String findLessonsByChapterId(@PathVariable("chapterId") String chapterId, HttpServletRequest request) {
 		List<Lesson> lessons = courseService.findLessonsByChapterId(chapterId);
@@ -104,6 +108,7 @@ public class CourseController {
 	 * @param request  数据回显
 	 * @return tasks列表
 	 */
+	@ApiOperation(value = "任务列表", notes = "某训练的任务列表")
 	@GetMapping("/lesson/{lessonId}/tasks")
 	public String findTasksByLessonId(@PathVariable String lessonId, HttpServletRequest request) {
 		List<Task> tasks = courseService.findTasksByLessonId(lessonId);
@@ -118,6 +123,7 @@ public class CourseController {
 	 * @param request 数据回显
 	 * @return task页面
 	 */
+	@ApiOperation(value = "任务详情", notes = "任务详情")
 	@GetMapping("/task/{taskId}")
 	public String findTaskByTaskId(@PathVariable("taskId") String taskId, HttpServletRequest request) {
 		request.setAttribute("task", courseService.findTaskByTaskId(taskId));
@@ -131,6 +137,7 @@ public class CourseController {
 	 * @return courses
 	 */
 	@ResponseBody
+	@ApiOperation(value = "课程详情", notes = "根据课程名查询")
 	@GetMapping("/course")
 	public List<Course> findCourseByName(@RequestParam("courseName") String courseName) {
 		return courseService.findCourseByName(courseName);
@@ -143,6 +150,7 @@ public class CourseController {
 	 * @return course
 	 */
 	@ResponseBody
+	@ApiOperation(value = "课程详情", notes = "根据课程Id查询")
 	@GetMapping("/course/{courseId}")
 	public Course findCourseByCourseId(@PathVariable("courseId") String courseId) {
 		return courseService.findCourseByCourseId(courseId);
@@ -160,6 +168,7 @@ public class CourseController {
 	 * @return CodeJudge结果
 	 */
 	@ResponseBody
+	@ApiOperation(value = "提交代码", notes = "提交代码")
 	@PostMapping("/code/commit")
 	public CodeJudge commitCode(@RequestBody Code code, HttpSession session) {
 		String username = (String) session.getAttribute("username");
@@ -202,34 +211,11 @@ public class CourseController {
 		producerService.sendStreamMessage(destination, codeMessage, new CodeMessageConverter());
 		Future<Boolean> future = executor.submit(new ListenConsumer(RECEIVE_QUEUE, code.getCodeId()));
 
-		try {
-			if (future.get(MAX_WAIT, TimeUnit.SECONDS)) {
-				pass = true;
-			}
-		} catch (TimeoutException e) {
-			codeJudge.setMsg("评测系统忙,请稍后提交!");
-			if (!executor.isShutdown()) {
-				executor.shutdown();
-			}
-			future.cancel(Boolean.TRUE);
-			return codeJudge;
-		} catch (Exception e) {
-			logger.info("评测系统繁忙,返回!", e.getStackTrace());
-			return codeJudge;
-		}
+		codeJudge = Utils.getCodeJudge(codeJudge, executor, future, MAX_WAIT);
 
-		if (!executor.isShutdown()) {
-			executor.shutdown();
-		}
-
-		if (pass) {
+		if (codeJudge.isPass()) {
+			pass = true;
 			code.setPass(true);
-			codeJudge.setPass(true);
-			codeJudge.setMsg("代码成功通过了所有的测试用例!");
-		} else {
-			code.setPass(false);
-			codeJudge.setPass(false);
-			codeJudge.setMsg("代码未通过,请检查代码是否符合要求!");
 		}
 
 		courseService.saveCode(code);

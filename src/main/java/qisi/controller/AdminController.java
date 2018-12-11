@@ -1,5 +1,6 @@
 package qisi.controller;
 
+import io.swagger.annotations.ApiOperation;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
@@ -30,6 +31,7 @@ import java.util.concurrent.*;
 
 /**
  * 管理员及测试API
+ * 添加类API自身主键id,标志id,createdAt自动生成,无需添加
  *
  * @author : ddv
  * @date : 2018/10/29 下午1:55
@@ -44,10 +46,10 @@ public class AdminController {
 	private static final int MAX_WAIT = 60;
 	private static final int POOL_SIZE = 1;
 
-	protected static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 	private static final String LOGIN_HTML = "admin_login.html";
 	private static final String TEST_HTML = "admin_test.html";
-	private static final String USERNAME = "username";
+	private static final String SESSION_KEY = "username";
 
 	@Autowired
 	private CourseService courseService;
@@ -60,6 +62,7 @@ public class AdminController {
 	@Autowired
 	private HttpSession session;
 
+	@ApiOperation(value = "管理员登录")
 	@PostMapping("/login")
 	public String adminLogin(AdminUser adminUser, HttpServletRequest request) {
 		request.setAttribute("user", adminUser);
@@ -73,79 +76,15 @@ public class AdminController {
 			request.setAttribute("msg", "登录信息有误!");
 			return LOGIN_HTML;
 		}
-		session.setAttribute("username", adminUser.getUsername());
+		session.setAttribute(SESSION_KEY, adminUser.getUsername());
 		request.setAttribute("msg", "登陆成功!");
 		return LOGIN_HTML;
 	}
 
-	@ResponseBody
-	@GetMapping("/mockCourses")
-	public String mockCourses() {
-		List<Course> courses = Mock.mockCourses();
-		courseService.saveCourses(courses);
-		return "done";
-	}
-
-	@ResponseBody
-	@GetMapping("/mockChapters")
-	public String mockChapters() {
-		List<Chapter> chapters = Mock.mockChapters();
-		courseService.saveChapters(chapters);
-		return "done";
-	}
-
-	@ResponseBody
-	@GetMapping("/mockLessons")
-	public String mockLessons() {
-		List<Lesson> lessons = Mock.mockLessons();
-		courseService.saveLessons(lessons);
-		return "done";
-	}
-
-	@ResponseBody
-	@GetMapping("/mockTasks")
-	public String mockTasks() {
-		List<Task> tasks = Mock.mockTasks();
-		courseService.saveTasks(tasks);
-		return "done";
-	}
-
-	@ResponseBody
-	@GetMapping("/mockCases")
-	public String mockCases() {
-		List<Case> cases = Mock.mockCases();
-		courseService.saveCases(cases);
-		return "done";
-	}
-
-	@ResponseBody
-	@GetMapping("/mockProgress")
-	public String mockProgress() {
-		Progress progress = new Progress();
-		progress.setProgressId(Utils.getUUID());
-		progress.setCourseId("codeId...");
-		progress.setChapterId("chapterId...");
-		progress.setLessonId("lessonId...");
-		progress.setTaskId("taskId...");
-		progress.setUsername("username...");
-		progress.setCreatedAt(new Date());
-		courseService.saveProgress(progress);
-		return "done...";
-	}
-
-	@ResponseBody
-	@GetMapping("/mockUsers")
-	public String mockUsers(@RequestParam("start") int start) {
-		List<User> users = Mock.mockUsers(start);
-		System.out.println("mock 完毕...");
-		userService.mockUsers(users);
-		return "done";
-	}
-
+	@ApiOperation(value = "模拟评测结果")
 	@ResponseBody
 	@GetMapping("/mockJudge")
 	public String mockJudge(@RequestParam String codeId, @RequestParam Boolean pass) {
-		System.out.println(codeId + pass);
 		try {
 			Jms.produce(RECEIVE_QUEUE, codeId, pass);
 		} catch (JMSException e) {
@@ -154,6 +93,7 @@ public class AdminController {
 		return "judge job done...";
 	}
 
+	@ApiOperation(value = "检查session")
 	@ResponseBody
 	@GetMapping("/getSession")
 	public String getSession() {
@@ -161,6 +101,7 @@ public class AdminController {
 
 	}
 
+	@ApiOperation(value = "清空session")
 	@ResponseBody
 	@GetMapping("/removeSession")
 	public String removeSession() {
@@ -168,6 +109,7 @@ public class AdminController {
 		return "done";
 	}
 
+	@ApiOperation(value = "获取用户列表")
 	/**
 	 * 获取所有用户信息
 	 *
@@ -183,6 +125,7 @@ public class AdminController {
 		return users;
 	}
 
+	@ApiOperation(value = "根据用户名查找")
 	/**
 	 * 根据用户名查询用户
 	 *
@@ -196,6 +139,7 @@ public class AdminController {
 		return user == null ? null : Dozer.getBean(user, MockUser.class);
 	}
 
+	@ApiOperation(value = "添加课程")
 	/**
 	 * 添加课程
 	 *
@@ -217,6 +161,7 @@ public class AdminController {
 		return ApiResult.SUCCESS();
 	}
 
+	@ApiOperation(value = "添加章节")
 	/**
 	 * 添加目录
 	 *
@@ -239,6 +184,7 @@ public class AdminController {
 		return ApiResult.SUCCESS();
 	}
 
+	@ApiOperation(value = "添加训练")
 	/**
 	 * 添加训练
 	 *
@@ -261,6 +207,7 @@ public class AdminController {
 		return ApiResult.SUCCESS();
 	}
 
+	@ApiOperation(value = "添加任务")
 	/**
 	 * 添加任务
 	 *
@@ -283,6 +230,7 @@ public class AdminController {
 		return ApiResult.SUCCESS();
 	}
 
+	@ApiOperation(value = "添加测试用例")
 	/**
 	 * 添加测试用例
 	 *
@@ -305,49 +253,54 @@ public class AdminController {
 		return ApiResult.SUCCESS();
 	}
 
+	@ApiOperation(value = "获取课程列表")
 	@ResponseBody
 	@GetMapping("/getCourses")
 	public List<Course> getCourses() {
 		return courseService.findAllCourses();
 	}
 
+	@ApiOperation(value = "获取目录列表")
 	@ResponseBody
 	@GetMapping("/getChapters")
 	public List<Chapter> getChapters() {
 		return courseService.findAllChapters();
 	}
 
+	@ApiOperation(value = "获取训练列表")
 	@ResponseBody
 	@GetMapping("/getLessons")
 	public List<Lesson> getLessons() {
 		return courseService.findAllLessons();
 	}
 
+	@ApiOperation(value = "获取任务列表")
 	@ResponseBody
 	@GetMapping("/getTasks")
 	public List<Task> getTasks() {
 		return courseService.findAllTasks();
 	}
 
+	@ApiOperation(value = "获取测试用例")
 	@ResponseBody
 	@GetMapping("/getCases")
 	public List<Case> getCases() {
 		return courseService.findAllCases();
 	}
 
-
+	@ApiOperation(value = "测试task详情")
 	@GetMapping("/task/{taskId}")
 	public String task(HttpServletRequest request, @PathVariable String taskId) {
 		Task task = courseService.findTaskByTaskId(taskId);
 		request.setAttribute("task", task);
-		return "admin_test";
+		return TEST_HTML;
 	}
 
+	@ApiOperation(value = "测试task提交")
 	@ResponseBody
 	@PostMapping("/commit")
 	public CodeJudge Commit(@RequestBody Code code, HttpServletRequest request) {
 		String username = (String) session.getAttribute("username");
-		boolean pass = false;
 		CodeJudge codeJudge = new CodeJudge();
 		Destination destination = new ActiveMQQueue(COMMIT_QUEUE);
 		CodeMessage codeMessage = new CodeMessage();
@@ -384,34 +337,8 @@ public class AdminController {
 		producerService.sendStreamMessage(destination, codeMessage, new CodeMessageConverter());
 		Future<Boolean> future = executor.submit(new ListenConsumer(RECEIVE_QUEUE, code.getCodeId()));
 
-		try {
-			if (future.get(MAX_WAIT, TimeUnit.SECONDS)) {
-				pass = true;
-			}
-		} catch (TimeoutException e) {
-			codeJudge.setMsg("评测系统忙,请稍后提交!");
-			if (!executor.isShutdown()) {
-				executor.shutdown();
-			}
-			future.cancel(Boolean.TRUE);
-			return codeJudge;
-		} catch (Exception e) {
-			return codeJudge;
-		}
-
-		if (!executor.isShutdown()) {
-			executor.shutdown();
-		}
-
-		if (pass) {
-			codeJudge.setPass(true);
-			codeJudge.setMsg("代码成功通过了所有的测试用例!");
-		} else {
-			codeJudge.setPass(false);
-			codeJudge.setMsg("代码未通过,请检查代码是否符合要求!");
-		}
-
-		return codeJudge;
+		return Utils.getCodeJudge(codeJudge, executor, future, MAX_WAIT);
 	}
+
 
 }

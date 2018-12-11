@@ -2,10 +2,15 @@ package qisi.utils;
 
 import qisi.bean.admin.AdminUser;
 import qisi.bean.json.ApiResult;
+import qisi.bean.json.CodeJudge;
 import qisi.bean.user.User;
 
 import java.security.MessageDigest;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.regex.Pattern;
 
 /**
@@ -116,8 +121,38 @@ public class Utils {
 		return true;
 	}
 
-	public static void main(String[] args){
-	    String pre  = "/admin";
-	    System.out.println("/admin".contains(pre));
+	public static CodeJudge getCodeJudge( CodeJudge codeJudge, ExecutorService executor, Future<Boolean> future, int MAX_WAIT) {
+		boolean pass = false ;
+		try {
+			if (future.get(MAX_WAIT, TimeUnit.SECONDS)) {
+				pass = true;
+			}
+		} catch (TimeoutException e) {
+			codeJudge.setMsg("评测系统忙,请稍后提交!");
+			future.cancel(Boolean.TRUE);
+			return codeJudge;
+		} catch (Exception e) {
+			return codeJudge;
+		} finally {
+			if (!executor.isShutdown()) {
+				executor.shutdown();
+			}
+		}
+
+		if (!executor.isShutdown()) {
+			executor.shutdown();
+		}
+
+		if (pass) {
+			codeJudge.setPass(true);
+			codeJudge.setMsg("代码成功通过了所有的测试用例!");
+		} else {
+			codeJudge.setPass(false);
+			codeJudge.setMsg("代码未通过,请检查代码是否符合要求!");
+		}
+
+		return codeJudge;
 	}
+
+
 }
