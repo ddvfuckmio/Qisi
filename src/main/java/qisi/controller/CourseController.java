@@ -214,7 +214,7 @@ public class CourseController {
 			future.cancel(Boolean.TRUE);
 			return codeJudge;
 		} catch (Exception e) {
-			logger.info("评测系统繁忙关闭", e.getStackTrace());
+			logger.info("评测系统繁忙,返回!", e.getStackTrace());
 			return codeJudge;
 		}
 
@@ -231,9 +231,11 @@ public class CourseController {
 			codeJudge.setPass(false);
 			codeJudge.setMsg("代码未通过,请检查代码是否符合要求!");
 		}
+
 		courseService.saveCode(code);
 		Course course = courseService.findCourseByTaskId(code.getTaskId());
 		Progress progress = courseService.findProgressByUsernameAndCourseId(username, course.getCourseId());
+
 		if (pass) {
 			if (progress == null) {
 				progress = new Progress();

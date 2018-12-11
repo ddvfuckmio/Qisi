@@ -2,30 +2,6 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>登录认证</title>
-    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
-    <script type="text/javascript">
-
-        function post() {
-            var data = {
-                username: $('#username').val(),
-                password: $('#password').val()
-            };
-            $.ajax({
-                type: 'POST',
-                contentType: 'application/json',
-                url: '/user/login',
-                data: JSON.stringify(data),
-                success: function (response) {
-                    console.log(response);
-                    $('#p1').text("登录失败!")
-                },
-                error: function () {
-
-                }
-            });
-        }
-
-    </script>
 </head>
 <body>
 
@@ -36,6 +12,6 @@
 </form>
 <a href="/pages/register">注册</a>
 <a href="/pages/admin/login">管理员登录</a>
-<p id="p1" th:text="${error}"/>
+<p th:text="${error}"/>
 </body>
 </html>

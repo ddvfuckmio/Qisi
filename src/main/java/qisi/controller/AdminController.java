@@ -1,5 +1,7 @@
 package qisi.controller;
 
+import org.apache.activemq.command.ActiveMQQueue;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import qisi.bean.admin.AdminUser;
 import qisi.bean.course.*;
+import qisi.bean.jms.CodeMessage;
 import qisi.bean.json.ApiResult;
+import qisi.bean.json.CodeJudge;
 import qisi.bean.user.MockUser;
 import qisi.bean.user.User;
 import qisi.exception.AdminAuthorityException;
@@ -17,10 +21,12 @@ import qisi.service.CourseService;
 import qisi.service.ProducerService;
 import qisi.service.UserService;
 
+import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
+import java.util.concurrent.*;
 
 /**
  * 管理员及测试API
@@ -33,9 +39,14 @@ import java.util.*;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+	private static final String COMMIT_QUEUE = "commit";
+	private static final String RECEIVE_QUEUE = "receive";
+	private static final int MAX_WAIT = 60;
+	private static final int POOL_SIZE = 1;
+
 	protected static final Logger logger = LoggerFactory.getLogger(AdminController.class);
-	private static final String RECEIVE = "receive";
 	private static final String LOGIN_HTML = "admin_login.html";
+	private static final String TEST_HTML = "admin_test.html";
 	private static final String USERNAME = "username";
 
 	@Autowired
@@ -136,7 +147,7 @@ public class AdminController {
 	public String mockJudge(@RequestParam String codeId, @RequestParam Boolean pass) {
 		System.out.println(codeId + pass);
 		try {
-			Jms.produce(RECEIVE, codeId, pass);
+			Jms.produce(RECEIVE_QUEUE, codeId, pass);
 		} catch (JMSException e) {
 			e.printStackTrace();
 		}
@@ -322,6 +333,85 @@ public class AdminController {
 	@GetMapping("/getCases")
 	public List<Case> getCases() {
 		return courseService.findAllCases();
+	}
+
+
+	@GetMapping("/task/{taskId}")
+	public String task(HttpServletRequest request, @PathVariable String taskId) {
+		Task task = courseService.findTaskByTaskId(taskId);
+		request.setAttribute("task", task);
+		return "admin_test";
+	}
+
+	@ResponseBody
+	@PostMapping("/commit")
+	public CodeJudge Commit(@RequestBody Code code, HttpServletRequest request) {
+		String username = (String) session.getAttribute("username");
+		boolean pass = false;
+		CodeJudge codeJudge = new CodeJudge();
+		Destination destination = new ActiveMQQueue(COMMIT_QUEUE);
+		CodeMessage codeMessage = new CodeMessage();
+		ExecutorService executor = new ScheduledThreadPoolExecutor(POOL_SIZE,
+				new BasicThreadFactory.Builder().namingPattern("ddv").daemon(true).build());
+
+		code.setCodeId(Utils.getUUID());
+		code.setCreatedAt(new Date());
+		code.setUsername(username);
+
+		Task task = courseService.findTaskByTaskId(code.getTaskId());
+		List<Case> cases = courseService.findCasesByTaskId(code.getTaskId());
+
+		List<String> inputs = new ArrayList<>(cases.size());
+		List<String> outputs = new ArrayList<>(cases.size());
+		for (int i = 0; i < cases.size(); i++) {
+			inputs.add(cases.get(i).getInput());
+			outputs.add(cases.get(i).getOutput());
+		}
+
+		codeMessage.setCodeId(code.getCodeId());
+		codeMessage.setTotalCases(cases.size());
+		codeMessage.setMaxTime(task.getMaxTime());
+		codeMessage.setMaxMemory(task.getMaxMemory());
+		codeMessage.setFirstCode(task.getFirstCode());
+		codeMessage.setSecondCode(task.getSecondCode());
+		codeMessage.setCode(code.getCode());
+		codeMessage.setInputs(inputs);
+		codeMessage.setOutputs(outputs);
+		codeMessage.setType(courseService.findCourseByTaskId(code.getTaskId()).getType());
+
+		logger.info(code.getCodeId());
+
+		producerService.sendStreamMessage(destination, codeMessage, new CodeMessageConverter());
+		Future<Boolean> future = executor.submit(new ListenConsumer(RECEIVE_QUEUE, code.getCodeId()));
+
+		try {
+			if (future.get(MAX_WAIT, TimeUnit.SECONDS)) {
+				pass = true;
+			}
+		} catch (TimeoutException e) {
+			codeJudge.setMsg("评测系统忙,请稍后提交!");
+			if (!executor.isShutdown()) {
+				executor.shutdown();
+			}
+			future.cancel(Boolean.TRUE);
+			return codeJudge;
+		} catch (Exception e) {
+			return codeJudge;
+		}
+
+		if (!executor.isShutdown()) {
+			executor.shutdown();
+		}
+
+		if (pass) {
+			codeJudge.setPass(true);
+			codeJudge.setMsg("代码成功通过了所有的测试用例!");
+		} else {
+			codeJudge.setPass(false);
+			codeJudge.setMsg("代码未通过,请检查代码是否符合要求!");
+		}
+
+		return codeJudge;
 	}
 
 }
