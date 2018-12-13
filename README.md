@@ -29,6 +29,7 @@
 所有接口(除了注册,登陆)都需要对session检查用户是否登录
 如未登录会强制用户登录 ajax需要做额外判断 
 后续API会从session中读取用户信息
+/admin API会对session中的用户进行鉴权
 ```
 
 ## Jms配置
@@ -36,8 +37,7 @@
 手动消息监听自行实现,未整合到框架中,需要观察GC状态
 是否有死线程,死连接现象
 ```
-##API
-
+##API(需要登录)
 http://localhost:8080/swagger-ui.html#/
 
 所有的API都在controller包中
@@ -46,33 +46,3 @@ API分为两种
 * restful API 返回json 
 
 controller中有二者的区分注释
-
-###UserController
-* /user/login          用户登录
-* /user/register       用户注册
-* /user/password       用户更新密码
-* /user/profile        用户更新个人信息
-* /upload              用户上传文件 (暂存image文件夹 上传文件限制1024MB)
-
-###AdminController (pre="/admin 获取将add修改为get即可)
-* /users                      获取所有用户
-* /user/{username}            获取用户根据用户名
-* /addCourses                 添加/获取Courses
-* /addChapters                添加/获取Chapters
-* /addLessons                 添加/获取Lessons   
-* /addTasks                   添加/获取Tasks
-* /addCases                   添加/获取Cases
-
-###PageController
-* /pages/login    登录页面 
-* /pages/register 注册页面
-
-###CourseController
-* /courses                     课程列表
-* /course/{courseId}/chapters  对应课程的目录
-* /chapter/{chapterId}/lessons 对应目录的训练
-* /lesson/{lessonId}/tasks     对应训练的任务
-* /task/{taskId}               对应任务详情
-* /course?courseName           根据courseName查找
-* /course/{courseId}           根据courseId查找
-* /code/commit                 提交代码

@@ -121,8 +121,8 @@ public class Utils {
 		return true;
 	}
 
-	public static CodeJudge getCodeJudge( CodeJudge codeJudge, ExecutorService executor, Future<Boolean> future, int MAX_WAIT) {
-		boolean pass = false ;
+	public static CodeJudge getCodeJudge(CodeJudge codeJudge, ExecutorService executor, Future<Boolean> future, int MAX_WAIT) {
+		boolean pass = false;
 		try {
 			if (future.get(MAX_WAIT, TimeUnit.SECONDS)) {
 				pass = true;

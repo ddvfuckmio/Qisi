@@ -299,7 +299,7 @@ public class AdminController {
 	@ApiOperation(value = "测试task提交")
 	@ResponseBody
 	@PostMapping("/commit")
-	public CodeJudge Commit(@RequestBody Code code, HttpServletRequest request) {
+	public CodeJudge commit(@RequestBody Code code, HttpServletRequest request) {
 		String username = (String) session.getAttribute("username");
 		CodeJudge codeJudge = new CodeJudge();
 		Destination destination = new ActiveMQQueue(COMMIT_QUEUE);
