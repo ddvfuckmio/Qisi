@@ -44,5 +44,4 @@ http://localhost:8080/swagger-ui.html#/
 API分为两种
 * 跳转页面API  跳转页面
 * restful API 返回json 
-
 controller中有二者的区分注释
