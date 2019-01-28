@@ -33,9 +33,8 @@ public class ApiResult {
 		this.msg = msg;
 	}
 
-
 	public static ApiResult SUCCESS() {
-		return new ApiResult(200, "成功!");
+		return new ApiResult(200, "操作成功!");
 	}
 
 	public static ApiResult FAILED(String msg) {

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>员工主页面</title>
+
+    <link rel="stylesheet" type="text/css" href="/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="/css/work/main.css">
+
+    <script type="text/javascript" src="/easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/js/work/main.js"></script>
+</head>
+<body class="easyui-layout">
+
+<div data-options="region:'north',title:'导航栏',split:true,noheader:true," style="height:60px;background:#666;">
+    <div class="logo">员工事务</div>
+    <div class="logout">您好 [用户名] <a href="/worker/logout">登出</a></div>
+</div>
+
+<div data-options="region:'south',title:'footer',split:true,noheader:true," style="height:50px;text-align: center;">
+    2018-2019 合肥师范学院 2015软件工程 张杰; Powered by Java and EasyUi .
+    <br/>
+    合肥师范学院版权所有 地址：合肥市金寨路327号（三孝口校区） 合肥市经济开发区莲花路1688号（锦绣校区） 皖ICP备15000025号
+</div>
+
+<div data-options="region:'west',title:'导航',split:true,iconCls:'icon-world'," style="width:180px;padding: 10px;">
+    <!--侧边栏-->
+    <ul id="tt"></ul>
+</div>
+
+<div data-options="region:'center'" style="overflow: hidden;">
+
+    <div id="tabs">
+        <div title="起始页" iconCls="icon-house" style="padding:5px 10px;display: block;">
+            欢迎进入员工后台管理系统!
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+</html>

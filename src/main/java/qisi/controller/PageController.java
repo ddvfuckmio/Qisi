@@ -1,6 +1,8 @@
 package qisi.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -27,6 +29,24 @@ public class PageController {
 	@RequestMapping("/admin/login")
 	public String adminLogin() {
 		return "admin_login";
+	}
+
+	@RequestMapping("/index")
+	public String index() {
+		return "index.html";
+	}
+
+
+	//员工登陆页面
+	@RequestMapping("/workLogin")
+	public String workLogin() {
+		return "work/login.html";
+	}
+
+	//员工主页面
+	@RequestMapping("/workMain")
+	public String workMain() {
+		return "work/main.html";
 	}
 
 }

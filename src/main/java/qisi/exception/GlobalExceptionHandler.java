@@ -28,6 +28,12 @@ public class GlobalExceptionHandler {
 	}
 
 	@ResponseBody
+	@ExceptionHandler(value = org.springframework.web.bind.MissingServletRequestParameterException.class)
+	public ApiResult ParameterExceptionHandler() {
+		return ApiResult.FAILED("请求参数格式有误!");
+	}
+
+	@ResponseBody
 	@ExceptionHandler(value = Exception.class)
 	public String globalExceptionHandler(HttpServletRequest request, Exception exception) throws Exception {
 		return "服务器繁忙,请稍后再试!";

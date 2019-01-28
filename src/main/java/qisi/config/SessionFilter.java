@@ -20,7 +20,7 @@ import java.util.HashSet;
  * @author : ddv
  * @date : 2018/11/15 上午9:40
  */
-@Component
+//@Component
 @WebFilter(filterName = "sessionFilter", urlPatterns = {"/*"})
 public class SessionFilter implements Filter {
 	@Autowired
@@ -54,9 +54,6 @@ public class SessionFilter implements Filter {
 			if (username != null && !"".equals(username)) {
 				if (url.contains("/admin")) {
 					if (adminService.findAdminUserByUsername(username) == null) {
-						if (isAjax(request)) {
-							ajaxHandler(response);
-						}
 						response.sendRedirect(request.getContextPath() + "/pages/admin/login");
 					}
 				}

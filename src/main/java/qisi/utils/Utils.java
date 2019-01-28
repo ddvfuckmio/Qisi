@@ -4,8 +4,11 @@ import qisi.bean.admin.AdminUser;
 import qisi.bean.json.ApiResult;
 import qisi.bean.json.CodeJudge;
 import qisi.bean.user.User;
+import qisi.bean.work.Worker;
 
 import java.security.MessageDigest;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -154,5 +157,16 @@ public class Utils {
 		return codeJudge;
 	}
 
+	public static boolean checkFormWorker(Worker formWorker) {
+		return !(formWorker == null || formWorker.getUsername() == null || formWorker.getPassword() == null);
+	}
+
+	public static Date getFormatDate() {
+		Calendar calendar = Calendar.getInstance();
+		int year = calendar.get(Calendar.YEAR);
+		int month = calendar.get(Calendar.MONTH);
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+		return new Date(year - 1900, month, day);
+	}
 
 }

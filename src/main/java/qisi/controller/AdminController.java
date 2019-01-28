@@ -15,6 +15,10 @@ import qisi.bean.json.ApiResult;
 import qisi.bean.json.CodeJudge;
 import qisi.bean.user.MockUser;
 import qisi.bean.user.User;
+import qisi.bean.work.Worker;
+import qisi.bean.work.WorkerCheck;
+import qisi.dao.WorkerCheckRepository;
+import qisi.dao.WorkerRepository;
 import qisi.exception.AdminAuthorityException;
 import qisi.service.AdminService;
 import qisi.utils.*;
@@ -61,6 +65,10 @@ public class AdminController {
 	private AdminService adminService;
 	@Autowired
 	private HttpSession session;
+	@Autowired
+	private WorkerRepository workerRepository;
+	@Autowired
+	private WorkerCheckRepository workerCheckRepository;
 
 	@ApiOperation(value = "管理员登录")
 	@PostMapping("/login")
@@ -119,9 +127,9 @@ public class AdminController {
 	@GetMapping("/users")
 	public List<User> getUsers() {
 		List<User> users = userService.getUsers();
-		for (int i = 0; i < users.size(); i++) {
-			users.get(i).setPassword(null);
-		}
+//		for (int i = 0; i < users.size(); i++) {
+//			users.get(i).setPassword(null);
+//		}
 		return users;
 	}
 
@@ -340,5 +348,30 @@ public class AdminController {
 		return Utils.getCodeJudge(codeJudge, executor, future, MAX_WAIT);
 	}
 
+	@GetMapping("/mockWorkers")
+	@ResponseBody
+	public String mockWorkers() {
+		List<Worker> workers = Mock.mockWorkers();
+		workerRepository.saveAll(workers);
+		return "done...";
+	}
 
+	@GetMapping("/mockWorkerCheck")
+	@ResponseBody
+	public String mockWorkerCheck() {
+		WorkerCheck workerCheck = new WorkerCheck();
+		workerCheck.setUsername("ddv");
+		workerCheck.setCheckDay(Utils.getFormatDate());
+
+		workerCheckRepository.save(workerCheck);
+
+		return "done";
+	}
+
+	@GetMapping("/test")
+	@ResponseBody
+	public WorkerCheck test() {
+
+		return workerCheckRepository.findWorkerCheckByUsernameAndDate("ddv", Utils.getFormatDate());
+	}
 }

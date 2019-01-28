@@ -1,0 +1,23 @@
+#login {
+    padding: 6px 0 0 0;
+}
+
+p {
+    hegith: 22px;
+    line-height: 22px;
+    padding: 4px 0 0 25px;
+}
+
+.textBox {
+    width: 150px;
+    height: 20px;
+    margin-top: 10px;
+}
+
+#login-button {
+  text-align: center;
+}
+
+.easyui-linkbutton {
+    padding: 0 5px 0 5px;
+}

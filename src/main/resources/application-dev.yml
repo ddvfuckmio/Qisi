@@ -9,6 +9,9 @@ spring:
   groovy:
     template:
       cache: false
+# 前端缓存
+  thymeleaf:
+    cache: false
 # activeMQ 配置
   activemq:
     broker-url: tcp://localhost:61616
@@ -20,14 +23,19 @@ spring:
 # 配置全局默认topic模式
   jms:
     pub-sub-domain: true
+#    redis
   redis:
     host: localhost
     port: 6379
+#    servlet
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
       enabled: true
+#      静态文件
+  resources:
+    static-locations:classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/
 # 配置项目路径前缀,端口,session
 server:
   port: 8080

@@ -2,6 +2,7 @@ package qisi.utils;
 
 import qisi.bean.course.*;
 import qisi.bean.user.User;
+import qisi.bean.work.Worker;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -136,5 +137,28 @@ public class Mock {
 			list.add(testCase);
 		}
 		return list;
+	}
+
+	public static List<Worker> mockWorkers() {
+		Random random = new Random();
+		List<Worker> workers = new ArrayList<>(COUNT);
+		String[] departments = {"销售部", "技术部", "行政部", "采购部", "公关部", "政党部", "临时部门", "人事部"};
+		for (int i = 0; i < COUNT; i++) {
+			String index = String.valueOf(i);
+			String sex = (i & 1) == 0 ? "男" : "女";
+			String department = departments[random.nextInt(departments.length)];
+			Worker worker = new Worker();
+			worker.setUsername(index);
+			worker.setPassword(Utils.encode(index));
+			worker.setAge(i);
+			worker.setRealName("张" + index);
+			worker.setDepartment(department);
+			worker.setEmail(index + "@qq.com");
+			worker.setCreatedAt(new Date());
+			worker.setSex(sex);
+			worker.setPhone("phone" + index);
+			workers.add(worker);
+		}
+		return workers;
 	}
 }

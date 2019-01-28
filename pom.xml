@@ -62,11 +62,11 @@
         </dependency>
 
         <!--log4j日志支持-->
-        <!--<dependency>-->
-        <!--<groupId>com.googlecode.log4jdbc</groupId>-->
-        <!--<artifactId>log4jdbc</artifactId>-->
-        <!--<version>1.2</version>-->
-        <!--</dependency>-->
+        <dependency>
+        <groupId>com.googlecode.log4jdbc</groupId>
+        <artifactId>log4jdbc</artifactId>
+        <version>1.2</version>
+        </dependency>
 
         <!--json依赖-->
         <dependency>
@@ -101,33 +101,19 @@
         </dependency>
 
         <!--redis依赖-->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-data-redis</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
 
-        <!--阿里云短信接口-->
-        <!--<dependency>-->
-            <!--<groupId>com.aliyun</groupId>-->
-            <!--<artifactId>aliyun-java-sdk-core</artifactId>-->
-            <!--<version>4.0.6</version>-->
-        <!--</dependency>-->
-
-        <!--阿里云短信接口-->
-        <!--<dependency>-->
-            <!--<groupId>com.aliyun</groupId>-->
-            <!--<artifactId>aliyun-java-sdk-dysmsapi</artifactId>-->
-            <!--<version>1.1.0</version>-->
-        <!--</dependency>-->
-
-        <!--Dozer依赖-->
+        <!--dozer 依赖-->
         <dependency>
             <groupId>com.github.dozermapper</groupId>
             <artifactId>dozer-core</artifactId>
             <version>6.4.1</version>
         </dependency>
 
-        <!--swagger依赖-->
+        <!--swagger 依赖-->
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>

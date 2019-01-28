@@ -1,12 +1,12 @@
 package qisi.controller;
 
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import qisi.bean.json.ApiResult;
+import qisi.bean.query.UserPageQuery;
 import qisi.service.UserService;
 import qisi.bean.user.User;
 import qisi.utils.Utils;
@@ -216,4 +216,13 @@ public class UserController {
 		return PROFILE_HTML;
 	}
 
+	@ResponseBody
+	@GetMapping("/test/users")
+	public UserPageQuery getUsersByPage(@RequestParam("page") int page, @RequestParam("rows") int rows) {
+		UserPageQuery userPageQuery = new UserPageQuery();
+		List<User> users = userService.findUsersByPage((page - 1) * rows, rows);
+		userPageQuery.setTotal(userService.getUsers().size());
+		userPageQuery.setRows(users);
+		return userPageQuery;
+	}
 }

@@ -46,4 +46,8 @@ public class UserService {
 	public void updateProfile(User user) {
 		userRepository.updateProfile(user.getUsername(), user.getSex(), user.getAge(), user.getJob(), user.getPhone(), user.getEmail());
 	}
+
+	public List<User> findUsersByPage(int start, int nums) {
+		return userRepository.findUsersByPage(start,nums);
+	}
 }

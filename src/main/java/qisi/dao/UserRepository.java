@@ -65,5 +65,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	@Modifying
 	public void updateProfile(String username, String sex, String age, String job, String phone, String email);
 
-
+	@Query(nativeQuery=true,value = "select * from users limit ?1 ,?2")
+	List<User> findUsersByPage(int start, int count);
 }
