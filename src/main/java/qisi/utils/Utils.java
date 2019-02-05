@@ -169,4 +169,11 @@ public class Utils {
 		return new Date(year - 1900, month, day);
 	}
 
+	public static int getDays(Date start, Date end) {
+		if (start.getTime() > end.getTime()) {
+			return 0;
+		}
+		return (int) ((end.getTime() - start.getTime()) / (1000 * 3600 * 24));
+	}
+
 }

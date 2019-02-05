@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Bean;
 public class Application {
 
 	/**
-	 * json快速配置
+	 * Json配置
 	 */
 	@Bean
 	public HttpMessageConverters fastJsonHttpMessageConverters() {

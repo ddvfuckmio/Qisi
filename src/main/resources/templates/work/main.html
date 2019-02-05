@@ -12,12 +12,13 @@
     <script type="text/javascript" src="/easyui/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="/js/work/main.js"></script>
+
 </head>
 <body class="easyui-layout">
 
 <div data-options="region:'north',title:'导航栏',split:true,noheader:true," style="height:60px;background:#666;">
     <div class="logo">员工事务</div>
-    <div class="logout">您好 [用户名] <a href="/worker/logout">登出</a></div>
+    <div id="username-bar" class="logout"></div>
 </div>
 
 <div data-options="region:'south',title:'footer',split:true,noheader:true," style="height:50px;text-align: center;">

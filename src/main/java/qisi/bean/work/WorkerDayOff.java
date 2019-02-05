@@ -10,7 +10,7 @@ import java.util.Date;
  * @author : ddv
  * @date : 2019/1/29 上午12:14
  */
-@Entity(name = "work_dayOffs")
+@Entity(name = "worker_dayOffs")
 public class WorkerDayOff {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +19,14 @@ public class WorkerDayOff {
 	private Date startDate;
 	private Date endDate;
 	private String reason;
+	/*
+	state
+	1: 未读
+	2: 已读
+	3: 批准
+	4: 驳回
+	 */
+	private int state;
 	private Date createdAt;
 
 	public Integer getId() {
@@ -69,6 +77,14 @@ public class WorkerDayOff {
 		this.createdAt = createdAt;
 	}
 
+	public int getState() {
+		return state;
+	}
+
+	public void setState(int state) {
+		this.state = state;
+	}
+
 	@Override
 	public String toString() {
 		return "WorkerDayOff{" +
@@ -77,6 +93,7 @@ public class WorkerDayOff {
 				", startDate=" + startDate +
 				", endDate=" + endDate +
 				", reason='" + reason + '\'' +
+				", state=" + state +
 				", createdAt=" + createdAt +
 				'}';
 	}

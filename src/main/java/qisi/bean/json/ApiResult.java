@@ -38,11 +38,11 @@ public class ApiResult {
 	}
 
 	public static ApiResult FAILED(String msg) {
-		return new ApiResult(401, msg);
+		return new ApiResult(400, msg);
 	}
 
 	public static ApiResult ILLEGAL() {
-		return new ApiResult(401, "需要登录的API!");
+		return new ApiResult(400, "需要登录的API!");
 	}
 
 	public static ApiResult ERROR() {

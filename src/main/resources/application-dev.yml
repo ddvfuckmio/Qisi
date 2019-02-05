@@ -12,7 +12,7 @@ spring:
 # 前端缓存
   thymeleaf:
     cache: false
-# activeMQ 配置
+# activeMQ  配置
   activemq:
     broker-url: tcp://localhost:61616
     in-memory: false

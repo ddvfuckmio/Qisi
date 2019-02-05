@@ -151,9 +151,10 @@ CREATE TABLE `worker_dayOffs` (
 	`startDate` date DEFAULT NULL,
 	`endDate` date DEFAULT NULL,
 	`reason`  varchar(50) DEFAULT NULL,
+	`state` int(11) DEFAULT 1,
 	`createdAt` date DEFAULT NULL,
 	 PRIMARY KEY (`id`),
-	 UNIQUE KEY `username_UNIQUE` (`username`)
+	 UNIQUE KEY `username_startDate_UNIQUE` (`username`,`startDate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '员工请假表';
 
 

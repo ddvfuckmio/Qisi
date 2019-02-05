@@ -12,6 +12,7 @@
       },
       {
         "text": "员工请假",
+        "url": "tree/dayOffs",
         "iconCls": "icon-leave",
         "checked": true
       },

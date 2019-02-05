@@ -17,4 +17,9 @@ public class TreeController {
 	public String sign() {
 		return "tree/sign.html";
 	}
+
+	@GetMapping("/dayOffs")
+	public String dayOffs() {
+		return "tree/dayOffs.html";
+	}
 }

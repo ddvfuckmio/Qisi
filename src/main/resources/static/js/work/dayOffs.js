@@ -1,0 +1,63 @@
+function cancelAjax(id) {
+    $.ajax({
+        url: '/worker/dayOffCancel?id=' + id,
+        type: 'post',
+        success: function (data) {
+            console.log(data);
+            if (data.status === 200) {
+                $('#dayOffs').datagrid('reload', {});
+                $.messager.alert('操作成功!', '成功取消请假申请!');
+            } else {
+                $.messager.alert('操作失败!', data.msg);
+            }
+        },
+    });
+};
+
+$(function () {
+
+    //unix时间戳转 年-月-日格式
+    var formatDate = function (times) {
+        var date = new Date(times);
+        return date.getFullYear() + '-' + date.getMonth() + 1 + '-' + date.getDate();
+    };
+
+    var formatRowStart = function (value, row, index) {
+        return formatDate(new Date(row.startDate));
+    };
+
+    var formatRowEnd = function (value, row, index) {
+        return formatDate(new Date(row.endDate));
+    };
+
+    var cancelDayOff = function (value, row, index) {
+        return "<a style='color: blue' href='javascript:void(0);' onclick='cancelAjax(" + row.id + ")'>" + '取消申请' + "</a>";
+    };
+
+
+    $('#dayOffs').datagrid({
+        method: 'get',
+        url: '/worker/dayOffs',
+        title: '员工请假记录',
+        iconCls: 'icon-search',
+        pagination: true,
+        columns: [[
+            {field: 'username', title: '用户名', width: 100},
+            {
+                field: 'startDate', title: '开始时间', width: 150, formatter: formatRowStart,
+            },
+            {
+                field: 'endDate', title: '结束时间', width: 150, formatter: formatRowEnd,
+
+            },
+            {field: 'reason', title: '申请理由', width: 400},
+            {field: 'state', title: '审批状态', width: 100},
+            {
+                field: 'id', title: '操作', width: 100, formatter: cancelDayOff
+
+            }
+        ]]
+    });
+
+
+});

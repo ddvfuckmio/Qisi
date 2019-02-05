@@ -225,4 +225,5 @@ public class UserController {
 		userPageQuery.setRows(users);
 		return userPageQuery;
 	}
+	
 }
