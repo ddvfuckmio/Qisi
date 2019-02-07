@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -33,6 +35,16 @@ public class RedisUtils {
 
 	}
 
+	public <T> List<T> listGet(String key, long start, long end) {
+		if (key == null) return null;
+
+		List<Object> list = redisTemplate.opsForList().range(key, start, end);
+		List<T> rs = new ArrayList<>(list.size());
+		for (Object object : list) {
+			rs.add((T) object);
+		}
+		return rs;
+	}
 
 
 }

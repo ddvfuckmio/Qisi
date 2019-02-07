@@ -49,4 +49,9 @@ public class PageController {
 		return "work/main.html";
 	}
 
+	@RequestMapping("/test")
+	public String test() {
+		return "test/index.html";
+	}
+
 }

@@ -22,7 +22,7 @@ $(function () {
     });
 
     $('#tt').tree({
-        url: '/js/work/json/tree.json',
+        url: '/json/tree.json',
         method: 'get',
         lines: true,
 

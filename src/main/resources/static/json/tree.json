@@ -1,0 +1,46 @@
+[
+  {
+    "id": 1,
+    "text": "员工办事",
+    "iconCls": "icon-worker",
+    "children": [
+      {
+        "text": "员工打卡",
+        "iconCls": "icon-sign",
+        "url": "tree/sign",
+        "checked": true
+      },
+      {
+        "text": "请假记录",
+        "url": "tree/dayOffs",
+        "iconCls": "icon-leave",
+        "checked": true
+      },
+      {
+        "text": "新增请假",
+        "url": "tree/addDayOffs",
+        "iconCls": "icon-leave",
+        "checked": true
+      },
+      {
+        "text": "行政通知",
+        "checked": true
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "text": "人事管理",
+    "children": [
+      {
+        "text": "员工列表"
+      },
+      {
+        "text": "请假审批"
+      },
+      {
+        "text": "绩效评测"
+      }
+    ]
+  }
+]

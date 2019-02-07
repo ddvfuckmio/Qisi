@@ -22,4 +22,10 @@ public class TreeController {
 	public String dayOffs() {
 		return "tree/dayOffs.html";
 	}
+
+	@GetMapping("/addDayOffs")
+	public String addDayOffs() {
+		return "tree/addDayOffs.html";
+	}
+
 }

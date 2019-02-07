@@ -1,0 +1,16 @@
+#login {
+    padding: 6px 0 0 0;
+    display: flex;
+}
+
+.div-date {
+    padding-top: 10px;
+    padding-left: 10px;
+}
+
+.div-buttons {
+    margin-top: 25px;
+    text-align: center;
+}
+
+

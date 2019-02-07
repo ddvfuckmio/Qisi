@@ -5,10 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import qisi.bean.admin.News;
 import qisi.bean.json.ApiResult;
 import qisi.bean.query.UserPageQuery;
 import qisi.service.UserService;
 import qisi.bean.user.User;
+import qisi.utils.RedisUtils;
 import qisi.utils.Utils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +37,9 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private RedisUtils redisUtils;
 
 	/**
 	 * 用户登录
@@ -225,5 +230,13 @@ public class UserController {
 		userPageQuery.setRows(users);
 		return userPageQuery;
 	}
-	
+
+	@ResponseBody
+	@GetMapping("/redis/test")
+	public void redisTest(){
+		List<News> newsList = redisUtils.listGet("news",0,5);
+
+		System.out.println(newsList);
+	}
+
 }

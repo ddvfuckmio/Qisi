@@ -1,0 +1,38 @@
+<script type="text/javascript" src="/js/work/addDayOffs.js"></script>
+
+<link rel="stylesheet" type="text/css" href="/css/work/addDayOffs.css">
+
+
+<div id="div-addDayOff">
+    <div class="div-date">
+        开始时间: <input id="startDate" type="text">
+        <!--<script>-->
+            <!--$(function () {-->
+                <!--$('#startDate').datebox().datebox('calendar').calendar({-->
+                    <!--validator: function (date) {-->
+                        <!--console.log('222');-->
+                        <!--var now = new Date();-->
+                        <!--var d1 = new Date(now.getFullYear(), now.getMonth(), now.getDate());-->
+                        <!--var d2 = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 10);-->
+                        <!--return d1 <= date && date <= d2;-->
+                    <!--}-->
+                <!--})-->
+            <!--});-->
+        <!--</script>-->
+    </div>
+
+    <div class="div-date">
+        结束时间: <input id="endDate" type="text">
+    </div>
+
+    <div class="div-date">
+        请假缘由: <textarea id="reason" type="text" placeholder="请输入请假说明..." style="width: 175px;height: 120px;"/>
+    </div>
+
+    <div class="div-buttons">
+        <a href="#" class="easyui-linkbutton" onclick="submit()">提交申请</a>
+        <a href="#" class="easyui-linkbutton" onclick="reset()">重置选项</a>
+    </div>
+
+</div>
+
