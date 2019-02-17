@@ -15,8 +15,9 @@ public class AdminUser {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	private String username;
+	private String account;
 	private String password;
+	private String username;
 	private Date createdAt;
 
 	public Integer getId() {
@@ -51,12 +52,21 @@ public class AdminUser {
 		this.createdAt = createdAt;
 	}
 
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
 	@Override
 	public String toString() {
 		return "AdminUser{" +
 				"id=" + id +
-				", username='" + username + '\'' +
+				", account='" + account + '\'' +
 				", password='" + password + '\'' +
+				", username='" + username + '\'' +
 				", createdAt=" + createdAt +
 				'}';
 	}

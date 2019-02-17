@@ -1,11 +1,7 @@
 package qisi.utils;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.jms.JmsException;
 import qisi.bean.jms.CodeMessage;
-import qisi.controller.CourseController;
 
 import javax.jms.*;
 import java.util.ArrayList;
