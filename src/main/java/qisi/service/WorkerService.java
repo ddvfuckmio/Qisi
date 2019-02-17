@@ -99,7 +99,7 @@ public class WorkerService {
 	}
 
 	public List<WorkerDayOff> findWorkerDayOffsByPage(String username, int start, int rows) {
-		return workerDayOffRepository.findWorkerDayOffsByPage(username, new Date(), start, rows);
+		return workerDayOffRepository.findWorkerDayOffsByPage(username, Utils.getFormatDate(), start, rows);
 
 	}
 
@@ -118,5 +118,21 @@ public class WorkerService {
 		workerDayOffRepository.deleteWorkerDayOff(id);
 
 		return ApiResult.SUCCESS();
+	}
+
+	public ApiResult addDayOff(WorkerDayOff workerDayOff) {
+		if (checkDayOff(workerDayOff)) {
+			workerDayOff.setCreatedAt(Utils.getFormatDate());
+			workerDayOff.setState(1);
+			workerDayOffRepository.save(workerDayOff);
+			return ApiResult.SUCCESS();
+		}
+		return ApiResult.FAILED("当前时间段已经有假期申请记录!");
+	}
+
+	public boolean checkDayOff(WorkerDayOff workerDayOff) {
+		List<WorkerDayOff> workerDayOffs = workerDayOffRepository.
+				findWorkerDayOffsByParams(workerDayOff.getUsername(), workerDayOff.getStartDate(), workerDayOff.getEndDate());
+		return workerDayOffs.size() == 0;
 	}
 }

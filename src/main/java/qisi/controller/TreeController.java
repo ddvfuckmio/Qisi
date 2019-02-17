@@ -28,4 +28,10 @@ public class TreeController {
 		return "tree/addDayOffs.html";
 	}
 
+	@GetMapping("/password")
+	public String profile() {
+		return "tree/password.html";
+	}
+
+
 }

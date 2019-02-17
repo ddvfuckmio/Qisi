@@ -18,7 +18,6 @@ $(function () {
     $('#tabs').tabs({
         fit: true,
         border: false,
-
     });
 
     $('#tt').tree({

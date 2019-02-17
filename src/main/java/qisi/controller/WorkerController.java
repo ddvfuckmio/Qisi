@@ -96,6 +96,13 @@ public class WorkerController {
 		return workerService.cancelDayOff(username, id);
 	}
 
+	@PostMapping("/addDayOff")
+	@ResponseBody
+	public ApiResult AddDayOffCancel(@RequestBody WorkerDayOff workerDayOff) {
+		workerDayOff.setUsername("ddv");
+		return workerService.addDayOff(workerDayOff);
+	}
+
 	@GetMapping("/news")
 	@ResponseBody
 	public List<String> news() {

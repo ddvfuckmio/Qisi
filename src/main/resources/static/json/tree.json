@@ -23,23 +23,9 @@
         "checked": true
       },
       {
-        "text": "行政通知",
+        "text": "修改密码",
+        "url": "tree/updatePassword",
         "checked": true
-      }
-    ]
-  },
-  {
-    "id": 2,
-    "text": "人事管理",
-    "children": [
-      {
-        "text": "员工列表"
-      },
-      {
-        "text": "请假审批"
-      },
-      {
-        "text": "绩效评测"
       }
     ]
   }
