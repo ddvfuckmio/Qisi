@@ -3,7 +3,11 @@ package qisi.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import qisi.bean.admin.AdminUser;
+import qisi.bean.json.ApiResult;
 import qisi.dao.AdminUserRepository;
+import qisi.utils.Utils;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * @author : ddv
@@ -14,10 +18,19 @@ public class AdminService {
 	@Autowired
 	private AdminUserRepository adminUserRepository;
 
-	public AdminUser findAdminUserByUsername(String username) {
-		if (username == null) {
-			return null;
+	public ApiResult login(AdminUser formUser, HttpSession session) {
+
+		if (Utils.checkAdminUser(formUser)) {
+			return ApiResult.LOGIN_ERROR();
 		}
-		return adminUserRepository.findAdminUserByUsername(username);
+
+		AdminUser adminUser = adminUserRepository.findAdminUserByUsername(formUser.getUsername());
+
+		if (!(adminUser != null && adminUser.getPassword().equals(Utils.encode(formUser.getPassword())))) {
+			return ApiResult.LOGIN_ERROR();
+		}
+
+		session.setAttribute("username", formUser.getUsername());
+		return ApiResult.SUCCESS();
 	}
 }

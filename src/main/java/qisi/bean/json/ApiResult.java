@@ -49,4 +49,9 @@ public class ApiResult {
 		return new ApiResult(400, "请求数据格式有误!");
 	}
 
+	public static ApiResult LOGIN_ERROR() {
+		return new ApiResult(400, "登录信息有误!");
+	}
+
+
 }

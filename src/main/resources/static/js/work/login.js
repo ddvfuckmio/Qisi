@@ -1,3 +1,35 @@
+function login(url) {
+    if (!($('#username').validatebox('isValid') && $('#password').validatebox('isValid'))) {
+        $.messager.alert('登录失败!', '登录信息有误!');
+    } else {
+        $.ajax({
+            url: url,
+            contentType: 'application/json',
+            type: 'post',
+            data: JSON.stringify({
+                username: $('#username').val(),
+                password: $('#password').val(),
+            }),
+
+            beforeSend: function () {
+                $.messager.progress({
+                    text: '正在登陆中...',
+                });
+            },
+
+            success: function (data) {
+                $.messager.progress('close');
+                console.log(data);
+                if (data.status === 200) {
+                    window.location.href = "http://localhost:8080/pages/workMain";
+                } else {
+                    $.messager.alert('登录失败!', '用户名或密码错误!');
+                }
+            },
+        });
+    }
+}
+
 $(function () {
 
     //登陆页面
@@ -25,35 +57,11 @@ $(function () {
     });
 
     //登陆事件
-    $('#ajaxLogin').click(function () {
-        if (!($('#username').validatebox('isValid') && $('#password').validatebox('isValid'))) {
-            alert('登录信息有误!');
-        } else {
-            $.ajax({
-                url: '/worker/login',
-                contentType: 'application/json',
-                type: 'post',
-                data: JSON.stringify({
-                    username: $('#username').val(),
-                    password: $('#password').val(),
-                }),
+    $('#worker-login').click(function () {
+        login('/worker/login');
+    });
 
-                beforeSend: function () {
-                    $.messager.progress({
-                        text: '正在登陆中...',
-                    });
-                },
-
-                success: function (data) {
-                    $.messager.progress('close');
-                    console.log(data);
-                    if (data.status === 200) {
-                        window.location.href = "http://localhost:8080/pages/workMain";
-                    } else {
-                        $.messager.alert('登录失败!', '用户名或密码错误!');
-                    }
-                },
-            });
-        }
+    $('#admin-login').click(function () {
+        login( '/admin/login');
     });
 });

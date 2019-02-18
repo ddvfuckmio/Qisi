@@ -159,12 +159,10 @@ CREATE TABLE `worker_dayOffs` (
 
 CREATE TABLE `admin_users` (
 	`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-	`account` varchar(50) NOT NULL,
-	`password` varchar(50) NOT NULL,
 	`username` varchar(50) NOT NULL,
+	`password` varchar(50) NOT NULL,
 	`createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
 	 PRIMARY KEY (`id`),
-	 UNIQUE KEY `account_UNIQUE` (`account`),
 	 UNIQUE KEY `username_UNIQUE` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '管理员表';
 

@@ -157,8 +157,12 @@ public class Utils {
 		return codeJudge;
 	}
 
-	public static boolean checkFormWorker(Worker formWorker) {
+	public static boolean checkWorker(Worker formWorker) {
 		return !(formWorker == null || formWorker.getUsername() == null || formWorker.getPassword() == null);
+	}
+
+	public static boolean checkAdminUser(AdminUser adminUser) {
+		return (adminUser == null || adminUser.getUsername() == null || adminUser.getPassword() == null);
 	}
 
 	public static Date getFormatDate() {
@@ -194,6 +198,10 @@ public class Utils {
 		}
 
 		return newsList;
+	}
+
+	public static void main(String[] args){
+	    System.out.println(encode("123"));
 	}
 
 }

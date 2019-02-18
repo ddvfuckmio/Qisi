@@ -6,10 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import qisi.bean.json.ApiResult;
 import qisi.bean.query.WorkerDayOffPageQuery;
-import qisi.bean.user.User;
 import qisi.bean.work.Worker;
 import qisi.bean.work.WorkerDayOff;
-import qisi.dao.UserRepository;
 import qisi.service.WorkerService;
 import qisi.utils.Utils;
 
@@ -39,7 +37,7 @@ public class WorkerController {
 	@PostMapping("/login")
 	@ResponseBody
 	public ApiResult login(@RequestBody Worker formWorker) {
-		if (!Utils.checkFormWorker(formWorker)) {
+		if (!Utils.checkWorker(formWorker)) {
 			return ApiResult.FAILED("登陆信息有误!");
 		}
 

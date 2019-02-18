@@ -42,7 +42,7 @@ import java.util.concurrent.*;
  */
 
 
-@Controller
+@RestController
 @RequestMapping("/admin")
 public class AdminController {
 
@@ -51,6 +51,12 @@ public class AdminController {
 	@Autowired
 	private HttpSession session;
 
-	
+	@Autowired
+	private AdminService adminService;
+
+	@PostMapping("/login")
+	public ApiResult login(@RequestBody AdminUser formUser) {
+		return adminService.login(formUser, session);
+	}
 
 }
