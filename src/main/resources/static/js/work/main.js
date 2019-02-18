@@ -11,9 +11,26 @@ var loadUsername = function () {
     });
 };
 
+var treeUrl;
+var loadTreeJson = function () {
+    console.log('加载侧边栏数据模块...');
+    $.ajax({
+        url: '/tree/json',
+        type: 'get',
+        async: false,
+        success: function (data) {
+            if (data.state === 200) {
+                treeUrl = data.url;
+            }
+        },
+    });
+};
+
 $(function () {
 
     loadUsername();
+
+    loadTreeJson();
 
     $('#tabs').tabs({
         fit: true,
@@ -21,7 +38,7 @@ $(function () {
     });
 
     $('#tt').tree({
-        url: '/json/tree.json',
+        url: treeUrl,
         method: 'get',
         lines: true,
 
@@ -39,6 +56,7 @@ $(function () {
                 }
             }
         },
+
     });
 
 });

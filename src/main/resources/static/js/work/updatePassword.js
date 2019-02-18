@@ -9,7 +9,7 @@ var submit = function () {
     var endDate = $('#endDate').datebox('getValue');
     var reason = $('#reason').val();
 
-    if (startDate == '' || endDate == '' || reason == '') {
+    if (startDate === '' || endDate === '' || reason === '') {
         $.messager.alert('操作有误!', '请填写所有表单信息!');
         return;
     }

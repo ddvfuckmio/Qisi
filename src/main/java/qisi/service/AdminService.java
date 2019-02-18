@@ -33,4 +33,8 @@ public class AdminService {
 		session.setAttribute("username", formUser.getUsername());
 		return ApiResult.SUCCESS();
 	}
+
+	public boolean checkAdminUser(String username) {
+		return adminUserRepository.findAdminUserByUsername(username) != null;
+	}
 }
