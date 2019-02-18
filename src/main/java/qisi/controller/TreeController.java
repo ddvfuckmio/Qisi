@@ -55,7 +55,7 @@ public class TreeController {
 
 	@GetMapping("/updatePassword")
 	public String profile() {
-		return "tree/password.html";
+		return "tree/updatePassword.html";
 	}
 
 
