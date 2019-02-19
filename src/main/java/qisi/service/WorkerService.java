@@ -1,5 +1,6 @@
 package qisi.service;
 
+import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
@@ -7,6 +8,7 @@ import qisi.bean.json.ApiResult;
 import qisi.bean.work.Worker;
 import qisi.bean.work.WorkerCheck;
 import qisi.bean.work.WorkerDayOff;
+import qisi.bean.work.WorkerUpdatePassword;
 import qisi.dao.WorkerCheckRepository;
 import qisi.dao.WorkerRepository;
 import qisi.dao.worker.WorkerDayOffRepository;
@@ -134,5 +136,25 @@ public class WorkerService {
 		List<WorkerDayOff> workerDayOffs = workerDayOffRepository.
 				findWorkerDayOffsByParams(workerDayOff.getUsername(), workerDayOff.getStartDate(), workerDayOff.getEndDate());
 		return workerDayOffs.size() == 0;
+	}
+
+	public ApiResult updatePassword(WorkerUpdatePassword workerUpdatePassword) {
+		if (!Utils.checkWorkerUpdatePassword(workerUpdatePassword)) {
+			return ApiResult.FAILED("请求参数有误!");
+		}
+
+		if (workerUpdatePassword.getPassword().equals(workerUpdatePassword.getNewPassword())) {
+			return ApiResult.FAILED("原密码不能与新密码相同!");
+		}
+
+		Worker worker = workerRepository.findWorkerByUsername(workerUpdatePassword.getUsername());
+
+		if (!(worker.getPassword().equals(Utils.encode(workerUpdatePassword.getPassword())))) {
+			return ApiResult.FAILED("用户原密码不正确!");
+		}
+
+		workerRepository.updatePassword(workerUpdatePassword.getUsername(), Utils.encode(workerUpdatePassword.getNewPassword()));
+
+		return ApiResult.SUCCESS();
 	}
 }

@@ -7,6 +7,7 @@ import qisi.bean.json.ApiResult;
 import qisi.bean.json.CodeJudge;
 import qisi.bean.user.User;
 import qisi.bean.work.Worker;
+import qisi.bean.work.WorkerUpdatePassword;
 
 import java.security.MessageDigest;
 import java.util.*;
@@ -200,8 +201,13 @@ public class Utils {
 		return newsList;
 	}
 
-	public static void main(String[] args){
-	    System.out.println(encode("123"));
+	public static boolean checkWorkerUpdatePassword(WorkerUpdatePassword workerUpdatePassword) {
+		return !(workerUpdatePassword == null || workerUpdatePassword.getPassword() == null || workerUpdatePassword.getNewPassword() == null);
 	}
+
+	public static void main(String[] args) {
+		System.out.println(encode("123"));
+	}
+
 
 }

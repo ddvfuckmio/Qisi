@@ -8,6 +8,7 @@ import qisi.bean.json.ApiResult;
 import qisi.bean.query.WorkerDayOffPageQuery;
 import qisi.bean.work.Worker;
 import qisi.bean.work.WorkerDayOff;
+import qisi.bean.work.WorkerUpdatePassword;
 import qisi.service.WorkerService;
 import qisi.utils.Utils;
 
@@ -29,7 +30,6 @@ public class WorkerController {
 
 	@Autowired
 	private RedisTemplate<String, Object> redisTemplate;
-
 
 	@Autowired
 	private HttpSession session;
@@ -108,6 +108,15 @@ public class WorkerController {
 		Worker worker = workerService.findWorkerByUsername("ddv");
 		redisTemplate.opsForValue().set("worker", worker);
 		return news;
+	}
+
+	@PostMapping("/updatePassword")
+	@ResponseBody
+	public ApiResult updatePassword(@RequestBody WorkerUpdatePassword workerUpdatePassword) {
+
+		workerUpdatePassword.setUsername("ddv");
+
+		return workerService.updatePassword(workerUpdatePassword);
 	}
 
 }
