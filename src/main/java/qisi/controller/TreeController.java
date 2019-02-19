@@ -37,26 +37,28 @@ public class TreeController {
 		return new TreeJson(200, "/json/tree.json");
 	}
 
-
 	@GetMapping("/sign")
 	public String sign() {
-		return "tree/sign.html";
+		return "tree/worker/sign.html";
 	}
 
 	@GetMapping("/dayOffs")
 	public String dayOffs() {
-		return "tree/dayOffs.html";
+		return "tree/worker/dayOffs.html";
 	}
 
 	@GetMapping("/addDayOffs")
 	public String addDayOffs() {
-		return "tree/addDayOffs.html";
+		return "tree/worker/addDayOffs.html";
 	}
 
 	@GetMapping("/updatePassword")
 	public String profile() {
-		return "tree/updatePassword.html";
+		return "tree/worker/updatePassword.html";
 	}
 
-
+	@GetMapping("/workers")
+	public String workers() {
+		return "tree/workers.html";
+	}
 }

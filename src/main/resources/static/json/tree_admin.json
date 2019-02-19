@@ -34,7 +34,9 @@
     "text": "人事管理",
     "children": [
       {
-        "text": "员工列表"
+        "text": "员工列表",
+        "url": "tree/workers",
+        "checked": true
       },
       {
         "text": "请假审批"
