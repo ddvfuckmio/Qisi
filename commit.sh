@@ -4,4 +4,4 @@ git add .
 git commit -m"case"
 git push origin develop
 git status
-echo "https://github.com/drityddv"
+echo "查看我的github: https://github.com/drityddv"
