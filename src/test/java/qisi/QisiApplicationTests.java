@@ -11,6 +11,7 @@ import qisi.bean.user.User;
 import qisi.bean.work.Worker;
 import qisi.dao.CourseRepository;
 import qisi.dao.UserRepository;
+import qisi.dao.WorkerRepository;
 import qisi.dao.worker.WorkerDayOffRepository;
 import qisi.service.CourseService;
 import qisi.service.WorkerService;
@@ -44,14 +45,16 @@ public class QisiApplicationTests {
 	@Autowired
 	private WorkerService workerService;
 
+	@Autowired
+	private WorkerRepository workerRepository;
+
 	@Test
 	public void contextLoads() {
-		RedisUtils redisUtils = new RedisUtils();
-		List<News> newsList = redisUtils.listGet("news",0,5);
-
-		System.out.println(newsList);
-//		redisTemplate.opsForList().rightPushAll("news", newsList);
-//		redisTemplate.expire("news", 7, TimeUnit.DAYS);
+		System.out.println(
+//				workerRepository.findWorkerByUsername("ddv")
+//				workerRepository.test("username=ddv")
+//				workerRepository.findAll()
+		);
 	}
 
 
