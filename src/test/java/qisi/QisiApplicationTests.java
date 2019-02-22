@@ -4,6 +4,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import qisi.bean.admin.News;
@@ -52,8 +55,10 @@ public class QisiApplicationTests {
 	public void contextLoads() {
 		Worker worker = new Worker();
 		worker.setUsername("ddv");
+		worker.setPhone("phone1");
 		System.out.println(
-				workerService.findWorkerByPageAndParams(worker, null)
+				workerService.findWorkerByPageAndParams(worker, new PageRequest(0, 10) {
+				}).getTotalElements()
 		);
 	}
 

@@ -179,6 +179,10 @@ public class WorkerService {
 					predicates.add(criteriaBuilder.equal(root.get("username").as(String.class), worker.getUsername()));
 				}
 
+				if (Utils.checkStringIsNotBlank(worker.getPhone())) {
+					predicates.add(criteriaBuilder.equal(root.get("phone").as(String.class), worker.getPhone()));
+				}
+
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		}, pageable);
