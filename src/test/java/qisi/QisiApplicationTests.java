@@ -50,10 +50,10 @@ public class QisiApplicationTests {
 
 	@Test
 	public void contextLoads() {
+		Worker worker = new Worker();
+		worker.setUsername("ddv");
 		System.out.println(
-//				workerRepository.findWorkerByUsername("ddv")
-//				workerRepository.test("username=ddv")
-//				workerRepository.findAll()
+				workerService.findWorkerByPageAndParams(worker, null)
 		);
 	}
 

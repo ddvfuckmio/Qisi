@@ -1,5 +1,6 @@
 package qisi.utils;
 
+import qisi.bean.admin.News;
 import qisi.bean.course.*;
 import qisi.bean.user.User;
 import qisi.bean.work.Worker;
@@ -160,5 +161,25 @@ public class Mock {
 			workers.add(worker);
 		}
 		return workers;
+	}
+
+	public static List<News> mockNews() {
+		List<News> newsList = new ArrayList<>();
+		String[] msgs = {"所有员工,新年快乐!🐖阖家团结,幸福美满!",
+				"紧急通知,所有技术部门的年底总结需要在2.19日之前上交.",
+				"国家税务总局关于修改〈税务部门规章制定实施办法〉的决定》，已经2018年12月29日国家税务总局2018年度第3次局务会议审议通过，现予公布，自2019年3月1日起施行。",
+				"10月受邀出席2018世界知识论坛，加强国际合作与交流，深化出海战略",
+				"投资少儿绘本平台咔哒故事和儿童编程教育平台妙小程，进军互联网少儿教育领域"
+		};
+
+		for (int i = 0; i < 5; i++) {
+			News news = new News();
+			news.setId(i);
+			news.setMsg(msgs[i]);
+			news.setCreatedAt(new Date());
+			newsList.add(news);
+		}
+
+		return newsList;
 	}
 }

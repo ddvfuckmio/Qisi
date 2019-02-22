@@ -2,6 +2,9 @@ package qisi.service;
 
 import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import qisi.bean.json.ApiResult;
@@ -14,7 +17,12 @@ import qisi.dao.WorkerRepository;
 import qisi.dao.worker.WorkerDayOffRepository;
 import qisi.utils.Utils;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -156,5 +164,23 @@ public class WorkerService {
 		workerRepository.updatePassword(workerUpdatePassword.getUsername(), Utils.encode(workerUpdatePassword.getNewPassword()));
 
 		return ApiResult.SUCCESS();
+	}
+
+	public Page<Worker> findWorkerByPageAndParams(final Worker worker, Pageable pageable) {
+
+		return workerRepository.findAll(new Specification<Worker>() {
+
+			List<Predicate> predicates = new ArrayList<Predicate>();
+
+			@Override
+			public Predicate toPredicate(Root<Worker> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+
+				if (Utils.checkStringIsNotBlank(worker.getUsername())) {
+					predicates.add(criteriaBuilder.equal(root.get("username").as(String.class), worker.getUsername()));
+				}
+
+				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		}, pageable);
 	}
 }
