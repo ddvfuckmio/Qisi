@@ -1,6 +1,7 @@
 package qisi.utils;
 
 import com.sun.org.apache.bcel.internal.generic.RETURN;
+import org.springframework.data.domain.Page;
 import qisi.bean.admin.AdminUser;
 import qisi.bean.admin.News;
 import qisi.bean.json.ApiResult;
@@ -194,4 +195,13 @@ public class Utils {
 	}
 
 
+	public static List<Worker> PageToList(Page<Worker> pages) {
+		List<Worker> workers = new ArrayList<>((int) pages.getTotalElements());
+
+		Iterator<Worker> iterator = pages.iterator();
+		while (iterator.hasNext()) {
+			workers.add(iterator.next());
+		}
+		return workers;
+	}
 }

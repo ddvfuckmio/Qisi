@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,6 +23,7 @@ import qisi.utils.RedisUtils;
 import qisi.utils.Utils;
 
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -55,11 +57,12 @@ public class QisiApplicationTests {
 	public void contextLoads() {
 		Worker worker = new Worker();
 		worker.setUsername("ddv");
-		worker.setPhone("phone1");
-		System.out.println(
-				workerService.findWorkerByPageAndParams(worker, new PageRequest(0, 10) {
-				}).getTotalElements()
-		);
+		worker.setPhone("phone0");
+		Page<Worker> workers = workerService.findWorkerByPageAndParams(worker, new PageRequest(0, 10) {
+		});
+		List<Worker> list = Utils.PageToList(workers);
+
+		System.out.println(list);
 	}
 
 
