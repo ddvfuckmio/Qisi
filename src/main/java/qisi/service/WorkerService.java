@@ -1,11 +1,9 @@
 package qisi.service;
 
-import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import qisi.bean.json.ApiResult;
 import qisi.bean.work.Worker;
@@ -23,10 +21,8 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.SimpleFormatter;
 
 /**
  * @author : ddv
@@ -168,7 +164,17 @@ public class WorkerService {
 
 	public List<Worker> findWorkerByPageAndParams(final Worker worker, Pageable pageable) {
 
-		Page<Worker> workerPage = workerRepository.findAll(new Specification<Worker>() {
+		Page<Worker> workerPage = workerRepository.findAll(getSpecification(worker), pageable);
+
+		return Utils.PageToList(workerPage);
+	}
+
+	public int getWorkerByParamsCount(final Worker worker) {
+		return (int) workerRepository.count(getSpecification(worker));
+	}
+
+	private Specification<Worker> getSpecification(final Worker worker) {
+		return new Specification<Worker>() {
 
 			List<Predicate> predicates = new ArrayList<>();
 
@@ -179,18 +185,20 @@ public class WorkerService {
 					predicates.add(criteriaBuilder.equal(root.get("username").as(String.class), worker.getUsername()));
 				}
 
-				if (Utils.checkStringIsNotBlank(worker.getPhone())) {
-					predicates.add(criteriaBuilder.equal(root.get("phone").as(String.class), worker.getPhone()));
+				if (Utils.checkStringIsNotBlank(worker.getRealName())) {
+					predicates.add(criteriaBuilder.equal(root.get("realName").as(String.class), worker.getRealName()));
+				}
+
+				if (Utils.checkStringIsNotBlank(worker.getSex())) {
+					predicates.add(criteriaBuilder.equal(root.get("sex").as(String.class), worker.getSex()));
+				}
+
+				if (Utils.checkStringIsNotBlank(worker.getDepartment())) {
+					predicates.add(criteriaBuilder.equal(root.get("department").as(String.class), worker.getDepartment()));
 				}
 
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
-		}, pageable);
-
-		return Utils.PageToList(workerPage);
-	}
-
-	public int getWorkerCount() {
-		return (int) workerRepository.count();
+		};
 	}
 }

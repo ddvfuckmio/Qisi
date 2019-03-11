@@ -36,12 +36,6 @@ public class PageController {
 		return "index.html";
 	}
 
-
-//	@GetMapping("/tree/json")
-//	public String treeJson(){
-//
-//	}
-
 	//员工登陆页面
 	@RequestMapping("/workLogin")
 	public String workLogin() {

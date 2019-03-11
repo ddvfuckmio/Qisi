@@ -24,6 +24,37 @@ var load = function () {
 
 $(function () {
 
+    $('#department').combobox({
+        data: [{
+            "id": 1,
+            "text": "不选择",
+            "selected": true
+        }, {
+            "id": 2,
+            "text": "行政部"
+        }, {
+            "id": 3,
+            "text": "采购部"
+        }, {
+            "id": 4,
+            "text": "公关部"
+        }, {
+            "id": 5,
+            "text": "政党部"
+        }, {
+            "id": 6,
+            "text": "临时部门"
+        }, {
+            "id": 7,
+            "text": "人事部门"
+        }, {
+            "id": 8,
+            "text": "销售部"
+        }],
+        valueField: 'id',
+        textField: 'text'
+    });
+
     $('#workers').datagrid({
         method: 'get',
         url: '/admin/workers',

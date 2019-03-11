@@ -56,7 +56,7 @@ public class AdminController {
 		worker.setSex(sex);
 
 		workerPageQuery.setRows(workerService.findWorkerByPageAndParams(worker, PageRequest.of((page - 1), rows)));
-		workerPageQuery.setTotal(workerService.getWorkerByParamsCount());
+		workerPageQuery.setTotal(workerService.getWorkerByParamsCount(worker));
 
 		return workerPageQuery;
 
