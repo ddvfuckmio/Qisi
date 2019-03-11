@@ -166,11 +166,11 @@ public class WorkerService {
 		return ApiResult.SUCCESS();
 	}
 
-	public Page<Worker> findWorkerByPageAndParams(final Worker worker, Pageable pageable) {
+	public List<Worker> findWorkerByPageAndParams(final Worker worker, Pageable pageable) {
 
-		return workerRepository.findAll(new Specification<Worker>() {
+		Page<Worker> workerPage = workerRepository.findAll(new Specification<Worker>() {
 
-			List<Predicate> predicates = new ArrayList<Predicate>();
+			List<Predicate> predicates = new ArrayList<>();
 
 			@Override
 			public Predicate toPredicate(Root<Worker> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
@@ -186,5 +186,11 @@ public class WorkerService {
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		}, pageable);
+
+		return Utils.PageToList(workerPage);
+	}
+
+	public int getWorkerCount() {
+		return (int) workerRepository.count();
 	}
 }

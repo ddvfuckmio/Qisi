@@ -1,37 +1,18 @@
 package qisi.controller;
 
-import io.swagger.annotations.ApiOperation;
-import org.apache.activemq.command.ActiveMQQueue;
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import qisi.bean.admin.AdminUser;
-import qisi.bean.course.*;
-import qisi.bean.jms.CodeMessage;
 import qisi.bean.json.ApiResult;
-import qisi.bean.json.CodeJudge;
-import qisi.bean.user.MockUser;
-import qisi.bean.user.User;
+import qisi.bean.query.WorkerPageQuery;
 import qisi.bean.work.Worker;
-import qisi.bean.work.WorkerCheck;
-import qisi.dao.WorkerCheckRepository;
-import qisi.dao.WorkerRepository;
-import qisi.exception.AdminAuthorityException;
 import qisi.service.AdminService;
-import qisi.utils.*;
-import qisi.service.CourseService;
-import qisi.service.ProducerService;
-import qisi.service.UserService;
+import qisi.service.WorkerService;
 
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.*;
-import java.util.concurrent.*;
 
 /**
  * 管理员及测试API
@@ -54,9 +35,31 @@ public class AdminController {
 	@Autowired
 	private AdminService adminService;
 
+	@Autowired
+	private WorkerService workerService;
+
 	@PostMapping("/login")
 	public ApiResult login(@RequestBody AdminUser formUser) {
 		return adminService.login(formUser, session);
+	}
+
+	@GetMapping("/workers")
+	@ResponseBody
+	public WorkerPageQuery workers(String username, String realName, String sex, String department, @RequestParam("page") int page, @RequestParam("rows") int rows) {
+
+		WorkerPageQuery workerPageQuery = new WorkerPageQuery();
+
+		Worker worker = new Worker();
+		worker.setUsername(username);
+		worker.setRealName(realName);
+		worker.setDepartment(department);
+		worker.setSex(sex);
+
+		workerPageQuery.setRows(workerService.findWorkerByPageAndParams(worker, PageRequest.of((page - 1), rows)));
+		workerPageQuery.setTotal(workerService.getWorkerByParamsCount());
+
+		return workerPageQuery;
+
 	}
 
 }

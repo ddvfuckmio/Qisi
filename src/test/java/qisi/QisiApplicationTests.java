@@ -58,11 +58,9 @@ public class QisiApplicationTests {
 		Worker worker = new Worker();
 		worker.setUsername("ddv");
 		worker.setPhone("phone0");
-		Page<Worker> workers = workerService.findWorkerByPageAndParams(worker, new PageRequest(0, 10) {
+		List<Worker> workers = workerService.findWorkerByPageAndParams(worker, new PageRequest(0, 10) {
 		});
-		List<Worker> list = Utils.PageToList(workers);
 
-		System.out.println(list);
 	}
 
 
