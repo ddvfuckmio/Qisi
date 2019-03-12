@@ -190,11 +190,6 @@ public class Utils {
 		return param != null && !param.equals("");
 	}
 
-	public static void main(String[] args) {
-		System.out.println(encode("123"));
-	}
-
-
 	public static List<Worker> PageToList(Page<Worker> pages) {
 		List<Worker> workers = new ArrayList<>((int) pages.getTotalElements());
 
@@ -203,5 +198,9 @@ public class Utils {
 			workers.add(iterator.next());
 		}
 		return workers;
+	}
+
+	public static void main(String[] args){
+	    System.out.println(1);
 	}
 }
