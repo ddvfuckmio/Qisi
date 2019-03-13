@@ -164,16 +164,21 @@ public class WorkerService {
 
 	public List<Worker> findWorkerByPageAndParams(final Worker worker, Pageable pageable) {
 
-		Page<Worker> workerPage = workerRepository.findAll(getSpecification(worker), pageable);
+		Page<Worker> workerPage = workerRepository.findAll(workerParams(worker), pageable);
 
 		return Utils.PageToList(workerPage);
 	}
 
 	public int getWorkerByParamsCount(final Worker worker) {
-		return (int) workerRepository.count(getSpecification(worker));
+		return (int) workerRepository.count(workerParams(worker));
 	}
 
-	private Specification<Worker> getSpecification(final Worker worker) {
+	public List<WorkerDayOff> getWorkerDayOffByParams(final WorkerDayOff workerDayOff, Pageable pageable) {
+		return Utils.PageToList(workerDayOffRepository.findAll(workerDayOffParams(workerDayOff), pageable));
+	}
+
+
+	private Specification<Worker> workerParams(final Worker worker) {
 		return new Specification<Worker>() {
 
 			List<Predicate> predicates = new ArrayList<>();
@@ -200,5 +205,35 @@ public class WorkerService {
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		};
+	}
+
+	private Specification<WorkerDayOff> workerDayOffParams(final WorkerDayOff workerDayOff) {
+		return new Specification<WorkerDayOff>() {
+
+			List<Predicate> predicates = new ArrayList<>();
+
+			@Override
+			public Predicate toPredicate(Root<WorkerDayOff> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+
+
+				if (workerDayOff.getState() != 0) {
+					predicates.add(criteriaBuilder.equal(root.get("state").as(Integer.class), workerDayOff.getState()));
+				}
+
+				if ((workerDayOff.getStartDate() != null)) {
+					predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("startDate").as(java.sql.Date.class), workerDayOff.getStartDate()));
+				}
+
+				if ((workerDayOff.getEndDate() != null)) {
+					predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("endDate").as(java.sql.Date.class), workerDayOff.getEndDate()));
+				}
+
+				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		};
+	}
+
+	public int getWorkerDayOffCountByParams(WorkerDayOff workerDayOff) {
+		return (int) workerDayOffRepository.count(workerDayOffParams(workerDayOff));
 	}
 }

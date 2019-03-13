@@ -7,12 +7,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import qisi.bean.admin.AdminUser;
 import qisi.bean.json.ApiResult;
+import qisi.bean.query.WorkerDayOffPageQuery;
 import qisi.bean.query.WorkerPageQuery;
 import qisi.bean.work.Worker;
+import qisi.bean.work.WorkerDayOff;
 import qisi.service.AdminService;
 import qisi.service.WorkerService;
 
 import javax.servlet.http.HttpSession;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 管理员及测试API
@@ -46,7 +50,6 @@ public class AdminController {
 	@GetMapping("/workers")
 	@ResponseBody
 	public WorkerPageQuery workers(String username, String realName, String sex, String department, @RequestParam("page") int page, @RequestParam("rows") int rows) {
-
 		WorkerPageQuery workerPageQuery = new WorkerPageQuery();
 
 		Worker worker = new Worker();
@@ -60,6 +63,25 @@ public class AdminController {
 
 		return workerPageQuery;
 
+	}
+
+	@GetMapping("/workerDayOffs")
+	public WorkerDayOffPageQuery workerDayOffs(int state, Date startDate, Date endDate, @RequestParam("page") int page, @RequestParam("rows") int rows) {
+		WorkerDayOffPageQuery workerDayOffPageQuery = new WorkerDayOffPageQuery();
+
+		WorkerDayOff workerDayOff = new WorkerDayOff();
+
+		workerDayOff.setState(state);
+		workerDayOff.setStartDate(startDate);
+		workerDayOff.setEndDate(endDate);
+
+		List<WorkerDayOff> workerDayOffList = workerService.getWorkerDayOffByParams(workerDayOff, PageRequest.of((page - 1), rows));
+		int total = workerService.getWorkerDayOffCountByParams(workerDayOff);
+
+		workerDayOffPageQuery.setTotal(total);
+		workerDayOffPageQuery.setRows(workerDayOffList);
+
+		return workerDayOffPageQuery;
 	}
 
 }

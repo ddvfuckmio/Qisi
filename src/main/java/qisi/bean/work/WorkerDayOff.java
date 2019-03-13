@@ -1,7 +1,6 @@
 package qisi.bean.work;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.fasterxml.jackson.annotation.JsonFilter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;

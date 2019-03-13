@@ -97,6 +97,9 @@ public class WorkerController {
 	@PostMapping("/addDayOff")
 	@ResponseBody
 	public ApiResult AddDayOffCancel(@RequestBody WorkerDayOff workerDayOff) {
+		System.out.println(workerDayOff.getStartDate().getTime());
+		System.out.println(workerDayOff.getEndDate().getTime());
+
 		workerDayOff.setUsername("ddv");
 		return workerService.addDayOff(workerDayOff);
 	}

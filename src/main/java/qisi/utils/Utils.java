@@ -1,9 +1,7 @@
 package qisi.utils;
 
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 import org.springframework.data.domain.Page;
 import qisi.bean.admin.AdminUser;
-import qisi.bean.admin.News;
 import qisi.bean.json.ApiResult;
 import qisi.bean.json.CodeJudge;
 import qisi.bean.user.User;
@@ -190,10 +188,10 @@ public class Utils {
 		return param != null && !param.equals("");
 	}
 
-	public static List<Worker> PageToList(Page<Worker> pages) {
-		List<Worker> workers = new ArrayList<>((int) pages.getTotalElements());
+	public static <T> List<T> PageToList(Page<T> pages) {
+		List<T> workers = new ArrayList<>((int) pages.getTotalElements());
 
-		Iterator<Worker> iterator = pages.iterator();
+		Iterator<T> iterator = pages.iterator();
 		while (iterator.hasNext()) {
 			workers.add(iterator.next());
 		}
