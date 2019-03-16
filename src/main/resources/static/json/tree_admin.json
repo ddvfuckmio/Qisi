@@ -35,7 +35,7 @@
     "children": [
       {
         "text": "员工列表",
-        "url": "tree/workers",
+        "url": "tree/admin/workers",
         "checked": true
       },
       {
