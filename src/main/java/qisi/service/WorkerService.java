@@ -236,4 +236,11 @@ public class WorkerService {
 	public int getWorkerDayOffCountByParams(WorkerDayOff workerDayOff) {
 		return (int) workerDayOffRepository.count(workerDayOffParams(workerDayOff));
 	}
+
+	public ApiResult updateWorkerDayOffState(WorkerDayOff workerDayOff) {
+
+		workerDayOffRepository.updateWorkerDayOffState(workerDayOff.getId(),workerDayOff.getState());
+
+		return ApiResult.SUCCESS();
+	}
 }

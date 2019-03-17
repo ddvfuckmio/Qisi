@@ -58,10 +58,15 @@ public class TreeController {
 
 
 	// admin tree
-
+	
 	@GetMapping("/admin/workers")
-	public String workers() {
+	public String adminWorkers() {
 		return "tree/admin/workers.html";
+	}
+
+	@GetMapping("/admin/dayOffs")
+	public String adminDayOffs() {
+		return "tree/admin/dayOffs";
 	}
 
 

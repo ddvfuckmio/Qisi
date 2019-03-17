@@ -65,13 +65,15 @@ public class AdminController {
 
 	}
 
-	@GetMapping("/workerDayOffs")
-	public WorkerDayOffPageQuery workerDayOffs(int state, Date startDate, Date endDate, @RequestParam("page") int page, @RequestParam("rows") int rows) {
+	@GetMapping("/dayOffs")
+	public WorkerDayOffPageQuery workerDayOffs(Integer state, Date startDate, Date endDate, @RequestParam("page") int page, @RequestParam("rows") int rows) {
 		WorkerDayOffPageQuery workerDayOffPageQuery = new WorkerDayOffPageQuery();
 
 		WorkerDayOff workerDayOff = new WorkerDayOff();
 
-		workerDayOff.setState(state);
+		if (state != null) {
+			workerDayOff.setState(state);
+		}
 		workerDayOff.setStartDate(startDate);
 		workerDayOff.setEndDate(endDate);
 
@@ -82,6 +84,17 @@ public class AdminController {
 		workerDayOffPageQuery.setRows(workerDayOffList);
 
 		return workerDayOffPageQuery;
+	}
+
+	@PostMapping("/operatorDayOff")
+	public ApiResult operatorDayOff(@RequestBody  WorkerDayOff workerDayOff) {
+		System.out.println(workerDayOff);
+		if(workerDayOff==null || workerDayOff.getId()==0 || workerDayOff.getState()==0){
+			return ApiResult.FAILED("参数有误!");
+		}
+
+		return workerService.updateWorkerDayOffState(workerDayOff);
+
 	}
 
 }

@@ -7,7 +7,7 @@ var loadUsername = function () {
             if (data.username) {
                 $('#username-bar').html('您好 [' + data.realName + '] | <a style="color: cornflowerblue" href="/worker/logout">登出</a>');
             }
-        },
+        }
     });
 };
 
@@ -22,7 +22,7 @@ var loadTreeJson = function () {
             if (data.state === 200) {
                 treeUrl = data.url;
             }
-        },
+        }
     });
 };
 
@@ -34,7 +34,7 @@ $(function () {
 
     $('#tabs').tabs({
         fit: true,
-        border: false,
+        border: false
     });
 
     $('#tt').tree({
@@ -51,11 +51,11 @@ $(function () {
                         title: node.text,
                         iconCls: node.iconCls,
                         closable: true,
-                        href: '/' + node.url,
+                        href: '/' + node.url
                     })
                 }
             }
-        },
+        }
 
     });
 

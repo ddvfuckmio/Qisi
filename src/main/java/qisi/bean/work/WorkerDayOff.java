@@ -17,7 +17,7 @@ import java.util.Date;
 public class WorkerDayOff {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private int id;
 	private String username;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JSONField(format = "yyyy-MM-dd")
@@ -27,19 +27,19 @@ public class WorkerDayOff {
 	private String reason;
 	/*
 	state
-	1: 未读
-	2: 已读
-	3: 批准
-	4: 驳回
+	1: 未审批
+	2: 同意申请
+	3: 提交上级
+	4: 拒绝申请
 	 */
 	private int state;
 	private Date createdAt;
 
-	public Integer getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

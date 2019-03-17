@@ -39,7 +39,8 @@
         "checked": true
       },
       {
-        "text": "请假审批"
+        "text": "请假审批",
+        "url":"tree/admin/dayOffs"
       },
       {
         "text": "绩效评测"

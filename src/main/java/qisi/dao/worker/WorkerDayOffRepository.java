@@ -34,4 +34,9 @@ public interface WorkerDayOffRepository extends JpaRepository<WorkerDayOff, Inte
 
 	@Query("from worker_dayOffs where username=?1 and ((endDate >=?3 and endDate<=?3) or (startDate>=?2 and startDate<=?2) or (startDate<=?2 and endDate>=?3) or(endDate =?2) )")
 	List<WorkerDayOff> findWorkerDayOffsByParams(String username, Date startDate, Date endDate);
+
+	@Transactional
+	@Modifying
+	@Query("update from worker_dayOffs set state=?2 where id=?1")
+	void updateWorkerDayOffState(int id, int state);
 }
