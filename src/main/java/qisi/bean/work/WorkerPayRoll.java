@@ -25,7 +25,10 @@ public class WorkerPayRoll {
 	private Date payrollDate;
 	private String username;
 	private int delayCount;
+	private int earlyCount;
 	private int dayOffCount;
+	private int absentCount;
+	private String department;
 	private Date createdAt;
 
 	public int getId() {
@@ -76,6 +79,30 @@ public class WorkerPayRoll {
 		this.createdAt = createdAt;
 	}
 
+	public int getEarlyCount() {
+		return earlyCount;
+	}
+
+	public void setEarlyCount(int earlyCount) {
+		this.earlyCount = earlyCount;
+	}
+
+	public String getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(String department) {
+		this.department = department;
+	}
+
+	public int getAbsentCount() {
+		return absentCount;
+	}
+
+	public void setAbsentCount(int absentCount) {
+		this.absentCount = absentCount;
+	}
+
 	@Override
 	public String toString() {
 		return "WorkerPayRoll{" +
@@ -83,7 +110,10 @@ public class WorkerPayRoll {
 				", payrollDate=" + payrollDate +
 				", username='" + username + '\'' +
 				", delayCount=" + delayCount +
+				", earlyCount=" + earlyCount +
 				", dayOffCount=" + dayOffCount +
+				", absentCount=" + absentCount +
+				", department='" + department + '\'' +
 				", createdAt=" + createdAt +
 				'}';
 	}

@@ -58,7 +58,7 @@ public class TreeController {
 
 
 	// admin tree
-	
+
 	@GetMapping("/admin/workers")
 	public String adminWorkers() {
 		return "tree/admin/workers.html";
@@ -69,5 +69,8 @@ public class TreeController {
 		return "tree/admin/dayOffs";
 	}
 
-
+	@GetMapping("/admin/payRolls")
+	public String adminPayRolls() {
+		return "tree/admin/payRolls";
+	}
 }

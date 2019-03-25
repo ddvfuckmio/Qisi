@@ -52,7 +52,10 @@ CREATE TABLE `worker_payrolls` (
 	`payrollDate` DATE DEFAULT NULL,
 	`username` varchar(50) NOT NULL,
 	`delayCount` int DEFAULT 0,
+	`earlyCount` int DEFAULT 0,
 	`dayOffCount` int DEFAULT 0,
+	`absentCount` int DEFAULT 0,
+	`department` varchar(10) DEFAULT NULL,
 	`createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
 	 PRIMARY KEY (`id`),
 	 UNIQUE KEY `payRollDate_username_UNIQUE` (`payrollDate`,`username`)

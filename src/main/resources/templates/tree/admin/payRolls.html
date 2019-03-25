@@ -1,0 +1,16 @@
+<script type="text/javascript" src="/js/admin/payRolls.js"></script>
+
+<link rel="stylesheet" type="text/css" href="/css/admin/payRolls.css">
+
+<div id="payRollBar" style="padding: 5px">
+
+    <div style="padding: 10px 0 0 7px;color:#333;">
+        部门: <input id="department" style="width:120px;height: 20px;">
+        年份: <input id="payRollDate" type="text">
+        <a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="load()">搜索</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="reset()">清空</a>
+    </div>
+
+</div>
+
+<table id="workerPayRolls"></table>

@@ -70,7 +70,13 @@ public class AdminService {
 			public Predicate toPredicate(Root<WorkerPayRoll> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 
 				if (workerPayRoll.getPayrollDate() != null) {
-					predicates.add(criteriaBuilder.equal(root.get("payrollDate").as(Date.class), workerPayRoll.getPayrollDate()));
+					predicates.add(criteriaBuilder.equal(
+							root.get("payrollDate").as(Date.class), workerPayRoll.getPayrollDate()));
+				}
+
+				if (workerPayRoll.getDepartment() != null) {
+					predicates.add(criteriaBuilder.equal(
+							root.get("department").as(String.class), workerPayRoll.getDepartment()));
 				}
 
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));

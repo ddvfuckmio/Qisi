@@ -43,7 +43,8 @@
         "url":"tree/admin/dayOffs"
       },
       {
-        "text": "绩效评测"
+        "text": "绩效评测",
+        "url": "tree/admin/payRolls"
       }
     ]
   }

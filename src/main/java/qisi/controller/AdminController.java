@@ -100,11 +100,15 @@ public class AdminController {
 	}
 
 	@GetMapping("/workerPayRoll")
-	public WorkerPayRollPageQuery getWorkerPayRoll(@RequestParam("page") int page, @RequestParam("rows") int rows) {
+	public WorkerPayRollPageQuery getWorkerPayRoll(String department,@RequestParam("page") int page, @RequestParam("rows") int rows) {
 		WorkerPayRollPageQuery workerPayRollPageQuery = new WorkerPayRollPageQuery();
 		WorkerPayRoll workerPayRoll = new WorkerPayRoll();
+
 		Date date = TimeUtil.getMonthByYear(2019, 3);
 		workerPayRoll.setPayrollDate(date);
+		if(department!=null){
+			workerPayRoll.setDepartment(department);
+		}
 
 		workerPayRollPageQuery.setRows(adminService.getWorkerPayRollByParams(workerPayRoll, PageRequest.of(page - 1, rows)));
 		workerPayRollPageQuery.setTotal(adminService.getWorkerPayRollByParamsCount(workerPayRoll));
