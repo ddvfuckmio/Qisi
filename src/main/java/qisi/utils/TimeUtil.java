@@ -10,21 +10,30 @@ import java.util.*;
 
 public class TimeUtil {
 
-	private static final String DAY_FORMAT = "yyyy-MM-dd";
+	public static final String MONTH_FORMAT = "yyyy-MM";
 
-	private static final String SECOND_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	public static final String DAY_FORMAT = "yyyy-MM-dd";
+
+	public static final String SECOND_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
 	// 一秒钟的毫秒数
-	private static final long ONE_SECOND = 1000;
+	public static final long ONE_SECOND = 1000;
 
-	private static final ThreadLocal<SimpleDateFormat> FORMAT_TO_DAY_THREAD_LOCAL = new ThreadLocal<SimpleDateFormat>() {
+	public static final ThreadLocal<SimpleDateFormat> FORMAT_TO_MONTH_THREAD_LOCAL = new ThreadLocal<SimpleDateFormat>() {
+		@Override
+		protected SimpleDateFormat initialValue() {
+			return new SimpleDateFormat(MONTH_FORMAT);
+		}
+	};
+
+	public static final ThreadLocal<SimpleDateFormat> FORMAT_TO_DAY_THREAD_LOCAL = new ThreadLocal<SimpleDateFormat>() {
 		@Override
 		protected SimpleDateFormat initialValue() {
 			return new SimpleDateFormat(DAY_FORMAT);
 		}
 	};
 
-	private static final ThreadLocal<SimpleDateFormat> FORMAT_TO_SECOND_THREAD_LOCAL = new ThreadLocal<SimpleDateFormat>() {
+	public static final ThreadLocal<SimpleDateFormat> FORMAT_TO_SECOND_THREAD_LOCAL = new ThreadLocal<SimpleDateFormat>() {
 		@Override
 		protected SimpleDateFormat initialValue() {
 			return new SimpleDateFormat(SECOND_FORMAT);
@@ -54,6 +63,18 @@ public class TimeUtil {
 		return dates;
 	}
 
+	// 获取每月开头
+	public static Date getMonthByYear(int year, int month) {
+		if (month < 1 || month > 12) return null;
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.clear();
+
+		calendar.set(Calendar.YEAR, year);
+		calendar.set(Calendar.MONTH, --month);
+		return calendar.getTime();
+	}
+
 	// 过滤周末
 	public static void filterWeekend(List<Date> dates) {
 		Calendar calendar = Calendar.getInstance();
@@ -79,18 +100,20 @@ public class TimeUtil {
 		return calendar.getTime();
 	}
 
+	public static String logDateWithMonth(Date date) {
+		StringBuffer stringBuffer = new StringBuffer();
+		SimpleDateFormat simpleDateFormat = FORMAT_TO_MONTH_THREAD_LOCAL.get();
+		String format = simpleDateFormat.format(date);
+		stringBuffer.append(format);
+		stringBuffer.append(date.getTime());
+		return stringBuffer.toString();
+	}
+
 	public static void main(String[] args) {
-		Calendar calendar = Calendar.getInstance();
-		List<Date> dateList = getDayByMonth(2019, 1);
-		filterWeekend(dateList);
-		dateList.forEach((Date date) -> {
-			System.out.print(new SimpleDateFormat(SECOND_FORMAT).format(addHours(date, 17)));
-			calendar.clear();
-			calendar.setTimeInMillis(date.getTime());
-			System.out.println(" 周" + (calendar.get(Calendar.DAY_OF_WEEK)));
-		});
-
-		System.out.println(dateList.size());
-
+		Date month = TimeUtil.getMonthByYear(2019, 3);
+		System.out.println(month);
+		SimpleDateFormat simpleDateFormat = FORMAT_TO_MONTH_THREAD_LOCAL.get();
+		String format = simpleDateFormat.format(month);
+		System.out.println(format);
 	}
 }

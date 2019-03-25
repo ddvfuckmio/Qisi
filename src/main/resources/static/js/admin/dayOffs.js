@@ -107,7 +107,7 @@ $(function () {
         }
     };
 
-    $('#dayOffs').datagrid({
+    $('#adminDayoffs').datagrid({
         method: 'get',
         url: '/admin/dayOffs',
         queryParams: {},

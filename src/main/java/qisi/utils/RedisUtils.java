@@ -39,6 +39,7 @@ public class RedisUtils {
 		if (key == null) return null;
 
 		List<Object> list = redisTemplate.opsForList().range(key, start, end);
+		if (list == null) return null;
 		List<T> rs = new ArrayList<>(list.size());
 		for (Object object : list) {
 			rs.add((T) object);

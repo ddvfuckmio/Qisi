@@ -9,10 +9,13 @@ import qisi.bean.admin.AdminUser;
 import qisi.bean.json.ApiResult;
 import qisi.bean.query.WorkerDayOffPageQuery;
 import qisi.bean.query.WorkerPageQuery;
+import qisi.bean.query.WorkerPayRollPageQuery;
 import qisi.bean.work.Worker;
 import qisi.bean.work.WorkerDayOff;
+import qisi.bean.work.WorkerPayRoll;
 import qisi.service.AdminService;
 import qisi.service.WorkerService;
+import qisi.utils.TimeUtil;
 
 import javax.servlet.http.HttpSession;
 import java.util.Date;
@@ -94,7 +97,18 @@ public class AdminController {
 		}
 
 		return workerService.updateWorkerDayOffState(workerDayOff);
+	}
 
+	@GetMapping("/workerPayRoll")
+	public WorkerPayRollPageQuery getWorkerPayRoll(@RequestParam("page") int page, @RequestParam("rows") int rows) {
+		WorkerPayRollPageQuery workerPayRollPageQuery = new WorkerPayRollPageQuery();
+		WorkerPayRoll workerPayRoll = new WorkerPayRoll();
+		Date date = TimeUtil.getMonthByYear(2019, 3);
+		workerPayRoll.setPayrollDate(date);
+
+		workerPayRollPageQuery.setRows(adminService.getWorkerPayRollByParams(workerPayRoll, PageRequest.of(page - 1, rows)));
+		workerPayRollPageQuery.setTotal(adminService.getWorkerPayRollByParamsCount(workerPayRoll));
+		return workerPayRollPageQuery;
 	}
 
 }

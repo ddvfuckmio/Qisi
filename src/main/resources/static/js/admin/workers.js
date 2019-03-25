@@ -36,6 +36,10 @@ var reset = function () {
     $('#sex').combobox('setText', '不选择');
 };
 
+var addWorker = function () {
+
+};
+
 $(function () {
 
     $('#sex').combobox({

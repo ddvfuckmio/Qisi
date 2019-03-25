@@ -10,9 +10,9 @@ function cancelAjax(id) {
             } else {
                 $.messager.alert('操作失败!', data.msg);
             }
-        },
+        }
     });
-};
+}
 
 $(function () {
 
