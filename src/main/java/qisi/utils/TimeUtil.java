@@ -105,7 +105,6 @@ public class TimeUtil {
 		SimpleDateFormat simpleDateFormat = FORMAT_TO_MONTH_THREAD_LOCAL.get();
 		String format = simpleDateFormat.format(date);
 		stringBuffer.append(format);
-		stringBuffer.append(date.getTime());
 		return stringBuffer.toString();
 	}
 
@@ -115,5 +114,12 @@ public class TimeUtil {
 		SimpleDateFormat simpleDateFormat = FORMAT_TO_MONTH_THREAD_LOCAL.get();
 		String format = simpleDateFormat.format(month);
 		System.out.println(format);
+	}
+
+	public static Date getLastMonth() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.clear();
+		calendar.setTimeInMillis(System.currentTimeMillis());
+		return getMonthByYear(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
 	}
 }

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import qisi.bean.admin.AdminUser;
 import qisi.bean.json.ApiResult;
@@ -18,6 +19,7 @@ import qisi.service.WorkerService;
 import qisi.utils.TimeUtil;
 
 import javax.servlet.http.HttpSession;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -100,15 +102,18 @@ public class AdminController {
 	}
 
 	@GetMapping("/workerPayRoll")
-	public WorkerPayRollPageQuery getWorkerPayRoll(String department,@RequestParam("page") int page, @RequestParam("rows") int rows) {
+	public WorkerPayRollPageQuery getWorkerPayRoll(String department, @DateTimeFormat(pattern = "yyyy-MM") Date payRollDate, @RequestParam("page") int page, @RequestParam("rows") int rows) {
 		WorkerPayRollPageQuery workerPayRollPageQuery = new WorkerPayRollPageQuery();
 		WorkerPayRoll workerPayRoll = new WorkerPayRoll();
 
-		Date date = TimeUtil.getMonthByYear(2019, 3);
-		workerPayRoll.setPayrollDate(date);
-		if(department!=null){
+		if (payRollDate == null) {
+			payRollDate = TimeUtil.getLastMonth();
+		}
+
+		if (department != null && !department.equals("")) {
 			workerPayRoll.setDepartment(department);
 		}
+		workerPayRoll.setPayrollDate(payRollDate);
 
 		workerPayRollPageQuery.setRows(adminService.getWorkerPayRollByParams(workerPayRoll, PageRequest.of(page - 1, rows)));
 		workerPayRollPageQuery.setTotal(adminService.getWorkerPayRollByParamsCount(workerPayRoll));

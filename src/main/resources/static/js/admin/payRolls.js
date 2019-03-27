@@ -1,12 +1,16 @@
 var payRollDate = null;
 var load = function () {
-
     var queryParams = $('#workerPayRolls').datagrid('options').queryParams;
 
     var department = $('#department').combobox('getText');
+    var payRollDate = $('#payRollDate').datebox('getValue');
 
     if (department === '不选择') {
         department = '';
+    }
+
+    if (payRollDate != '') {
+        queryParams.payRollDate = payRollDate;
     }
 
     queryParams.department = department;
