@@ -37,15 +37,15 @@ public class PageController {
 	}
 
 	//员工登陆页面
-	@RequestMapping("/workLogin")
+	@RequestMapping("/workerLogin")
 	public String workLogin() {
-		return "work/login.html";
+		return "worker/login.html";
 	}
 
 	//员工主页面
 	@RequestMapping("/workMain")
 	public String workMain() {
-		return "work/main.html";
+		return "worker/main.html";
 	}
 
 	@RequestMapping("/test")

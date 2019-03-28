@@ -2,6 +2,7 @@ package qisi.config;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import qisi.service.AdminService;
 
 import javax.servlet.*;
@@ -12,14 +13,16 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * @author : ddv
  * @date : 2018/11/15 上午9:40
  */
-//@Component
+@Component
 @WebFilter(filterName = "sessionFilter", urlPatterns = {"/*"})
 public class SessionFilter implements Filter {
+
 	@Autowired
 	private AdminService adminService;
 	private static HashSet<String> set = new HashSet<>();
@@ -30,12 +33,11 @@ public class SessionFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		set.add("/pages/login");
-		set.add("/pages/register");
-		set.add("/pages/admin/login");
-		set.add("/user/login");
-		set.add("/user/register");
-		set.add("/admin/login");
+		set.add("/pages/workerLogin");
+		set.add("/worker/login");
+		set.add("/easyui");
+		set.add("/css");
+		set.add("/js");
 	}
 
 	@Override
@@ -44,7 +46,7 @@ public class SessionFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
 		HttpSession session = request.getSession();
 		String url = request.getRequestURI();
-		if (set.contains(url)) {
+		if (set.contains(url) || containResource(url)) {
 			filterChain.doFilter(servletRequest, servletResponse);
 		} else {
 			String username = (String) session.getAttribute("username");
@@ -60,12 +62,22 @@ public class SessionFilter implements Filter {
 					ajaxHandler(response);
 					return;
 				} else {
-					response.sendRedirect(request.getContextPath() + "/pages/login");
+					response.sendRedirect(request.getContextPath() + "/pages/workerLogin");
 				}
 
 			}
 		}
-		return;
+	}
+
+	private boolean containResource(String url) {
+		Iterator<String> iterator = set.iterator();
+		while (iterator.hasNext()) {
+			String next = iterator.next();
+			if (url.startsWith(next)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void ajaxHandler(HttpServletResponse response) throws IOException {
