@@ -19,6 +19,9 @@ public interface WorkerCheckRepository extends JpaRepository<WorkerCheck, Intege
 	@Query("from worker_checks where username=?1 and checkDay=?2")
 	WorkerCheck findWorkerCheckByUsernameAndDate(String username, Date formatDate);
 
+	@Query("from worker_checks where username=?1 and checkDay=?2")
+	WorkerCheck findWorkerCheckByMonth(String username, Date formatDate);
+
 	@Transactional
 	@Modifying
 	@Query("update worker_checks set signOut=?1 where username=?2 and checkDay=?3")

@@ -199,6 +199,7 @@ public class Utils {
 	}
 
 	public static void main(String[] args){
-	    System.out.println(encode("ddv"));
+		String ddv = encode("ddv");
+		System.out.println(ddv);
 	}
 }

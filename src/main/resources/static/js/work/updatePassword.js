@@ -8,7 +8,7 @@ var submit = function () {
     var newPassword = $('#newPassword').val();
 
     if (password === '' || newPassword === '') {
-        $.messager.alert('操作有失败', '修改信息填写有误!');
+        $.messager.alert('操作失败', '修改信息填写有误!');
         return;
     }
 

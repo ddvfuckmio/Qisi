@@ -2,7 +2,7 @@ var payRollDate = null;
 var load = function () {
     var queryParams = $('#workerPayRolls').datagrid('options').queryParams;
 
-    var department = $('#department').combobox('getText');
+    var department = $('#parRoll_department').combobox('getText');
     var payRollDate = $('#payRollDate').datebox('getValue');
 
     if (department === '不选择') {
@@ -23,8 +23,8 @@ var reset = function () {
     $('#username').val = '';
     $('#realName').val = '';
 
-    $('#department').combobox('setValue', 1);
-    $('#department').combobox('setText', '不选择');
+    $('#parRoll_department').combobox('setValue', 1);
+    $('#parRoll_department').combobox('setText', '不选择');
 
     $('#sex').combobox('setValue', 1);
     $('#sex').combobox('setText', '不选择');
@@ -55,7 +55,7 @@ var formatRowPayRollDate = function (value, row, index) {
 
 $(function () {
 
-    $('#department').combobox({
+    $('#parRoll_department').combobox({
         height: 25,
         data: [{
             "id": 1,

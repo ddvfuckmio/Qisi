@@ -114,6 +114,15 @@ public class AdminController {
 		}
 		workerPayRoll.setPayrollDate(payRollDate);
 
+		boolean isExist = adminService.checkRecords(workerPayRoll.getPayrollDate());
+
+		/**
+		 * 指定日期没有记录，需要触发一下新的统计
+		 */
+		if (!isExist) {
+			adminService.triggerWorkerPayRollCount(workerPayRoll.getPayrollDate());
+		}
+
 		workerPayRollPageQuery.setRows(adminService.getWorkerPayRollByParams(workerPayRoll, PageRequest.of(page - 1, rows)));
 		workerPayRollPageQuery.setTotal(adminService.getWorkerPayRollByParamsCount(workerPayRoll));
 		return workerPayRollPageQuery;

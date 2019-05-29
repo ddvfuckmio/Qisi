@@ -14,6 +14,11 @@ var submit = function () {
         return;
     }
 
+    if (startDate > endDate) {
+        $.messager.alert('操作有误!', '结束日期要大于等于开始日期!');
+        return;
+    }
+
     $.ajax({
         url: '/worker/addDayOff',
         contentType: 'application/json',
@@ -68,9 +73,9 @@ $(function () {
         editable: false,
         onSelect: function (date) {
             var endDate = $('#endDate').datebox('getValue');
-            if (endDate != null || endDate != '') {
+            if (endDate != null && endDate != '') {
                 var end = parseDate(endDate);
-                if (date < end) {
+                if (date > end) {
                     $.messager.alert('操作有误!', '当前时间矛盾,已重置结束时间!');
                     $('#endDate').datebox('setValue', null);
                     return;

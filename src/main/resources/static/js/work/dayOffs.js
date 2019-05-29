@@ -42,11 +42,11 @@ $(function () {
             case 1:
                 return '等待人事审阅';
             case 2:
-                return '人事已审阅,等待上级批准';
+                return '人事已批准';
             case 3:
-                return '请假已批准';
+                return '申请已转交至上级';
             case 4:
-                return '请假拒绝';
+                return '申请拒绝';
         }
     };
 
