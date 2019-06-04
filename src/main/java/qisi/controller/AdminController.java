@@ -14,9 +14,11 @@ import qisi.bean.query.WorkerPayRollPageQuery;
 import qisi.bean.work.Worker;
 import qisi.bean.work.WorkerDayOff;
 import qisi.bean.work.WorkerPayRoll;
+import qisi.dao.WorkerRepository;
 import qisi.service.AdminService;
 import qisi.service.WorkerService;
 import qisi.utils.TimeUtil;
+import qisi.utils.Utils;
 
 import javax.servlet.http.HttpSession;
 import java.util.Date;
@@ -46,6 +48,9 @@ public class AdminController {
 	@Autowired
 	private WorkerService workerService;
 
+	@Autowired
+	private WorkerRepository workerRepository;
+
 	@PostMapping("/login")
 	public ApiResult login(@RequestBody AdminUser formUser) {
 		return adminService.login(formUser, session);
@@ -67,6 +72,16 @@ public class AdminController {
 
 		return workerPageQuery;
 
+	}
+
+	@GetMapping("/addWorkers")
+	public ApiResult addWorkers() {
+
+		List<Worker> workers = Utils.getWorkerFromExecl();
+
+		workerRepository.saveAll(workers);
+
+		return ApiResult.SUCCESS();
 	}
 
 	@GetMapping("/dayOffs")
@@ -91,9 +106,9 @@ public class AdminController {
 	}
 
 	@PostMapping("/operatorDayOff")
-	public ApiResult operatorDayOff(@RequestBody  WorkerDayOff workerDayOff) {
+	public ApiResult operatorDayOff(@RequestBody WorkerDayOff workerDayOff) {
 		System.out.println(workerDayOff);
-		if(workerDayOff==null || workerDayOff.getId()==0 || workerDayOff.getState()==0){
+		if (workerDayOff == null || workerDayOff.getId() == 0 || workerDayOff.getState() == 0) {
 			return ApiResult.FAILED("参数有误!");
 		}
 

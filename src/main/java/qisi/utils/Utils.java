@@ -1,5 +1,6 @@
 package qisi.utils;
 
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.data.domain.Page;
 import qisi.bean.admin.AdminUser;
 import qisi.bean.json.ApiResult;
@@ -8,6 +9,7 @@ import qisi.bean.user.User;
 import qisi.bean.work.Worker;
 import qisi.bean.work.WorkerUpdatePassword;
 
+import java.io.File;
 import java.security.MessageDigest;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -198,8 +200,78 @@ public class Utils {
 		return workers;
 	}
 
-	public static void main(String[] args){
+	public static List<Worker> getWorkerFromExecl() {
+		File file = new File("src/main/resources/execl/员工表.xlsx");
+		List<Worker> list = new ArrayList<>();
+
+		Workbook workbook = null;
+		try {
+			workbook = WorkbookFactory.create(file);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// 获得工作表个数
+		int sheetCount = workbook.getNumberOfSheets();
+		// 遍历工作表
+		for (int i = 0; i < sheetCount; i++) {
+			Sheet sheet = workbook.getSheetAt(i);
+			// 获得行数
+			int rows = sheet.getLastRowNum() + 1;
+			// 获得列数，先获得一行，在得到改行列数
+			Row tmp = sheet.getRow(0);
+			if (tmp == null) {
+				continue;
+			}
+			int cols = tmp.getPhysicalNumberOfCells();
+			// 读取数据
+			for (int row = 1; row < rows; row++) {
+				Worker worker = new Worker();
+				Row r = sheet.getRow(row);
+
+				// 用户名
+				Cell cell1 = r.getCell(0);
+				cell1.setCellType(CellType.STRING);
+				worker.setUsername(cell1.getStringCellValue());
+
+
+				Cell cell2 = r.getCell(1);
+				cell2.setCellType(CellType.STRING);
+				worker.setRealName(cell2.getStringCellValue());
+
+				Cell cell3 = r.getCell(2);
+				cell3.setCellType(CellType.NUMERIC);
+				worker.setAge((int) cell3.getNumericCellValue());
+
+				Cell cell4 = r.getCell(3);
+				cell4.setCellType(CellType.STRING);
+				worker.setSex(cell4.getStringCellValue());
+
+				Cell cell5 = r.getCell(4);
+				cell5.setCellType(CellType.STRING);
+				worker.setPhone(cell5.getStringCellValue());
+
+				Cell cell6 = r.getCell(5);
+				cell6.setCellType(CellType.STRING);
+				worker.setEmail(cell6.getStringCellValue());
+
+				Cell cell7 = r.getCell(6);
+				cell7.setCellType(CellType.STRING);
+				worker.setDepartment(cell7.getStringCellValue());
+
+				worker.setPassword(Utils.encode(worker.getUsername() + "2019"));
+
+				worker.setCreatedAt(TimeUtil.now());
+
+				list.add(worker);
+			}
+		}
+
+		return list;
+	}
+
+	public static void main(String[] args) {
 		String ddv = encode("ddv");
 		System.out.println(ddv);
 	}
+
 }

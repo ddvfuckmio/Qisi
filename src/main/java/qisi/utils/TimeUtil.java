@@ -122,4 +122,8 @@ public class TimeUtil {
 		calendar.setTimeInMillis(System.currentTimeMillis());
 		return getMonthByYear(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
 	}
+
+	public static Date now() {
+		return new Date();
+	}
 }

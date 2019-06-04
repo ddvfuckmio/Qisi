@@ -45,7 +45,7 @@ public interface WorkerRepository extends JpaRepository<Worker, Integer>, JpaSpe
 	@Query("update workers set password=?2 where username=?1")
 	void updatePassword(String username, String newPassword);
 
-	@Query(nativeQuery = true, value = "select * from workers where ?1")
-	List<Worker> test(String sql);
+	@Query(nativeQuery = true, value = "select * from workers")
+	List<Worker> findAllWorkers();
 
 }

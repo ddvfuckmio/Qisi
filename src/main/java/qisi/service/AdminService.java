@@ -111,59 +111,75 @@ public class AdminService {
 		calendar.clear();
 		calendar.setTimeInMillis(payrollDate.getTime());
 
-		List<Date> dates = TimeUtil.getDayByMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
+		List<Date> dates = TimeUtil.getDayByMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
 		TimeUtil.filterWeekend(dates);
 
 		// 应当出勤天数
 		int workDayCount = dates.size();
 
-		List<Worker> workers = new ArrayList<>();
-		workers.addAll(workerRepository.findAll());
+		List<WorkerPayRoll> workerPayRolls = new ArrayList<>();
 
-		workers.forEach(worker -> {
-			List<WorkerCheck> checks = new ArrayList<>();
-			WorkerPayRoll payRoll = new WorkerPayRoll();
-			dates.forEach(date -> {
-				WorkerCheck check = workerCheckRepository.findWorkerCheckByUsernameAndDate(worker.getUsername(), date);
-				checks.add(check);
-			});
+		try {
 
-			// 迟到次数
-			long delayCount = checks.stream().filter(check -> {
-				Date signIn = check.getSignIn();
-				if (signIn != null && signIn.getHours() > 8) {
-					return true;
-				}
-				return false;
-			}).count();
+			List<Worker> workers = workerRepository.findAllWorkers();
+//		workers.addAll(workerRepository.findAllWorkers());
 
-			// 早退次数
-			long earlyLeave = checks.stream().filter(check -> {
-				Date signOut = check.getSignOut();
-				if (signOut != null || signOut.getHours() < 18) {
-					return true;
-				}
-				return false;
-			}).count();
+//		workers.forEach(worker -> {
+			for (int i = 0; i < workers.size(); i++) {
+				Worker worker = workers.get(i);
+				List<WorkerCheck> checks = new ArrayList<>();
+				WorkerPayRoll payRoll = new WorkerPayRoll();
+				dates.forEach(date -> {
+					WorkerCheck check = workerCheckRepository.findWorkerCheckByUsernameAndDate(worker.getUsername(), date);
+					if (check != null) {
+						checks.add(check);
+					}
+				});
 
-			//  统计下班无打卡的旷工
-			long breakCount = checks.stream().filter(check -> {
-				if (check.getSignIn() != null || check.getSignOut() == null) {
-					return true;
-				}
-				return false;
-			}).count();
+				// 迟到次数
+				long delayCount = checks.stream().filter(check -> {
+					Date signIn = check.getSignIn();
+					if (signIn != null && signIn.getHours() > 8) {
+						return true;
+					}
+					return false;
+				}).count();
 
-			// 无打卡的记录数
-			int breaks = workDayCount - checks.size();
+				// 早退次数
+				long earlyLeave = checks.stream().filter(check -> {
+					Date signOut = check.getSignOut();
+					if (signOut != null && signOut.getHours() < 18) {
+						return true;
+					}
+					return false;
+				}).count();
 
-			payRoll.setDepartment(worker.getDepartment());
-			payRoll.setAbsentCount(breaks);
-			payRoll.setCreatedAt(new Date());
-			payRoll.setDelayCount((int) delayCount);
-			payRoll.setEarlyCount((int) earlyLeave);
-			payRoll.setUsername(worker.getUsername());
-		});
+				//  统计下班无打卡的旷工
+				long breakCount = checks.stream().filter(check -> {
+					if (check.getSignIn() != null || check.getSignOut() == null) {
+						return true;
+					}
+					return false;
+				}).count();
+
+				// 无打卡的记录数
+				int breaks = workDayCount - checks.size();
+
+				payRoll.setDepartment(worker.getDepartment());
+				payRoll.setAbsentCount(breaks);
+				payRoll.setCreatedAt(new Date());
+				payRoll.setDelayCount((int) delayCount);
+				payRoll.setEarlyCount((int) earlyLeave);
+				payRoll.setUsername(worker.getUsername());
+				payRoll.setPayrollDate(payrollDate);
+
+				workerPayRolls.add(payRoll);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		workerPayRollRepository.saveAll(workerPayRolls);
 	}
 
 	public boolean checkRecords(Date payrollDate) {

@@ -13,6 +13,7 @@ import qisi.dao.worker.WorkerDayOffRepository;
 import qisi.service.AdminService;
 import qisi.service.CourseService;
 import qisi.service.WorkerService;
+import qisi.utils.Mock;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -44,7 +45,7 @@ public class QisiApplicationTests {
 
 	@Test
 	public void contextLoads() {
-
+		workerRepository.saveAll(Mock.mockWorkers());
 	}
 
 
